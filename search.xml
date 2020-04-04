@@ -1,8 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>markdown语法集</title>
+    <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
+    <content><![CDATA[<blockquote>
+<p>参考链接<a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">markdown百度百科</a>，<a href="https://www.jianshu.com/p/ebe52d2d468f" target="_blank" rel="noopener">Markdown语法大全(超级版)</a>，<br><a href="https://www.zhihu.com/question/20409634/answer/90728572" target="_blank" rel="noopener">怎样引导新手使用 Markdown</a>，<a href="https://www.jianshu.com/p/191d1e21f7ed/" target="_blank" rel="noopener">Markdown基本语法</a>，<a href="https://www.jianshu.com/p/280c6a6f2594" target="_blank" rel="noopener">MarkDown添加图片的三种方式</a><br><strong>1. 标题</strong><br>在标题面前加上#空格即可<br>几级标题就加几个#，敲完#要再敲个空格再写标题如下：<br><img src="./biaoti.png" alt="Alt text"></p>
+</blockquote>
+<p>效果图是这样的：</p>
+<blockquote>
+<p><img src="./biaotixiaoguo.png" alt="Alt text"></p>
+</blockquote>
+<p><strong>2. 引用，多级引用</strong><br>在文本面前加上&gt;空格<br><img src="./yinyong.png" alt="Alt text"></p>
+<p>效果图：<br><img src="./yinyongxiaoguo.png" alt="Alt text"></p>
+<p>效果图：</p>
+<blockquote>
+<p><img src="./yinyongxiaoguo.png" alt="Alt text"></p>
+</blockquote>
+<p><strong>3. 字体</strong></p>
+<ul>
+<li>粗体和斜体用代码:<blockquote>
+<p><code>&lt;b&gt;粗体&lt;/b&gt;</code><br><code>&lt;i&gt;斜体&lt;/i&gt;</code></p>
+</blockquote>
+</li>
+</ul>
+<p>用符号：</p>
+<blockquote>
+<p><img src="./ziti.png" alt="Alt text"><br><strong>注意：字体的高亮用两对等号</strong></p>
+</blockquote>
+<p>效果：</p>
+<blockquote>
+<p><img src="./zitixiaoguo.png" alt="Alt text"></p>
+</blockquote>
+<ul>
+<li>字体的样式（字体，颜色，大小）<blockquote>
+<p><code>&lt;font face=&quot;黑体&quot; color=&quot;red&quot; size=12&gt;黑体&lt;/font&gt;</code><br>这个效果图就省略咯</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>4. 有序列表，无序列表</strong></p>
+<ol>
+<li>有序列表就是在数字后面加上英语符号点“.”</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>我的第一篇博客文章</title>
-    <url>/2020/04/03/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/</url>
+    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
     <content><![CDATA[<blockquote>
 <p>今天是2020年4月4号星期六，创建博客，特此留念</p>
 </blockquote>
