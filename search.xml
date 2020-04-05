@@ -4,7 +4,7 @@
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
-<p>参考链接<a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">markdown百度百科</a>，<a href="https://www.jianshu.com/p/ebe52d2d468f" target="_blank" rel="noopener">Markdown语法大全(超级版)</a>，<br><a href="https://www.zhihu.com/question/20409634/answer/90728572" target="_blank" rel="noopener">怎样引导新手使用 Markdown</a>，<a href="https://www.jianshu.com/p/191d1e21f7ed/" target="_blank" rel="noopener">Markdown基本语法</a>，<a href="https://www.jianshu.com/p/280c6a6f2594" target="_blank" rel="noopener">MarkDown添加图片的三种方式</a><br><strong>1. 标题</strong><br>在标题面前加上#空格即可<br>几级标题就加几个#，敲完#要再敲个空格再写标题如下：<br><img src="./markdown/biaoti.jpg" alt="Alt text"></p>
+<p>参考链接<a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">markdown百度百科</a>，<a href="https://www.jianshu.com/p/ebe52d2d468f" target="_blank" rel="noopener">Markdown语法大全(超级版)</a>，<br><a href="https://www.zhihu.com/question/20409634/answer/90728572" target="_blank" rel="noopener">怎样引导新手使用 Markdown</a>，<a href="https://www.jianshu.com/p/191d1e21f7ed/" target="_blank" rel="noopener">Markdown基本语法</a>，<a href="https://www.jianshu.com/p/280c6a6f2594" target="_blank" rel="noopener">MarkDown添加图片的三种方式</a><br><strong>1. 标题</strong><br>在标题面前加上#空格即可<br>几级标题就加几个#，敲完#要再敲个空格再写标题如下：<br><img src="/biaoti.jpg" alt="Alt text"></p>
 </blockquote>
 <p>效果图是这样的：</p>
 <blockquote>
