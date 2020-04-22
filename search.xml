@@ -22,7 +22,7 @@
 </li>
 <li><p>赋权后就可以修改文件了，在hosts原文件最后面添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</p>
 <blockquote>
-<p>#GitHub Start<br><br>192.30.253.112 github.com<br><br>192.30.253.119 gist.github.com<br><br>151.101.184.133 assets-cdn.github.com<br><br>151.101.184.133 raw.githubusercontent.com<br><br>151.101.184.133 gist.githubusercontent.com<br><br>151.101.184.133 cloud.githubusercontent.com<br><br>151.101.184.133 camo.githubusercontent.com<br><br>151.101.184.133 avatars0.githubusercontent.com<br><br>151.101.184.133 avatars1.githubusercontent.com<br><br>151.101.184.133 avatars2.githubusercontent.com<br><br>151.101.184.133 avatars3.githubusercontent.com<br><br>151.101.184.133 avatars4.githubusercontent.com<br><br>151.101.184.133 avatars5.githubusercontent.com<br><br>151.101.184.133 avatars6.githubusercontent.com<br><br>151.101.184.133 avatars7.githubusercontent.com<br><br>151.101.184.133 avatars8.githubusercontent.com<br></p>
+<p>#GitHub Start<br>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
 </blockquote>
 </li>
 </ul>
