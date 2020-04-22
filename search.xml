@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>markdown语法集</title>
+    <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
+    <content><![CDATA[<blockquote>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://caixuya.github.io/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/" target="_blank" rel="noopener">点击这里跳转</a>，此博客所有内容均为原创</p>
+</blockquote>
+<blockquote>
+<p>参考链接:<a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">markdown百度百科</a>，<a href="https://www.jianshu.com/p/ebe52d2d468f" target="_blank" rel="noopener">Markdown语法大全(超级版)</a>，<br><a href="https://www.zhihu.com/question/20409634/answer/90728572" target="_blank" rel="noopener">怎样引导新手使用 Markdown</a>，<a href="https://www.jianshu.com/p/191d1e21f7ed/" target="_blank" rel="noopener">Markdown基本语法</a>，<a href="https://www.jianshu.com/p/280c6a6f2594" target="_blank" rel="noopener">MarkDown添加图片的三种方式</a></p>
+</blockquote>
+<h3 id="1-标题"><a href="#1-标题" class="headerlink" title="1. 标题"></a>1. 标题</h3><p>在标题面前加上#空格即可</p>
+<p>几级标题就加几个#，敲完#要再敲个空格再写标题，就像这样：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/biaoti.png?raw=true" alt="图片显示失败"></p>
+<p>效果图是这样的：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/biaotixiaoguo.png?raw=true" alt="图片显示失败"></p>
+<h3 id="2-引用，多级引用"><a href="#2-引用，多级引用" class="headerlink" title="2. 引用，多级引用"></a>2. 引用，多级引用</h3><p>在文本面前加上&gt;空格</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/yin.png?raw=true" alt="图片显示失败"></p>
+<p>效果：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/yinxiaoguo.png?raw=true" alt="图片显示失败"></p>
+<h3 id="3-字体"><a href="#3-字体" class="headerlink" title="3. 字体"></a>3. 字体</h3><ul>
+<li>粗体和斜体用代码:<blockquote>
+<p><code>&lt;b&gt;粗体&lt;/b&gt;</code></p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p><code>&lt;i&gt;斜体&lt;/i&gt;</code></p>
+</blockquote>
+<p>用符号：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/zi.png?raw=true" alt="图片显示失败"></p>
+<p>效果：</p>
+<p> <img src="https://github.com/Caixuya/wangzhanpicture/blob/master/zixiaoguo.png?raw=true" alt="图片显示失败"></p>
+<ul>
+<li>字体的样式（字体，颜色，大小）<blockquote>
+<p><code>&lt;font face=&quot;黑体&quot; color=&quot;red&quot; size=12&gt;黑体&lt;/font&gt;</code><br>这个效果图就省略咯</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="4-有序列表，无序列表"><a href="#4-有序列表，无序列表" class="headerlink" title="4. 有序列表，无序列表"></a>4. 有序列表，无序列表</h3><ul>
+<li><strong>有序列表</strong></li>
+<li>在数字后面加上英语符号点“.”空格（精髓是点的后面要敲一个空格），示例：</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/youxu.png?raw=true" alt="图片显示失败"></p>
+<p>效果：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/youxuxiaoguo.png?raw=true" alt="图片显示失败"></p>
+<ul>
+<li><strong>无序列表</strong></li>
+<li>英文符号”-“空格，示例：</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wuxu.png?raw=true" alt="图片显示失败"></p>
+<p>效果：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wuxuxiaoguo.png?raw=true" alt="图片显示失败"></p>
+<h3 id="5-插入图片"><a href="#5-插入图片" class="headerlink" title="5. 插入图片"></a>5. 插入图片</h3><p>插入图片有两种方式，一种是当图片显示不出来的时候代替出现的文字示意，一种是用代码，这种方式可以调图片的宽高</p>
+<ul>
+<li>先说说第一种</li>
+<li>其实第一种我们很常见，只是用文字说出来略显陌生，二话不说，先上图</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5.png?raw=true" alt="图片显示失败"></p>
+<ul>
+<li>上图所示的效果是下图这玩意儿搞的：</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E7%A4%BA%E4%BE%8B.png?raw=true" alt="图片显示失败"></p>
+<ul>
+<li>那么正题来了，感叹号+方括号+括号的组合就是第一种图片展示的方法</li>
+<li>就是介个样子<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;![代替文字](这里填入图片的路径，支持本地路径和网络路径，本地路径我插入不成功，这里就不出教程了，我的解决方法是把图片上传到github上，然后这里填入的是网络路径)</span><br><span class="line">- 这三种符号是连着的，中间没有空格，感叹号敲在最前面，方括号里面的是代替出现的文字，括号里面的图片的路径，就像上上面这张图那样，当图片显示不出来时，方括号里面的文字就会代替图片出现，示意图片显示失败，而图片可以正常显示时，方括号里的文字就不会出现啦</span><br><span class="line">&lt;br&gt;</span><br><span class="line">- 第二种 代码的方法：</span><br><span class="line">&#96;&#96;&#96;&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;github.com&#x2F;1.png&quot;&gt; </span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li>输入以上代码可以显示图片也可以通过width和height属性来调节图片的大小，也可以用align属性来调节图片的位置<blockquote>
+<figure class="highlight plain"><figcaption><span>src</span></figcaption><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">### 6. 插入链接</span><br><span class="line"></span><br><span class="line">插入链接的方法和插入图片的有点容易混淆，插入链接时没有感叹号，只有方括号和括号</span><br><span class="line">&#96;&#96;&#96;[]()&#96;&#96;&#96;&lt;br&gt;</span><br><span class="line">&#96;&#96;&#96;[这里填入文字，点击文字就会跳转到后面的那个链接](这里填写要跳转的链接) </span><br></pre></td></tr></table></figure></blockquote>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>github图片加载不成功问题</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntudeeping系列的linux系统安装命令">ubuntu，deeping系列的linux系统安装命令</a><br><a href="#centos系列的安装命令">centos系列的安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a></p>
@@ -94,78 +169,9 @@
       </tags>
   </entry>
   <entry>
-    <title>markdown语法集</title>
-    <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
-    <content><![CDATA[<blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://caixuya.github.io/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/" target="_blank" rel="noopener">点击这里跳转</a>，此博客所有内容均为原创</p>
-</blockquote>
-<blockquote>
-<p>参考链接:<a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">markdown百度百科</a>，<a href="https://www.jianshu.com/p/ebe52d2d468f" target="_blank" rel="noopener">Markdown语法大全(超级版)</a>，<br><a href="https://www.zhihu.com/question/20409634/answer/90728572" target="_blank" rel="noopener">怎样引导新手使用 Markdown</a>，<a href="https://www.jianshu.com/p/191d1e21f7ed/" target="_blank" rel="noopener">Markdown基本语法</a>，<a href="https://www.jianshu.com/p/280c6a6f2594" target="_blank" rel="noopener">MarkDown添加图片的三种方式</a></p>
-</blockquote>
-<h3 id="1-标题"><a href="#1-标题" class="headerlink" title="==1. 标题=="></a>==1. 标题==</h3><p>在标题面前加上#空格即可</p>
-<p>几级标题就加几个#，敲完#要再敲个空格再写标题，就像这样：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/biaoti.png?raw=true" alt="图片显示失败"></p>
-<p>效果图是这样的：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/biaotixiaoguo.png?raw=true" alt="图片显示失败"></p>
-<h3 id="2-引用，多级引用"><a href="#2-引用，多级引用" class="headerlink" title="==2. 引用，多级引用=="></a>==2. 引用，多级引用==</h3><p>在文本面前加上&gt;空格</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/yin.png?raw=true" alt="图片显示失败"></p>
-<p>效果：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/yinxiaoguo.png?raw=true" alt="图片显示失败"></p>
-<h3 id="3-字体"><a href="#3-字体" class="headerlink" title="==3. 字体=="></a>==3. 字体==</h3><ul>
-<li>粗体和斜体用代码:<blockquote>
-<p><code>&lt;b&gt;粗体&lt;/b&gt;</code></p>
-</blockquote>
-</li>
-</ul>
-<blockquote>
-<p><code>&lt;i&gt;斜体&lt;/i&gt;</code></p>
-</blockquote>
-<p>用符号：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/zi.png?raw=true" alt="图片显示失败"></p>
-<p>效果：</p>
-<p> <img src="https://github.com/Caixuya/wangzhanpicture/blob/master/zixiaoguo.png?raw=true" alt="图片显示失败"></p>
-<ul>
-<li>字体的样式（字体，颜色，大小）<blockquote>
-<p><code>&lt;font face=&quot;黑体&quot; color=&quot;red&quot; size=12&gt;黑体&lt;/font&gt;</code><br>这个效果图就省略咯</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="4-有序列表，无序列表"><a href="#4-有序列表，无序列表" class="headerlink" title="==4. 有序列表，无序列表=="></a>==4. 有序列表，无序列表==</h3><ul>
-<li><strong>有序列表</strong></li>
-<li>在数字后面加上英语符号点“.”空格（精髓是点的后面要敲一个空格），示例：</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/youxu.png?raw=true" alt="图片显示失败"></p>
-<p>效果：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/youxuxiaoguo.png?raw=true" alt="图片显示失败"></p>
-<ul>
-<li><strong>无序列表</strong></li>
-<li>英文符号”-“空格，示例：</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wuxu.png?raw=true" alt="图片显示失败"></p>
-<p>效果：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wuxuxiaoguo.png?raw=true" alt="图片显示失败"></p>
-<h3 id="5-插入图片"><a href="#5-插入图片" class="headerlink" title="==5. 插入图片=="></a>==5. 插入图片==</h3><p>插入图片有两种方式，一种是当图片显示不出来的时候代替出现的文字示意，一种是用代码，这种方式可以调图片的宽高</p>
-<ul>
-<li>先说说第一种</li>
-<li>其实第一种我们很常见，只是用文字说出来略显陌生，二话不说，先上图</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5.png?raw=true" alt="图片显示失败"></p>
-<ul>
-<li>上图所示的效果是下图这玩意儿搞的：</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E7%A4%BA%E4%BE%8B.png?raw=true" alt="图片显示失败"></p>
-<ul>
-<li>那么正题来了，感叹号+方括号+括号的组合就是第一种图片展示的方法</li>
-<li>就是介个样子<blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;![代替文字](这里填入图片的路径，支持本地路径和网络路径，本地路径我插入不成功，这里就不出教程了，我的解决方法是把图片上传到github上，然后这里填入的是网络路径)</span><br><span class="line">- 这三种符号是连着的，中间没有空格，感叹号敲在最前面，方括号里面的是代替出现的文字，括号里面的图片的路径，就像上上面这张图那样，当图片显示不出来时，方括号里面的文字就会代替图片出现，示意图片显示失败，而图片可以正常显示时，方括号里的文字就不会出现啦</span><br><span class="line">&lt;br&gt;</span><br><span class="line">- 第二种 代码的方法：</span><br><span class="line">&#96;&#96;&#96;&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;github.com&#x2F;1.png&quot;&gt; </span><br></pre></td></tr></table></figure></blockquote>
-</li>
-<li>输入以上代码可以显示图片也可以通过width和height属性来调节图片的大小，也可以用align属性来调节图片的位置<blockquote>
-<p><code>&lt;img src=&quot;https://github.com/1.png&quot; height=60 width=30   align=&quot;left&quot;&gt;</code></p>
-</blockquote>
-</li>
-</ul>
-<h3 id="6-插入链接"><a href="#6-插入链接" class="headerlink" title="==6. 插入链接=="></a>==6. 插入链接==</h3><p>插入链接的方法和插入图片的有点容易混淆，插入链接时没有感叹号，只有方括号和括号<br><code>[]()</code><br><br><a href="这里填写要跳转的链接">这里填入文字，点击文字就会跳转到后面的那个链接</a></p>
-]]></content>
+    <title>搭建hexo博客详细教程</title>
+    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[]]></content>
       <tags>
         <tag>/study</tag>
       </tags>
@@ -177,14 +183,6 @@
 <p>今天是2020年4月3号星期五，创建博客，特此留念</p>
 </blockquote>
 ]]></content>
-  </entry>
-  <entry>
-    <title>搭建hexo博客详细教程</title>
-    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
   </entry>
   <entry>
     <title>about</title>
