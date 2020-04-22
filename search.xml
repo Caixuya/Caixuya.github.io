@@ -3,7 +3,7 @@
   <entry>
     <title>github图片加载不成功问题</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntudeeping系列的linux系统安装命令">ubuntu，deeping系列的linux系统安装命令</a><br><a href="#centos系列的安装命令">centos系列的安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a></p>
+    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntudeeping系列的linux系统安装命令">ubuntu，deeping系列的linux系统安装命令</a><br><a href="#centos系列的安装命令">centos系列的安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
 <blockquote>
 <p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件</p>
 </blockquote>
@@ -97,22 +97,6 @@
       </tags>
   </entry>
   <entry>
-    <title>搭建hexo博客详细教程</title>
-    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>起始点</title>
-    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
-    <content><![CDATA[<blockquote>
-<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
@@ -199,6 +183,22 @@
       <tags>
         <tag>/study</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>搭建hexo博客详细教程</title>
+    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>起始点</title>
+    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
+    <content><![CDATA[<blockquote>
+<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
+</blockquote>
+]]></content>
   </entry>
   <entry>
     <title>about</title>
