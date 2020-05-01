@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    github图片加载不成功问题 |  
+    html+css鼠标移到图片上时显示下拉菜单 |  
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -36,7 +36,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-github图片加载不成功关键修改hosts文件" class="article article-type-post" itemscope
+  <article id="post-html+css鼠标移到图片上时显示下拉菜单" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -44,7 +44,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  github图片加载不成功问题
+  html+css鼠标移到图片上时显示下拉菜单
 </h1>
  
 
@@ -53,8 +53,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/" class="article-date">
-  <time datetime="2020-04-09T12:59:02.000Z" itemprop="datePublished">2020-04-09</time>
+      <a href="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" class="article-date">
+  <time datetime="2020-05-01T14:50:50.000Z" itemprop="datePublished">2020-05-01</time>
 </a>
       
       
@@ -64,7 +64,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">946</span>
+            <span class="post-count">721</span>
         </span>
     </span>
 
@@ -84,8 +84,6 @@
 
     
     
-    <div class="tocbot"></div>
-
 
 
 
@@ -98,90 +96,10 @@
       
 
       
-      <p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
-<blockquote>
-<p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件</p>
-</blockquote>
-<h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul>
-<li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true" alt=""></li>
-<li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把盘符改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li>
-<li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li>
-<li>右键“属性”</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E5%B1%9E%E6%80%A7.png?raw=true" alt=""></p>
-<ul>
-<li><p>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png?raw=true" alt=""></p>
-</li>
-</ul>
-<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul>
-<li>赋权后就可以修改文件了，在hosts原文件最后面添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li>
-</ul>
-<blockquote>
-<p>#GitHub Start<br>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
-</blockquote>
-<h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul>
-<li>ctrl+alt+t调出终端</li>
-<li>输入以下代码给hosts文件赋权<blockquote>
-<p>sudo chmod 777 /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>敲完命令后没有报错就是成功的，像这样<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/777hosts.png?raw=true" alt=""></p>
-<ul>
-<li>用gedit或者vim/vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li>
-<li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote>
-<p>sudo apt-get install gedit<br></p>
-</blockquote>
-</li>
-</ul>
-<h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote>
-<p>sudo yum install gedit</p>
-</blockquote>
-<p>视自身情况选其中一个</p>
-<ul>
-<li>安装完成后使用gedit的命令如下：<blockquote>
-<p>gedit /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>输入命令会打开这样一个编辑窗口<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png?raw=true" alt=""></p>
-<ul>
-<li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-vi修改文件"><a href="#用vim-vi修改文件" class="headerlink" title="用vim/vi修改文件"></a>用vim/vi修改文件</h3></li>
-<li>vim的安装（如果系统没有vim）</li>
-<li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li>
-<li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote>
-<p>sudo yum -y install vim</p>
-</blockquote>
-</li>
-<li>安装完成后使用vim/vi的命令如下：<blockquote>
-<p>vi /etc/hosts<br><br>vim /etc/hosts<br></p>
-</blockquote>
-</li>
-</ul>
-<p>两个命令二选一，都可以，打开界面如下：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png?raw=true" alt=""></p>
-<ul>
-<li><p>打开界面后输入键盘”i”键</p>
-<blockquote>
-<p>i</p>
-</blockquote>
-</li>
-<li><p>左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png?raw=true" alt=""></p>
-</li>
-<li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p>
-<blockquote>
-<p>:wq</p>
-</blockquote>
-</li>
-<li><p>这时左下角会出现你键入的命令<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wq.png?raw=true" alt=""></p>
-</li>
-<li><p>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令</p>
-<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li>
-<li><p>像下图这样没有出现报错就是大功告成啦<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png?raw=true" alt=""></p>
-</li>
-</ul>
-
+      <p>html代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>css代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span><br><span class="line">	list-style: none;&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span><br><span class="line">	top:-10px;&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span><br><span class="line">	left:-8px;&lt;!--调整ul这个整体到网页左边的距离--&gt;</span><br><span class="line">	text-align:center;&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span><br><span class="line">	 记账             记账</span><br><span class="line">	修改账本          修改账本 </span><br><span class="line">	 查询             查询</span><br><span class="line">	--&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;&lt;!--标题居中 --&gt;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;&lt;!--去除a标签链接下面的横线 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363&lt;!--代表当一段文本为链接时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080&lt;!--代表这段文本被点击之后的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;&lt;!--图片向右移动的距离--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; &lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
       <!-- reward -->
       
@@ -249,7 +167,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -267,19 +185,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            解决liux系统只读文件系统，linux系统磁盘上锁问题
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/" class="article-nav-link">
+      <a href="/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">markdown语法集</div>
+        <div class="article-nav-title">mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</div>
       </a>
     
   </nav>
