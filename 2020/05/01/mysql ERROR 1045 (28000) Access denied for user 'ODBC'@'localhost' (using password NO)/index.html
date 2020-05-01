@@ -64,7 +64,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">238</span>
+            <span class="post-count">247</span>
         </span>
     </span>
 
@@ -100,8 +100,8 @@
 <blockquote>
 <p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
 </blockquote>
-<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一些，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
-<p>这句话翻译过来就是没有一个不用密码可以登录的ODBC用户，创建一个没有密码的ODBC用户就行，如下所示：<br></p>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
 <p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code></p>
 <p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～</p>
 
