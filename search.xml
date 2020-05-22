@@ -92,34 +92,6 @@
       </tags>
   </entry>
   <entry>
-    <title>html+css鼠标移到图片上时显示下拉菜单</title>
-    <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
-    <content><![CDATA[<p>html代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
-<p>css代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span><br><span class="line">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span><br><span class="line">	list-style: none;&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span><br><span class="line">	top:-10px;&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span><br><span class="line">	left:-8px;&lt;!--调整ul这个整体到网页左边的距离--&gt;</span><br><span class="line">	text-align:center;&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span><br><span class="line">	 记账             记账</span><br><span class="line">	修改账本          修改账本 </span><br><span class="line">	 查询             查询</span><br><span class="line">	--&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;&lt;!--标题居中 --&gt;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;&lt;!--去除a标签链接下面的横线 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363&lt;!--代表当一段文本为链接时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080&lt;!--代表这段文本被点击之后的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;&lt;!--图片向右移动的距离--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; &lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
-    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
-    <content><![CDATA[<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
-<blockquote>
-<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
-</blockquote>
-<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
-<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
-<figure class="highlight plain"><figcaption><span>USER 'ODBC'@'localhost' IDENTIFIED BY '';```</span></figcaption><table><tr><td class="code"><pre><span class="line">然后更新一下权限</span><br><span class="line">&#96;&#96;&#96;flush privileges;</span><br></pre></td></tr></table></figure>
-
-<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
@@ -452,9 +424,73 @@
       </tags>
   </entry>
   <entry>
+    <title>html+css鼠标移到图片上时显示下拉菜单</title>
+    <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
+    <content><![CDATA[<p>html代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>css代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span><br><span class="line">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span><br><span class="line">	list-style: none;&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span><br><span class="line">	top:-10px;&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span><br><span class="line">	left:-8px;&lt;!--调整ul这个整体到网页左边的距离--&gt;</span><br><span class="line">	text-align:center;&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span><br><span class="line">	 记账             记账</span><br><span class="line">	修改账本          修改账本 </span><br><span class="line">	 查询             查询</span><br><span class="line">	--&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;&lt;!--标题居中 --&gt;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;&lt;!--去除a标签链接下面的横线 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363&lt;!--代表当一段文本为链接时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080&lt;!--代表这段文本被点击之后的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;&lt;!--图片向右移动的距离--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; &lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
+    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
+    <content><![CDATA[<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
+<blockquote>
+<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
+</blockquote>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
+<figure class="highlight plain"><figcaption><span>USER 'ODBC'@'localhost' IDENTIFIED BY '';```</span></figcaption><table><tr><td class="code"><pre><span class="line">然后更新一下权限</span><br><span class="line">&#96;&#96;&#96;flush privileges;</span><br></pre></td></tr></table></figure>
+
+<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>vue html按钮事件，js传参</title>
     <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
     <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> &lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决liux系统只读文件系统，linux系统磁盘上锁问题</title>
+    <url>/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件<br><br>之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了<br><br>而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当然我忍住了<br><br>上网找解决方案的时候，这次终于皇天不负有心人，我找到了解决方案，我得抓紧这颗稻草，于是我连忙写在自己博客，防止链接丢失或者某天这个回答突然不见了<br></p>
+<p>解决方案很简单，win + R打开运行（命令提示符），输入下面这行东东</p>
+<ul>
+<li><code>df -h</code></li>
+</ul>
+<p>然后可以看到你的磁盘的路径，然后再输入下面这行东东</p>
+<ul>
+<li><code>mount -o rw,remount /media/tia/系统</code></li>
+</ul>
+<p><code>/media/tia/系统</code>介个是我那个被锁住的磁盘的路径，在第一条命令输入后可以找到，rw后面是英文状态下的逗号，原回答有更详细的说明，下面会贴出原回答，我这里只贴出我尝试过的解决方案。</p>
+<p>值得一提的是：ro为只读，rw为可读可写<br><br>（其实我认为会找这个的问题的解决方案的人大部分是因为想要解锁文件，所以并不会想知道文件只读的方法是啥，例如我就是这么想的，但是为了防止我以后要用到却找不到，所以我还是写下来吧）</p>
+<p>如果发现有提示<code>“device is busy”</code></p>
+<ul>
+<li><code>fuser -m /boot</code> 将会显示使用这个模块的pid</li>
+<li><code>fuser -mk /boot</code> 将会直接kill那个pid</li>
+</ul>
+<p>这个解决方案并不是我原创，所以还是贴上原链接：<br><a href="https://blog.csdn.net/whf96998/article/details/82184485" target="_blank" rel="noopener">原文链接</a></p>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>起始点</title>
+    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
+    <content><![CDATA[<blockquote>
+<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
+</blockquote>
 ]]></content>
   </entry>
   <entry>
@@ -494,39 +530,6 @@
 <blockquote>
 <p><code>cd blog</code><br>8. 安装hexo<br>很多人在安装npm的时候会习惯换成淘宝镜像的cnpm，因为npm的服务器位于国外可能会影响安装，我也是这样，但是安装hexo似乎不能直接用cnpm安装，emmm，什么原因我也不清楚，没去查过，所以我们不换成cnpm了，用npm安装，命令如下：<br><code>npm install -g hexo-cli</code></p>
 </blockquote>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>起始点</title>
-    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
-    <content><![CDATA[<blockquote>
-<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>解决liux系统只读文件系统，linux系统磁盘上锁问题</title>
-    <url>/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件<br><br>之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了<br><br>而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当然我忍住了<br><br>上网找解决方案的时候，这次终于皇天不负有心人，我找到了解决方案，我得抓紧这颗稻草，于是我连忙写在自己博客，防止链接丢失或者某天这个回答突然不见了<br></p>
-<p>解决方案很简单，win + R打开运行（命令提示符），输入下面这行东东</p>
-<ul>
-<li><code>df -h</code></li>
-</ul>
-<p>然后可以看到你的磁盘的路径，然后再输入下面这行东东</p>
-<ul>
-<li><code>mount -o rw,remount /media/tia/系统</code></li>
-</ul>
-<p><code>/media/tia/系统</code>介个是我那个被锁住的磁盘的路径，在第一条命令输入后可以找到，rw后面是英文状态下的逗号，原回答有更详细的说明，下面会贴出原回答，我这里只贴出我尝试过的解决方案。</p>
-<p>值得一提的是：ro为只读，rw为可读可写<br><br>（其实我认为会找这个的问题的解决方案的人大部分是因为想要解锁文件，所以并不会想知道文件只读的方法是啥，例如我就是这么想的，但是为了防止我以后要用到却找不到，所以我还是写下来吧）</p>
-<p>如果发现有提示<code>“device is busy”</code></p>
-<ul>
-<li><code>fuser -m /boot</code> 将会显示使用这个模块的pid</li>
-<li><code>fuser -mk /boot</code> 将会直接kill那个pid</li>
-</ul>
-<p>这个解决方案并不是我原创，所以还是贴上原链接：<br><a href="https://blog.csdn.net/whf96998/article/details/82184485" target="_blank" rel="noopener">原文链接</a></p>
 ]]></content>
       <tags>
         <tag>/study</tag>
