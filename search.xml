@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>html+css鼠标移到图片上时显示下拉菜单</title>
+    <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
+    <content><![CDATA[<p>html代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>css代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span><br><span class="line">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span><br><span class="line">	list-style: none;&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span><br><span class="line">	top:-10px;&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span><br><span class="line">	left:-8px;&lt;!--调整ul这个整体到网页左边的距离--&gt;</span><br><span class="line">	text-align:center;&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span><br><span class="line">	 记账             记账</span><br><span class="line">	修改账本          修改账本 </span><br><span class="line">	 查询             查询</span><br><span class="line">	--&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;&lt;!--标题居中 --&gt;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;&lt;!--去除a标签链接下面的横线 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363&lt;!--代表当一段文本为链接时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080&lt;!--代表这段文本被点击之后的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;&lt;!--图片向右移动的距离--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; &lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>github图片加载不成功问题</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
@@ -87,17 +98,6 @@
 </li>
 </ul>
 ]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>html+css鼠标移到图片上时显示下拉菜单</title>
-    <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
-    <content><![CDATA[<p>html代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
-<p>css代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span><br><span class="line">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span><br><span class="line">	list-style: none;&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span><br><span class="line">	top:-10px;&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span><br><span class="line">	left:-8px;&lt;!--调整ul这个整体到网页左边的距离--&gt;</span><br><span class="line">	text-align:center;&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span><br><span class="line">	 记账             记账</span><br><span class="line">	修改账本          修改账本 </span><br><span class="line">	 查询             查询</span><br><span class="line">	--&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;&lt;!--标题居中 --&gt;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;&lt;!--去除a标签链接下面的横线 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363&lt;!--代表当一段文本为链接时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080&lt;!--代表这段文本被点击之后的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;&lt;!--图片向右移动的距离--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; &lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>/study</tag>
       </tags>
@@ -454,58 +454,7 @@
   <entry>
     <title>vue html按钮事件，js传参</title>
     <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
-    <content><![CDATA[<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vueweb</title>
-  <meta name="generator" content="hexo-theme-yilia-plus">
-
-<pre><code>&lt;script src=&quot;https://unpkg.com/vue/dist/vue.js&quot;&gt;&lt;/script&gt;</code></pre>  </head>
-  <body>
-    <div id="app">
-      <button v-on:click="insert">增加学生</button>
-      <button v-on:click="remove(index)">删除学生</button>      
-      <table border='1px'>        
-        <tr>
-          <th>班级</th>
-          <th>姓名</th>
-          <th>性别</th>
-          <th>年龄</th>
-        </tr>
-        <tbody>
-            <tr v-for ="(s,index) in users">
-              <td>{{s.班级}}</td>
-              <td>{{s.姓名}}</td>
-              <td>{{s.性别}}</td>
-              <td>{{s.年龄}}</td>
-            </tr>
-        </tbody>
-      </table>
-
-<pre><code>&lt;/div&gt;
-&lt;script&gt;
-var vm =new Vue({
-  el:&quot;#app&quot;,
-  data:{
-    users:[
-      {班级:&apos;软件2班&apos;,姓名:&apos;cxy&apos;,性别:&apos;女&apos;,年龄:&apos;21&apos;}
-    ]
-  },
-  methods:{
-    insert:function(){
-      this.users.push({班级:&apos;软件2班&apos;,姓名:&apos;cxy&apos;,性别:&apos;女&apos;,年龄:&apos;21&apos;});
-    },
-    remove:function(index){
-      this.users.splice(index,1)
-    }
-  }
-
-})
-&lt;/script&gt;
-&lt;!-- built files will be auto injected --&gt;</code></pre>  </body>
-</html>
+    <content><![CDATA[<figure class="highlight plain"><figcaption><span>html></span></figcaption><table><tr><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
 ]]></content>
   </entry>
   <entry>
