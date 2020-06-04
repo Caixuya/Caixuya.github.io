@@ -64,7 +64,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">393</span>
+            <span class="post-count">503</span>
         </span>
     </span>
 
@@ -84,6 +84,8 @@
 
     
     
+    <div class="tocbot"></div>
+
 
 
 
@@ -96,16 +98,17 @@
       
 
       
-      <p>我们直接开始教程吧<br></p>
-<ol>
+      <p>[目录]<br><a href="#首先注册github">首先注册github</a><br><a href="#搭建前的准备工作">搭建前的准备工作</a><br><a href="#开始搭建hexo">开始搭建hexo</a><br><a href="#部署到github">部署到github</a></p>
+<p>我们直接开始教程吧<br></p>
+<h3 id="首先注册github"><a href="#首先注册github" class="headerlink" title="首先注册github"></a>首先注册github</h3><ol>
 <li><p>在浏览器地址栏输入这个链接，注册github账户邮箱，注册前先看完第二条</p>
 <blockquote>
 <p><code>github.com</code></p>
 </blockquote>
 </li>
-<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Xiaoxiao</code>,部署到github后，博客地址就是这个：<code>xiaoxiao.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
-</li>
-<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可</p>
+<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Anli</code>,部署到github后，博客地址就是这个：<code>anli.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
+<h3 id="搭建前的准备工作"><a href="#搭建前的准备工作" class="headerlink" title="搭建前的准备工作"></a>搭建前的准备工作</h3></li>
+<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可，大部分命令直接换是可以的，如果不行，就自行百度吧</p>
 <blockquote>
 <p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
 </blockquote>
@@ -120,16 +123,27 @@
 <p><code>node -v</code><br><code>npm -v</code></p>
 </blockquote>
 </li>
-<li><p>创建一个文件夹用来放博客</p>
+<li><p>用npm安装，命令如下：</p>
 <blockquote>
+<p><code>npm install -g hexo-cli</code><br>hexo -v</p>
+</blockquote>
+</li>
+</ol>
+<p>出现版本号表示安装成功</p>
+<h3 id="开始搭建hexo"><a href="#开始搭建hexo" class="headerlink" title="开始搭建hexo"></a>开始搭建hexo</h3><ol start="7">
+<li>创建一个文件夹用来放你的博客文件<blockquote>
 <p><code>mkdir blog</code></p>
 </blockquote>
 </li>
 </ol>
-<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名<br>7. 进入到刚刚创建的文件夹中</p>
+<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名，也可以带上地址，具体百度搜索linux如何创建文件夹<br>8. 进入到刚刚创建的文件夹中</p>
 <blockquote>
-<p><code>cd blog</code><br>8. 安装hexo<br>很多人在安装npm的时候会习惯换成淘宝镜像的cnpm，因为npm的服务器位于国外可能会影响安装，我也是这样，但是安装hexo似乎不能直接用cnpm安装，emmm，什么原因我也不清楚，没去查过，所以我们不换成cnpm了，用npm安装，命令如下：<br><code>npm install -g hexo-cli</code></p>
+<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code><br>10. 生成项目<code>hexo g</code><br>11. 启动项目<code>hexo s</code><br>12. 根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功</p>
 </blockquote>
+<h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3><ol start="13">
+<li>接下来我们将它部署到github，命令是：<code>hexo d</code>，这个时候你的github得注册完成，因为这里得输入你的github的用户名和密码</li>
+<li></li>
+</ol>
 
       
       <!-- reward -->
@@ -226,7 +240,7 @@
       </a>
     
     
-      <a href="/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/" class="article-nav-link">
+      <a href="/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
         <div class="article-nav-title">github图片加载不成功,以及电脑能上网却无法登录github.com问题</div>
       </a>

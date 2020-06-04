@@ -1,117 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>github图片加载不成功,以及电脑能上网却无法登录github.com问题</title>
-    <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F%E5%85%B3%E9%94%AE%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#电脑可以上网却无法登录github.com">电脑可以上网却无法登录github.com</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
-<blockquote>
-<p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件</p>
-</blockquote>
-<h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul>
-<li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true" alt="图片加载失败"></li>
-<li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把盘符改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li>
-<li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li>
-<li>右键“属性”</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E5%B1%9E%E6%80%A7.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li><p>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png?raw=true" alt="图片加载失败"></p>
-</li>
-</ul>
-<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul>
-<li>赋权后就可以修改文件了，在hosts原文件最后面添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li>
-</ul>
-<blockquote>
-<p>#GitHub Start<br>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
-</blockquote>
-<h3 id="电脑可以上网却无法登录github-com"><a href="#电脑可以上网却无法登录github-com" class="headerlink" title="电脑可以上网却无法登录github.com"></a>电脑可以上网却无法登录github.com</h3><ul>
-<li><p>以上内容的IP地址并不是绝对的，也不是所有用户都一样的，如果复制粘贴上面的内容还是不行的话，就试一下下面这个方法，或者本来可以登录github.com的，但是后来突然有一天网页能上网却无法登录github.com的时候就用下面这种方法<br></p>
-</li>
-<li><p>不知道怎么的IP突然换了,所以这里得将第一行的IP地址换掉，具体方法如下<br></p>
-</li>
-<li><p>登录<a href="https://www.ipaddress.com/,或者直接点击这里跳转[跳转](https://www.ipaddress.com/)" target="_blank" rel="noopener">https://www.ipaddress.com/,或者直接点击这里跳转[跳转](https://www.ipaddress.com/)</a><br></p>
-</li>
-<li><p>在查询窗口输入github.com<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcomchaxun.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li><p>然后图片中的这个IP地址换掉上面第一行的IP地址192.30.253.112 github.com<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcom.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li><p>实例如下：<br></p>
-<blockquote>
-<p>#GitHub Start<br>140.82.113.4 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
-</blockquote>
-</li>
-<li><p>这样就可以啦</p>
-</li>
-</ul>
-<h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul>
-<li>找到hosts文件，路径如下:/etc/hosts</li>
-<li>ctrl+alt+t调出终端</li>
-<li>输入以下代码给hosts文件赋权<blockquote>
-<p>sudo chmod 777 /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>敲完命令后没有报错就是成功的，像这样<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/777hosts.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li>用gedit或者vim/vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li>
-<li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote>
-<p>sudo apt-get install gedit<br></p>
-</blockquote>
-</li>
-</ul>
-<h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote>
-<p>sudo yum install gedit</p>
-</blockquote>
-<p>视自身情况选其中一个</p>
-<ul>
-<li>安装完成后使用gedit的命令如下：<blockquote>
-<p>gedit /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>输入命令会打开这样一个编辑窗口<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-vi修改文件"><a href="#用vim-vi修改文件" class="headerlink" title="用vim/vi修改文件"></a>用vim/vi修改文件</h3></li>
-<li>vim的安装（如果系统没有vim）</li>
-<li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li>
-<li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote>
-<p>sudo yum -y install vim</p>
-</blockquote>
-</li>
-<li>安装完成后使用vim/vi的命令如下：<blockquote>
-<p>vi /etc/hosts<br><br>vim /etc/hosts<br></p>
-</blockquote>
-</li>
-</ul>
-<p>两个命令二选一，都可以，打开界面如下：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li><p>打开界面后输入键盘”i”键</p>
-<blockquote>
-<p>i</p>
-</blockquote>
-</li>
-<li><p>左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p>
-<blockquote>
-<p>:wq</p>
-</blockquote>
-</li>
-<li><p>这时左下角会出现你键入的命令<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wq.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li><p>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令</p>
-<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li>
-<li><p>像下图这样没有出现报错就是大功告成啦<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png?raw=true" alt="图片加载失败"></p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>html+css鼠标移到图片上时显示下拉菜单</title>
     <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
     <content><![CDATA[<p>html代码如下：</p>
@@ -473,16 +362,17 @@
   <entry>
     <title>搭建hexo博客，部署到github，配置域名一条龙教程</title>
     <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<p>我们直接开始教程吧<br></p>
-<ol>
+    <content><![CDATA[<p>[目录]<br><a href="#首先注册github">首先注册github</a><br><a href="#搭建前的准备工作">搭建前的准备工作</a><br><a href="#开始搭建hexo">开始搭建hexo</a><br><a href="#部署到github">部署到github</a></p>
+<p>我们直接开始教程吧<br></p>
+<h3 id="首先注册github"><a href="#首先注册github" class="headerlink" title="首先注册github"></a>首先注册github</h3><ol>
 <li><p>在浏览器地址栏输入这个链接，注册github账户邮箱，注册前先看完第二条</p>
 <blockquote>
 <p><code>github.com</code></p>
 </blockquote>
 </li>
-<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Xiaoxiao</code>,部署到github后，博客地址就是这个：<code>xiaoxiao.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
-</li>
-<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可</p>
+<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Anli</code>,部署到github后，博客地址就是这个：<code>anli.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
+<h3 id="搭建前的准备工作"><a href="#搭建前的准备工作" class="headerlink" title="搭建前的准备工作"></a>搭建前的准备工作</h3></li>
+<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可，大部分命令直接换是可以的，如果不行，就自行百度吧</p>
 <blockquote>
 <p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
 </blockquote>
@@ -497,16 +387,27 @@
 <p><code>node -v</code><br><code>npm -v</code></p>
 </blockquote>
 </li>
-<li><p>创建一个文件夹用来放博客</p>
+<li><p>用npm安装，命令如下：</p>
 <blockquote>
+<p><code>npm install -g hexo-cli</code><br>hexo -v</p>
+</blockquote>
+</li>
+</ol>
+<p>出现版本号表示安装成功</p>
+<h3 id="开始搭建hexo"><a href="#开始搭建hexo" class="headerlink" title="开始搭建hexo"></a>开始搭建hexo</h3><ol start="7">
+<li>创建一个文件夹用来放你的博客文件<blockquote>
 <p><code>mkdir blog</code></p>
 </blockquote>
 </li>
 </ol>
-<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名<br>7. 进入到刚刚创建的文件夹中</p>
+<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名，也可以带上地址，具体百度搜索linux如何创建文件夹<br>8. 进入到刚刚创建的文件夹中</p>
 <blockquote>
-<p><code>cd blog</code><br>8. 安装hexo<br>很多人在安装npm的时候会习惯换成淘宝镜像的cnpm，因为npm的服务器位于国外可能会影响安装，我也是这样，但是安装hexo似乎不能直接用cnpm安装，emmm，什么原因我也不清楚，没去查过，所以我们不换成cnpm了，用npm安装，命令如下：<br><code>npm install -g hexo-cli</code></p>
+<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code><br>10. 生成项目<code>hexo g</code><br>11. 启动项目<code>hexo s</code><br>12. 根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功</p>
 </blockquote>
+<h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3><ol start="13">
+<li>接下来我们将它部署到github，命令是：<code>hexo d</code>，这个时候你的github得注册完成，因为这里得输入你的github的用户名和密码</li>
+<li></li>
+</ol>
 ]]></content>
       <tags>
         <tag>/study</tag>
@@ -553,6 +454,117 @@
 <p>今天是2020年4月3号星期五，创建博客，特此留念</p>
 </blockquote>
 ]]></content>
+  </entry>
+  <entry>
+    <title>github图片加载不成功,以及电脑能上网却无法登录github.com问题</title>
+    <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#电脑可以上网却无法登录github.com">电脑可以上网却无法登录github.com</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
+<blockquote>
+<p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件</p>
+</blockquote>
+<h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul>
+<li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true" alt="图片加载失败"></li>
+<li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把盘符改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li>
+<li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li>
+<li>右键“属性”</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E5%B1%9E%E6%80%A7.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li><p>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png?raw=true" alt="图片加载失败"></p>
+</li>
+</ul>
+<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul>
+<li>赋权后就可以修改文件了，在hosts原文件最后面添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li>
+</ul>
+<blockquote>
+<p>#GitHub Start<br>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
+</blockquote>
+<h3 id="电脑可以上网却无法登录github-com"><a href="#电脑可以上网却无法登录github-com" class="headerlink" title="电脑可以上网却无法登录github.com"></a>电脑可以上网却无法登录github.com</h3><ul>
+<li><p>以上内容的IP地址并不是绝对的，也不是所有用户都一样的，如果复制粘贴上面的内容还是不行的话，就试一下下面这个方法，或者本来可以登录github.com的，但是后来突然有一天网页能上网却无法登录github.com的时候就用下面这种方法<br></p>
+</li>
+<li><p>不知道怎么的IP突然换了,所以这里得将第一行的IP地址换掉，具体方法如下<br></p>
+</li>
+<li><p>登录<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a href="https://www.ipaddress.com/" target="_blank" rel="noopener">跳转</a><br></p>
+</li>
+<li><p>在查询窗口输入github.com<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcomchaxun.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li><p>然后图片中的这个IP地址换掉上面第一行的IP地址192.30.253.112 github.com<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcom.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li><p>实例如下：<br></p>
+<blockquote>
+<p>#GitHub Start<br>140.82.113.4 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
+</blockquote>
+</li>
+<li><p>这样就可以啦</p>
+</li>
+</ul>
+<h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul>
+<li>找到hosts文件，路径如下:/etc/hosts</li>
+<li>ctrl+alt+t调出终端</li>
+<li>输入以下代码给hosts文件赋权<blockquote>
+<p>sudo chmod 777 /etc/hosts</p>
+</blockquote>
+</li>
+</ul>
+<p>敲完命令后没有报错就是成功的，像这样<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/777hosts.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li>用gedit或者vim/vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li>
+<li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote>
+<p>sudo apt-get install gedit<br></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote>
+<p>sudo yum install gedit</p>
+</blockquote>
+<p>视自身情况选其中一个</p>
+<ul>
+<li>安装完成后使用gedit的命令如下：<blockquote>
+<p>gedit /etc/hosts</p>
+</blockquote>
+</li>
+</ul>
+<p>输入命令会打开这样一个编辑窗口<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-vi修改文件"><a href="#用vim-vi修改文件" class="headerlink" title="用vim/vi修改文件"></a>用vim/vi修改文件</h3></li>
+<li>vim的安装（如果系统没有vim）</li>
+<li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li>
+<li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote>
+<p>sudo yum -y install vim</p>
+</blockquote>
+</li>
+<li>安装完成后使用vim/vi的命令如下：<blockquote>
+<p>vi /etc/hosts<br><br>vim /etc/hosts<br></p>
+</blockquote>
+</li>
+</ul>
+<p>两个命令二选一，都可以，打开界面如下：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li><p>打开界面后输入键盘”i”键</p>
+<blockquote>
+<p>i</p>
+</blockquote>
+</li>
+<li><p>左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p>
+<blockquote>
+<p>:wq</p>
+</blockquote>
+</li>
+<li><p>这时左下角会出现你键入的命令<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wq.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li><p>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令</p>
+<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li>
+<li><p>像下图这样没有出现报错就是大功告成啦<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png?raw=true" alt="图片加载失败"></p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
   </entry>
   <entry>
     <title>about</title>
