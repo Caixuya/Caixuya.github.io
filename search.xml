@@ -103,6 +103,73 @@
       </tags>
   </entry>
   <entry>
+    <title>vue html按钮事件，js传参</title>
+    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> &lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
+    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
+    <content><![CDATA[<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
+<blockquote>
+<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
+</blockquote>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
+<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
+<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>搭建hexo博客，部署到github，配置域名一条龙教程</title>
+    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>我们直接开始教程吧<br></p>
+<ol>
+<li><p>在浏览器地址栏输入这个链接，注册github账户邮箱，注册前先看完第二条</p>
+<blockquote>
+<p><code>github.com</code></p>
+</blockquote>
+</li>
+<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Xiaoxiao</code>,部署到github后，博客地址就是这个：<code>xiaoxiao.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
+</li>
+<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可</p>
+<blockquote>
+<p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
+</blockquote>
+</li>
+<li><p>安装npm</p>
+<blockquote>
+<p><code>sudo yum install npm</code></p>
+</blockquote>
+</li>
+<li><p>检查安装情况：分别输入以下命令，如果出现版本号则表示安装成功</p>
+<blockquote>
+<p><code>node -v</code><br><code>npm -v</code></p>
+</blockquote>
+</li>
+<li><p>创建一个文件夹用来放博客</p>
+<blockquote>
+<p><code>mkdir blog</code></p>
+</blockquote>
+</li>
+</ol>
+<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名<br>7. 进入到刚刚创建的文件夹中</p>
+<blockquote>
+<p><code>cd blog</code><br>8. 安装hexo<br>很多人在安装npm的时候会习惯换成淘宝镜像的cnpm，因为npm的服务器位于国外可能会影响安装，我也是这样，但是安装hexo似乎不能直接用cnpm安装，emmm，什么原因我也不清楚，没去查过，所以我们不换成cnpm了，用npm安装，命令如下：<br><code>npm install -g hexo-cli</code></p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
@@ -430,74 +497,6 @@
 <p>[========]</p>
 <h3 id="绘制序列图-Sequence-Diagram"><a href="#绘制序列图-Sequence-Diagram" class="headerlink" title="绘制序列图 Sequence Diagram"></a>绘制序列图 Sequence Diagram</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Andrew-&gt;China: Says Hello</span><br><span class="line">Note right of China: China thinks\nabout it</span><br><span class="line">China--&gt;Andrew: How are you?</span><br><span class="line">Andrew-&gt;&gt;China: I am good thanks!</span><br></pre></td></tr></table></figure>
 <h3 id="End"><a href="#End" class="headerlink" title="End"></a>End</h3>]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
-    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
-    <content><![CDATA[<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
-<blockquote>
-<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
-</blockquote>
-<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
-<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
-<figure class="highlight plain"><figcaption><span>USER 'ODBC'@'localhost' IDENTIFIED BY '';```</span></figcaption><table><tr><td class="code"><pre><span class="line">然后更新一下权限</span><br><span class="line">&#96;&#96;&#96;flush privileges;</span><br></pre></td></tr></table></figure>
-
-<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vue html按钮事件，js传参</title>
-    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> &lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>搭建hexo博客，部署到github，配置域名一条龙教程</title>
-    <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<p>我们直接开始教程吧<br></p>
-<ol>
-<li><p>在浏览器地址栏输入这个链接，注册github账户邮箱，注册前先看完第二条</p>
-<blockquote>
-<p><code>github.com</code></p>
-</blockquote>
-</li>
-<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Xiaoxiao</code>,部署到github后，博客地址就是这个：<code>xiaoxiao.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
-</li>
-<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可</p>
-<blockquote>
-<p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
-</blockquote>
-</li>
-<li><p>安装npm</p>
-<blockquote>
-<p><code>sudo yum install npm</code></p>
-</blockquote>
-</li>
-<li><p>检查安装情况：分别输入以下命令，如果出现版本号则表示安装成功</p>
-<blockquote>
-<p><code>node -v</code><br><code>npm -v</code></p>
-</blockquote>
-</li>
-<li><p>创建一个文件夹用来放博客</p>
-<blockquote>
-<p><code>mkdir blog</code></p>
-</blockquote>
-</li>
-</ol>
-<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名<br>7. 进入到刚刚创建的文件夹中</p>
-<blockquote>
-<p><code>cd blog</code><br>8. 安装hexo<br>很多人在安装npm的时候会习惯换成淘宝镜像的cnpm，因为npm的服务器位于国外可能会影响安装，我也是这样，但是安装hexo似乎不能直接用cnpm安装，emmm，什么原因我也不清楚，没去查过，所以我们不换成cnpm了，用npm安装，命令如下：<br><code>npm install -g hexo-cli</code></p>
-</blockquote>
-]]></content>
       <tags>
         <tag>/study</tag>
       </tags>
