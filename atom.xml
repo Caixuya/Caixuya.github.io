@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.caixuya.top/"/>
-  <updated>2020-05-22T07:31:42.989Z</updated>
+  <updated>2020-06-06T16:38:16.223Z</updated>
   <id>http://www.caixuya.top/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>心情记录:今天总算把博客完善了</title>
+    <link href="http://www.caixuya.top/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/"/>
+    <id>http://www.caixuya.top/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</id>
+    <published>2020-06-06T16:29:54.000Z</published>
+    <updated>2020-06-06T16:38:16.223Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上&lt;br&gt;&lt;br&gt;身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>vue html按钮事件，js传参</title>
