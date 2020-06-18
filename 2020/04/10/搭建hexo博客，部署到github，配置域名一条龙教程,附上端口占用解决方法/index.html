@@ -65,7 +65,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.2k</span>
+            <span class="post-count">2.3k</span>
         </span>
     </span>
 
@@ -100,7 +100,7 @@
 
       
       <blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a><br>[目录]<br><a href="#首先注册github新建一个空的仓库">首先注册github新建一个空的仓库</a><br><a href="#搭建前的准备工作">搭建前的准备工作</a><br><a href="#开始搭建hexo">开始搭建hexo</a><br><a href="#部署到github">部署到github</a><br><a href="#添加github的ssh">添加github的ssh</a><br><a href="#修改hexo配置文件">修改hexo配置文件</a><br><a href="#端口占用">端口占用</a><br><a href="#购买域名">购买域名</a><br><a href="#github设置域名">github设置域名</a><br><a href="#域名配置永久">域名配置永久</a><br><a href="#完结撒花">完结撒花</a></p>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a><br>[目录]<br><a href="#首先注册github新建一个空的仓库">首先注册github新建一个空的仓库</a><br><a href="#搭建前的准备工作">搭建前的准备工作</a><br><a href="#安装git">安装git</a><br><a href="#开始搭建hexo">开始搭建hexo</a><br><a href="#部署到github">部署到github</a><br><a href="#添加github的ssh">添加github的ssh</a><br><a href="#修改hexo配置文件">修改hexo配置文件</a><br><a href="#端口占用">端口占用</a><br><a href="#购买域名">购买域名</a><br><a href="#github设置域名">github设置域名</a><br><a href="#域名配置永久">域名配置永久</a><br><a href="#完结撒花">完结撒花</a></p>
 </blockquote>
 <p>我们直接开始教程吧<br></p>
 <h3 id="首先注册github新建一个空的仓库"><a href="#首先注册github新建一个空的仓库" class="headerlink" title="首先注册github新建一个空的仓库"></a>首先注册github新建一个空的仓库</h3><ol>
@@ -136,11 +136,23 @@
 </li>
 <li><p>用npm安装，命令如下：</p>
 <blockquote>
-<p><code>npm install -g hexo-cli</code><br>hexo -v</p>
+<p><code>npm install -g hexo-cli</code></p>
 </blockquote>
 </li>
 </ol>
+<p>检查是否安装成功</p>
+<blockquote>
+<p>hexo -v</p>
+</blockquote>
 <p>出现版本号表示安装成功</p>
+<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><blockquote>
+<p><code>yum -y install git</code></p>
+</blockquote>
+<p>检查是否安装成功</p>
+<blockquote>
+<p><code>git --version</code></p>
+</blockquote>
+<p>出现版本号即安装成功</p>
 <h3 id="开始搭建hexo"><a href="#开始搭建hexo" class="headerlink" title="开始搭建hexo"></a>开始搭建hexo</h3><ol start="7">
 <li>创建一个文件夹用来放你的博客文件<blockquote>
 <p><code>mkdir blog</code></p>
@@ -149,9 +161,16 @@
 </ol>
 <p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名，也可以带上地址，具体百度搜索linux如何创建文件夹<br>8. 进入到刚刚创建的文件夹中</p>
 <blockquote>
-<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code><br>10. 生成项目<code>hexo g</code><br>11. 启动项目<code>hexo s</code><br>12. 根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功，退出的话在终端同时按住<code>ctrl+c</code>或者<code>shift+ctrl+c</code>即可</p>
+<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code></p>
 </blockquote>
-<h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3><ol start="13">
+<p>这个时候可能会发生错误<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hexo%20init.png?raw=true" alt="图片加载失败"><br><br>这是因为node版本太低导致的，这个时候我们用这两个命令来更新到最新版<br></p>
+<blockquote>
+<p>先输入这条命令安装n软件<br><code>npm install n -g</code><br>n软件是node专门的软件，所以可以用n软件更新升级到最新的稳定版，命令如下<br><code>n stable</code><br>然后再输入hexo的初始化命令<br>hexo init</p>
+</blockquote>
+<ol start="10">
+<li>生成项目<code>hexo g</code> </li>
+<li>启动项目<code>hexo s</code></li>
+<li>根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功，退出的话在终端同时按住<code>ctrl+c</code>或者<code>shift+ctrl+c</code>即可<h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3></li>
 <li>接下来我们将它部署到github，命令是：<code>hexo d</code>，这个时候需要你的github注册完成，因为这里需要输入你的github的用户名和密码<h5 id="添加github的ssh"><a href="#添加github的ssh" class="headerlink" title="添加github的ssh"></a>添加github的ssh</h5></li>
 <li>部署后不着急，我们先添加一下github的ssh<br>在主机根目录下，输入这条命令<code>ssh-keygen -t rsa -b 4096 -C&quot;******@qq.com&quot;</code>，其中<code>******@qq.com</code>填入你的邮箱账号<br><br>然后会出现这行：<code>Enter file in which to save the key (/home/tia/.ssh/id_rsa):</code>，这时候直接回车，那么后面的这个路径<code>(/home/tia/.ssh/id_rsa)</code>就是你的ssh的存放路径<br><br>之后会提示输入密码，要记住这个密码，输入密码后会有一个图案出现，看到这个奇怪的图案就证明成功啦，这个时候我们切换到.ssh目录下<code>cd /home/tia/.ssh</code><br><br>然后<code>ls</code>查看一下目录下的所有文件，找到id_rsa.pub文件，用<code>vi id_rsa.pub</code>打开文件，复制里面的所有内容<br><br>登录github官网，找到最右边的四边形图案，点击展开下拉菜单，点击settings<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/settings.png?raw=true" alt="图片加载失败"><br><br>在左边的菜单栏中找到ssh<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/ssh.png?raw=true" alt="图片加载失败"><br><br>打开的页面中，将复制的内容粘贴到key里面，title自己写，写啥都信，然后点击<code>Add SSH Key</code><br><br>最后测试是否成功，打开终端，输入<code>ssh -T git@github.com</code>，之后等一小会儿会出现很多英文单词，如果找到‘successfully’，那就安装成功啦<h6 id="修改hexo配置文件"><a href="#修改hexo配置文件" class="headerlink" title="修改hexo配置文件"></a>修改hexo配置文件</h6></li>
 <li>打开终端，<code>cd blog</code>切换到博客的根目录，安装插件<br><code>npm install hexo-deployer-git --save</code></li>
