@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.caixuya.top/"/>
-  <updated>2020-06-18T00:19:34.000Z</updated>
+  <updated>2020-06-18T01:10:02.888Z</updated>
   <id>http://www.caixuya.top/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>sql文件打开失败解决办法</title>
-    <link href="http://www.caixuya.top/2020/06/18/sql%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
-    <id>http://www.caixuya.top/2020/06/18/sql%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</id>
-    <published>2020-06-18T00:59:01.234Z</published>
-    <updated>2020-06-18T00:19:34.000Z</updated>
+    <title>navicat打开sql文件失败解决办法</title>
+    <link href="http://www.caixuya.top/2020/06/18/navicat%E6%89%93%E5%BC%80sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
+    <id>http://www.caixuya.top/2020/06/18/navicat%E6%89%93%E5%BC%80sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</id>
+    <published>2020-06-18T01:09:25.000Z</published>
+    <updated>2020-06-18T01:10:02.888Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>打开.sql文件失败的话，先创建一个数据库，如下：<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql2.png?raw=true'></img><br><br>在创建出来的数据库上右键“运行sql文件”，然后勾一三，点击“开始”，等待完成<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql1.png?raw=true'></img><br></p></blockquote>]]></content>
     
@@ -36,6 +36,8 @@
     </summary>
     
     
+    
+      <category term="/study" scheme="http://www.caixuya.top/tags/study/"/>
     
   </entry>
   
