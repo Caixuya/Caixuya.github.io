@@ -1,12 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-  
-  <title>github图片加载不成功,以及电脑能上网却无法登录github首页 | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Muse","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
   <meta name="description" content="[目录]windows端修改内容修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页linux端用gedit修改文件ubuntu，deeping系列安装命令centos系列安装命令用vim&#x2F;vi修改文件大功告成  我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="github图片加载不成功,以及电脑能上网却无法登录github首页">
@@ -31,77 +46,224 @@
 <meta property="article:tag" content="&#x2F;study">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true">
-  
-    <link rel="alternate" href="/atom.xml" title="" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo"></a>
-      </h1>
-      
+<link rel="canonical" href="http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>github图片加载不成功,以及电脑能上网却无法登录github首页 | </title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="null" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title"></h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.caixuya.top"></form>
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#windows%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">windows端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">修改内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5"><span class="nav-number">3.</span> <span class="nav-text">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E7%AB%AF"><span class="nav-number">4.</span> <span class="nav-text">linux端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">用gedit修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">ubuntu，deeping系列的linux系统安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">centos系列的安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8vim-vi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">8.</span> <span class="nav-text">用vim&#x2F;vi修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90"><span class="nav-number">9.</span> <span class="nav-text">大功告成</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-github图片加载不成功,以及电脑能上网却无法登录github.com问题" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/" class="article-date">
-  <time datetime="2020-04-09T12:59:02.000Z" itemprop="datePublished">2020-04-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      github图片加载不成功,以及电脑能上网却无法登录github首页
-    </h1>
-  
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
 
-      </header>
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
     
-    <div class="article-entry" itemprop="articleBody">
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
       
-        <p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          github图片加载不成功,以及电脑能上网却无法登录github首页
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-04-09 20:59:02" itemprop="dateCreated datePublished" datetime="2020-04-09T20:59:02+08:00">2020-04-09</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-06-18 09:44:51" itemprop="dateModified" datetime="2020-06-18T09:44:51+08:00">2020-06-18</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim/vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p>
 <blockquote>
 <p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件<br>如果这篇博客看不到图片也没关系，我都详细说明了，大部分图片展示怎样的效果表示命令成功，其它图片内容我都用文字表示出来了。</p>
 </blockquote>
@@ -130,7 +292,7 @@
 </li>
 <li><p>将上面内容第一行的IP地址换掉，具体方法如下<br></p>
 </li>
-<li><p>打开<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a href="https://www.ipaddress.com/" target="_blank" rel="noopener">跳转</a><br></p>
+<li><p>打开<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a target="_blank" rel="noopener" href="https://www.ipaddress.com/">跳转</a><br></p>
 </li>
 <li><p>在查询窗口输入github.com<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcomchaxun.png?raw=true" alt="图片加载失败"><br></p>
 </li>
@@ -207,146 +369,119 @@
 </li>
 </ul>
 
-      
     </div>
-    <footer class="article-footer">
-      <a data-url="http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/" data-id="ckfjhqmpr0000779x11iacd2y" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">/study</a></li></ul>
 
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/study/" rel="tag"># /study</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/" rel="prev" title="markdown语法集">
+                  <i class="fa fa-chevron-left"></i> markdown语法集
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B,%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" rel="next" title="linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法">
+                  linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B,%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法
-        
-      </div>
-    </a>
+  </article>
   
   
-    <a href="/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">markdown语法集</div>
-    </a>
   
-</nav>
 
-  
-</article>
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/study/" rel="tag">/study</a></li></ul>
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
     </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/study/" style="font-size: 10px;">/study</a>
     </div>
-  </div>
+  </footer>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
-    </div>
-  </div>
-
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/">navicat导入sql文件失败解决办法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/">心情记录:今天总算把博客完善了</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/">vue html按钮事件，js传参</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">html+css鼠标移到图片上时显示下拉菜单</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/">mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 caixuya<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
 
 
   
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+
+
+
+
 
   
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
+  
 
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
 </body>
 </html>
