@@ -127,6 +127,48 @@
       </tags>
   </entry>
   <entry>
+    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
+    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
+    <content><![CDATA[<blockquote>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
+</blockquote>
+<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
+<blockquote>
+<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
+</blockquote>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
+<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
+<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>navicat导入sql文件失败解决办法</title>
+    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    <content><![CDATA[<blockquote>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
+</blockquote>
+<blockquote>
+<p>navicat导入.sql文件失败的话，先创建一个与导入数据库的字符集和排列规则一样的数据库，如下：<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql2.png?raw=true'></img><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql1.png?raw=true'></img><br></p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vue html按钮事件，js传参</title>
+    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> &lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
@@ -234,7 +276,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#x65;&#115;&#x74;&#46;&#116;&#x65;&#115;&#x74;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;">&#x74;&#x65;&#115;&#x74;&#46;&#116;&#x65;&#115;&#x74;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a>  <a href="mailto:&#x77;&#x77;&#x77;&#x40;&#118;&#x69;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#109;">&#x77;&#x77;&#x77;&#x40;&#118;&#x69;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#101;&#x73;&#116;&#46;&#x74;&#x65;&#x73;&#116;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;">&#116;&#101;&#x73;&#116;&#46;&#x74;&#x65;&#x73;&#116;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;</a>  <a href="mailto:&#x77;&#119;&#119;&#x40;&#118;&#x69;&#112;&#46;&#x71;&#x71;&#46;&#99;&#111;&#109;">&#x77;&#119;&#119;&#x40;&#118;&#x69;&#112;&#46;&#x71;&#x71;&#46;&#99;&#111;&#109;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -461,48 +503,6 @@
       </tags>
   </entry>
   <entry>
-    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
-    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
-    <content><![CDATA[<blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
-</blockquote>
-<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
-<blockquote>
-<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
-</blockquote>
-<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
-<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
-<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
-<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vue html按钮事件，js传参</title>
-    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> &lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width,initial-scale&#x3D;1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;vueweb&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;unpkg.com&#x2F;vue&#x2F;dist&#x2F;vue.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">  &lt;&#x2F;head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;insert&quot;&gt;增加学生&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;button v-on:click&#x3D;&quot;remove(index)&quot;&gt;删除学生&lt;&#x2F;button&gt;      </span><br><span class="line">      &lt;table border&#x3D;&#39;1px&#39;&gt;        </span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">          &lt;th&gt;班级&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;姓名&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;性别&lt;&#x2F;th&gt;</span><br><span class="line">          &lt;th&gt;年龄&lt;&#x2F;th&gt;</span><br><span class="line">        &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr v-for &#x3D;&quot;(s,index) in users&quot;&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.班级&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.姓名&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.性别&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">              &lt;td&gt;&#123;&#123;s.年龄&#125;&#125;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;tbody&gt;</span><br><span class="line">      &lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">    var vm &#x3D;new Vue(&#123;</span><br><span class="line">      el:&quot;#app&quot;,</span><br><span class="line">      data:&#123;</span><br><span class="line">        users:[</span><br><span class="line">          &#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        insert:function()&#123;</span><br><span class="line">          this.users.push(&#123;班级:&#39;软件2班&#39;,姓名:&#39;cxy&#39;,性别:&#39;女&#39;,年龄:&#39;21&#39;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        remove:function(index)&#123;</span><br><span class="line">          this.users.splice(index,1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>navicat导入sql文件失败解决办法</title>
-    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
-    <content><![CDATA[<blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
-</blockquote>
-<blockquote>
-<p>navicat导入.sql文件失败的话，先创建一个与导入数据库的字符集和排列规则一样的数据库，如下：<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql2.png?raw=true'></img><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql1.png?raw=true'></img><br></p>
-</blockquote>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>心情记录:今天总算把博客完善了</title>
     <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
     <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
@@ -610,6 +610,14 @@
       </tags>
   </entry>
   <entry>
+    <title>起始点</title>
+    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
+    <content><![CDATA[<blockquote>
+<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
     <title>解决liux系统只读文件系统，linux系统磁盘上锁问题</title>
     <url>/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件<br><br>之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了<br><br>而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当然我忍住了<br><br>上网找解决方案的时候，这次终于皇天不负有心人，我找到了解决方案，我得抓紧这颗稻草，于是我连忙写在自己博客，防止链接丢失或者某天这个回答突然不见了<br></p>
@@ -633,14 +641,6 @@
       <tags>
         <tag>/study</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>起始点</title>
-    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
-    <content><![CDATA[<blockquote>
-<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
-</blockquote>
-]]></content>
   </entry>
   <entry>
     <title>about</title>
