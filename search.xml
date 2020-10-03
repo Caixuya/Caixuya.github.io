@@ -117,6 +117,25 @@
       </tags>
   </entry>
   <entry>
+    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
+    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
+    <content><![CDATA[<blockquote>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
+</blockquote>
+<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
+<blockquote>
+<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
+</blockquote>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
+<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
+<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
+]]></content>
+      <tags>
+        <tag>/study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>markdown语法集</title>
     <url>/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</url>
     <content><![CDATA[<blockquote>
@@ -466,25 +485,6 @@
       </tags>
   </entry>
   <entry>
-    <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
-    <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
-    <content><![CDATA[<blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
-</blockquote>
-<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
-<blockquote>
-<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC’@’localhost’ (using password NO)</p>
-</blockquote>
-<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
-<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
-<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
-<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
-]]></content>
-      <tags>
-        <tag>/study</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>navicat导入sql文件失败解决办法</title>
     <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
     <content><![CDATA[<blockquote>
@@ -504,12 +504,6 @@
       <tags>
         <tag>/study</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>心情记录:今天总算把博客完善了</title>
-    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
-    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
-]]></content>
   </entry>
   <entry>
     <title>linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法</title>
@@ -620,6 +614,12 @@ branch: master</code></p>
       <tags>
         <tag>/study</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>心情记录:今天总算把博客完善了</title>
+    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
+    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
+]]></content>
   </entry>
   <entry>
     <title>解决liux系统只读文件系统，linux系统磁盘上锁问题</title>
