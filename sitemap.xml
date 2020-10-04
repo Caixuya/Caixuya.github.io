@@ -2,14 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.caixuya.top/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</loc>
-    
-    <lastmod>2020-10-04</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.caixuya.top/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</loc>
+    <loc>http://www.caixuya.top/about/</loc>
     
     <lastmod>2020-10-04</lastmod>
     
@@ -30,16 +23,30 @@
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/404</loc>
+    <loc>http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2020-10-04</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/about/</loc>
+    <loc>http://www.caixuya.top/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</loc>
     
-    <lastmod>2020-09-27</lastmod>
+    <lastmod>2020-10-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</loc>
+    
+    <lastmod>2020-10-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/404</loc>
+    
+    <lastmod>2020-10-04</lastmod>
     
   </url>
   
@@ -86,13 +93,6 @@
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</loc>
-    
-    <lastmod>2020-06-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.caixuya.top/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</loc>
     
     <lastmod>2020-05-22</lastmod>
@@ -123,5 +123,12 @@
   </url>
   
 
+  
+  <url>
+    <loc>http://www.caixuya.top/categories/study/</loc>
+    <lastmod>2020-10-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
 </urlset>
