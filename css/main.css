@@ -3233,7 +3233,7 @@ hr {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #d6f2ed;
+  background: #de621d;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -3349,7 +3349,7 @@ hr {
 }
 .cal tbody .cal-today {
 /*今天*/
-  color: #a722ff;
+  color: #f00;
   font-weight: bold;
 }
 .cal .cal-gray {
