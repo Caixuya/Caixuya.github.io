@@ -506,15 +506,6 @@
       </categories>
   </entry>
   <entry>
-    <title>心情记录:今天总算把博客完善了</title>
-    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
-    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
-]]></content>
-      <categories>
-        <category>daily</category>
-      </categories>
-  </entry>
-  <entry>
     <title>linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法</title>
     <url>/2020/04/10/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B,%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<blockquote>
@@ -622,6 +613,15 @@ branch: master</code></p>
 ]]></content>
       <categories>
         <category>study</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>心情记录:今天总算把博客完善了</title>
+    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
+    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
+]]></content>
+      <categories>
+        <category>daily</category>
       </categories>
   </entry>
   <entry>
