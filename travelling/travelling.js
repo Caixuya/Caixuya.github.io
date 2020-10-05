@@ -3,13 +3,13 @@ function travelling(){
 
     url[0]="http://www.baidu.com"
 
-
+/*
     if (document.referrer) {
       var origin = new URL(document.referrer).origin;
       url.splice(url.indexOf(origin), 1);
     }
+    */
     
-    
-    var ints=Math.floor(Math.random() * url.length);
-    window.location=url[ints];
+    //var ints=Math.floor(Math.random() * url.length);
+    window.location=url[0];
    }
