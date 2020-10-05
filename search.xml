@@ -1,111 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
-    <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
-<blockquote>
-<p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件<br>如果这篇博客看不到图片也没关系，我都详细说明了，大部分图片展示怎样的效果表示命令成功，其它图片内容我都用文字表示出来了。</p>
-</blockquote>
-<h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul>
-<li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true" alt="图片加载失败"></li>
-<li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把上面的路径中的C:改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li>
-<li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li>
-<li>找到hosts文件后，右键选择“属性”</li>
-</ul>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E5%B1%9E%E6%80%A7.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li><p>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png?raw=true" alt="图片加载失败"></p>
-</li>
-</ul>
-<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul>
-<li>赋权后就可以修改文件了，点开并编辑hosts文件，在hosts文件最底部添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li>
-</ul>
-<blockquote>
-<h1 id="GitHub-Start"><a href="#GitHub-Start" class="headerlink" title="GitHub Start"></a>GitHub Start</h1><p>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
-</blockquote>
-<ul>
-<li>以上内容的IP地址并不是绝对的，也不是所有用户都一样的，如果复制粘贴上面的内容还是不行的话，就试一下下面这个方法<br><h3 id="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页" class="headerlink" title="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"></a>修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</h3></li>
-<li>复制粘贴上面的内容还是看不到图片或者本来可以打开github.com的，但是后来突然有一天网页能上网却无法打开github.com的时候就用下面这种方法<br></li>
-<li>将上面内容第一行的IP地址换掉，具体方法如下<br></li>
-<li>打开<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a href="https://www.ipaddress.com/">跳转</a><br></li>
-<li>在查询窗口输入github.com<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcomchaxun.png?raw=true" alt="图片加载失败"><br></li>
-<li>然后找到<code>IP Address</code>后面的IP地址，用这个IP地址换掉上面第一行的IP地址<code>192.30.253.112 github.com</code><br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcom.png?raw=true" alt="图片加载失败"><br></li>
-<li><p>示例如下：<br></p>
-<blockquote>
-<h1 id="GitHub-Start-1"><a href="#GitHub-Start-1" class="headerlink" title="GitHub Start"></a>GitHub Start</h1><p>140.82.113.4 github.com #这是替换后的IP地址，这个IP地址就是查询出来的那个IP Address后面的IP地址<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
-</blockquote>
-</li>
-<li><p>这样就可以啦</p>
-</li>
-</ul>
-<h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul>
-<li>找到hosts文件，路径如下<code>/etc/hosts</code>，如果你的hosts不在这里，那么输入这条命令查询<code>whereis hosts</code>，要找的是hosts文件，其他hosts.<em>*</em> 的不是我们要找的文件</li>
-<li>ctrl+alt+t调出终端</li>
-<li>输入以下代码给hosts文件赋权<blockquote>
-<p>sudo chmod 777 /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>敲完命令后没有报错就是成功的，像这样<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/777hosts.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li>用gedit或者vim/vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li>
-<li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote>
-<p>sudo apt-get install gedit<br></p>
-</blockquote>
-</li>
-</ul>
-<h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote>
-<p>sudo yum install gedit</p>
-</blockquote>
-<p>视自身情况选其中一个</p>
-<ul>
-<li>安装完成后使用gedit编辑文件的命令如下：<blockquote>
-<p>gedit /etc/hosts</p>
-</blockquote>
-</li>
-</ul>
-<p>输入命令会打开这样一个编辑窗口<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-vi修改文件"><a href="#用vim-vi修改文件" class="headerlink" title="用vim/vi修改文件"></a>用vim/vi修改文件</h3></li>
-<li>vim的安装（如果系统没有vim）(linux系统自带vi)</li>
-<li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li>
-<li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote>
-<p>sudo yum -y install vim</p>
-</blockquote>
-</li>
-<li>安装完成后使用vim/vi编辑文件的命令如下：<blockquote>
-<p>vi /etc/hosts<br><br>vim /etc/hosts<br></p>
-</blockquote>
-</li>
-</ul>
-<p>两个命令二选一，都可以，打开界面如下：</p>
-<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png?raw=true" alt="图片加载失败"></p>
-<ul>
-<li><p>打开界面后输入键盘”i”键</p>
-<blockquote>
-<p>i</p>
-</blockquote>
-</li>
-<li><p>拉到终端最底端，左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p>
-<blockquote>
-<p>:wq</p>
-</blockquote>
-</li>
-<li><p>键入时左下角会出现你键入的命令，然后回车即可<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wq.png?raw=true" alt="图片加载失败"></p>
-</li>
-<li>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li>
-<li>像下图这样没有出现报错就是大功告成啦<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png?raw=true" alt="图片加载失败"></li>
-</ul>
-]]></content>
-      <categories>
-        <category>study</category>
-      </categories>
-  </entry>
-  <entry>
     <title>html+css鼠标移到图片上时显示下拉菜单</title>
     <url>/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/</url>
     <content><![CDATA[<blockquote>
@@ -466,21 +361,105 @@
       </categories>
   </entry>
   <entry>
-    <title>navicat导入sql文件失败解决办法</title>
-    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
-    <content><![CDATA[<blockquote>
-<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
-<p>navicat导入.sql文件失败的话，先创建一个与导入数据库的字符集和排列规则一样的数据库，如下：<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql2.png?raw=true'>&lt;/img&gt;<br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql1.png?raw=true'></img><br></p>
+    <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
+    <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>[目录]<br><a href="#windows端">windows端</a><br><a href="#修改内容">修改内容</a><br><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux端">linux端</a><br><a href="#用gedit修改文件">用gedit修改文件</a><br><a href="#ubuntu，deeping系列的linux系统安装命令">ubuntu，deeping系列安装命令</a><br><a href="#centos系列的安装命令">centos系列安装命令</a><br><a href="#用vimvi修改文件">用vim/vi修改文件</a><br><a href="#大功告成">大功告成</a></p>
+<blockquote>
+<p>我博客的图片都是上传到github上的，遇到过打不开自己博客图片的情况，为了方便大家看图片，这里就详细说一下解决github图片加载不成功的办法，分为linux端和windows端，本质都是一样的，都是修改hosts文件<br>如果这篇博客看不到图片也没关系，我都详细说明了，大部分图片展示怎样的效果表示命令成功，其它图片内容我都用文字表示出来了。</p>
 </blockquote>
-]]></content>
-      <categories>
-        <category>study</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>vue html按钮事件，js传参</title>
-    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
-    <content><![CDATA[<figure class="highlight handlebars"><table><tr><td class="code"><pre><span class="line"><span class="xml"> <span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width,initial-scale=1.0&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>vueweb<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/vue/dist/vue.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;insert&quot;</span>&gt;</span>增加学生<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;remove(index)&quot;</span>&gt;</span>删除学生<span class="tag">&lt;/<span class="name">button</span>&gt;</span>      </span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">&#x27;1px&#x27;</span>&gt;</span>        </span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>班级<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>性别<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>年龄<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">tr</span> <span class="attr">v-for</span> =<span class="string">&quot;(s,index) in users&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.班级</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.姓名</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.性别</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.年龄</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">    var vm =new Vue(&#123;</span></span><br><span class="line"><span class="xml">      el:&quot;#app&quot;,</span></span><br><span class="line"><span class="xml">      data:&#123;</span></span><br><span class="line"><span class="xml">        users:[</span></span><br><span class="line"><span class="xml">          &#123;班级:&#x27;软件2班&#x27;,姓名:&#x27;cxy&#x27;,性别:&#x27;女&#x27;,年龄:&#x27;21&#x27;&#125;</span></span><br><span class="line"><span class="xml">        ]</span></span><br><span class="line"><span class="xml">      &#125;,</span></span><br><span class="line"><span class="xml">      methods:&#123;</span></span><br><span class="line"><span class="xml">        insert:function()&#123;</span></span><br><span class="line"><span class="xml">          this.users.push(&#123;班级:&#x27;软件2班&#x27;,姓名:&#x27;cxy&#x27;,性别:&#x27;女&#x27;,年龄:&#x27;21&#x27;&#125;);</span></span><br><span class="line"><span class="xml">        &#125;,</span></span><br><span class="line"><span class="xml">        remove:function(index)&#123;</span></span><br><span class="line"><span class="xml">          this.users.splice(index,1)</span></span><br><span class="line"><span class="xml">        &#125;</span></span><br><span class="line"><span class="xml">      &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="xml">    &#125;)</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="comment">&lt;!-- built files will be auto injected --&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul>
+<li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E4%BD%8D%E7%BD%AE.PNG?raw=true" alt="图片加载失败"></li>
+<li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把上面的路径中的C:改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li>
+<li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li>
+<li>找到hosts文件后，右键选择“属性”</li>
+</ul>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/hosts%E5%B1%9E%E6%80%A7.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li><p>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png?raw=true" alt="图片加载失败"></p>
+</li>
+</ul>
+<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul>
+<li>赋权后就可以修改文件了，点开并编辑hosts文件，在hosts文件最底部添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li>
+</ul>
+<blockquote>
+<h1 id="GitHub-Start"><a href="#GitHub-Start" class="headerlink" title="GitHub Start"></a>GitHub Start</h1><p>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
+</blockquote>
+<ul>
+<li>以上内容的IP地址并不是绝对的，也不是所有用户都一样的，如果复制粘贴上面的内容还是不行的话，就试一下下面这个方法<br><h3 id="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页" class="headerlink" title="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"></a>修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</h3></li>
+<li>复制粘贴上面的内容还是看不到图片或者本来可以打开github.com的，但是后来突然有一天网页能上网却无法打开github.com的时候就用下面这种方法<br></li>
+<li>将上面内容第一行的IP地址换掉，具体方法如下<br></li>
+<li>打开<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a href="https://www.ipaddress.com/">跳转</a><br></li>
+<li>在查询窗口输入github.com<br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcomchaxun.png?raw=true" alt="图片加载失败"><br></li>
+<li>然后找到<code>IP Address</code>后面的IP地址，用这个IP地址换掉上面第一行的IP地址<code>192.30.253.112 github.com</code><br><br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/githubcom.png?raw=true" alt="图片加载失败"><br></li>
+<li><p>示例如下：<br></p>
+<blockquote>
+<h1 id="GitHub-Start-1"><a href="#GitHub-Start-1" class="headerlink" title="GitHub Start"></a>GitHub Start</h1><p>140.82.113.4 github.com #这是替换后的IP地址，这个IP地址就是查询出来的那个IP Address后面的IP地址<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p>
+</blockquote>
+</li>
+<li><p>这样就可以啦</p>
+</li>
+</ul>
+<h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul>
+<li>找到hosts文件，路径如下<code>/etc/hosts</code>，如果你的hosts不在这里，那么输入这条命令查询<code>whereis hosts</code>，要找的是hosts文件，其他hosts.<em>*</em> 的不是我们要找的文件</li>
+<li>ctrl+alt+t调出终端</li>
+<li>输入以下代码给hosts文件赋权<blockquote>
+<p>sudo chmod 777 /etc/hosts</p>
+</blockquote>
+</li>
+</ul>
+<p>敲完命令后没有报错就是成功的，像这样<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/777hosts.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li>用gedit或者vim/vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li>
+<li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote>
+<p>sudo apt-get install gedit<br></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote>
+<p>sudo yum install gedit</p>
+</blockquote>
+<p>视自身情况选其中一个</p>
+<ul>
+<li>安装完成后使用gedit编辑文件的命令如下：<blockquote>
+<p>gedit /etc/hosts</p>
+</blockquote>
+</li>
+</ul>
+<p>输入命令会打开这样一个编辑窗口<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-vi修改文件"><a href="#用vim-vi修改文件" class="headerlink" title="用vim/vi修改文件"></a>用vim/vi修改文件</h3></li>
+<li>vim的安装（如果系统没有vim）(linux系统自带vi)</li>
+<li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li>
+<li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote>
+<p>sudo yum -y install vim</p>
+</blockquote>
+</li>
+<li>安装完成后使用vim/vi编辑文件的命令如下：<blockquote>
+<p>vi /etc/hosts<br><br>vim /etc/hosts<br></p>
+</blockquote>
+</li>
+</ul>
+<p>两个命令二选一，都可以，打开界面如下：</p>
+<p><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png?raw=true" alt="图片加载失败"></p>
+<ul>
+<li><p>打开界面后输入键盘”i”键</p>
+<blockquote>
+<p>i</p>
+</blockquote>
+</li>
+<li><p>拉到终端最底端，左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p>
+<blockquote>
+<p>:wq</p>
+</blockquote>
+</li>
+<li><p>键入时左下角会出现你键入的命令，然后回车即可<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/wq.png?raw=true" alt="图片加载失败"></p>
+</li>
+<li>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li>
+<li>像下图这样没有出现报错就是大功告成啦<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png?raw=true" alt="图片加载失败"></li>
+</ul>
 ]]></content>
       <categories>
         <category>study</category>
@@ -500,6 +479,27 @@
 <p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
 <p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
 <p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://github.com/Caixuya/wangzhanpicture/blob/master/mysql.png?raw=true" alt="图片失踪了"></p>
+]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>navicat导入sql文件失败解决办法</title>
+    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    <content><![CDATA[<blockquote>
+<p>此页面所有图片都上传到了github，如果图片显示不成功，请移步另一篇教程：<a href="https://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">点击这里跳转</a></p>
+<p>navicat导入.sql文件失败的话，先创建一个与导入数据库的字符集和排列规则一样的数据库，如下：<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql2.png?raw=true'>&lt;/img&gt;<br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src='https://github.com/Caixuya/wangzhanpicture/blob/master/mysql1.png?raw=true'></img><br></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>vue html按钮事件，js传参</title>
+    <url>/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/</url>
+    <content><![CDATA[<figure class="highlight handlebars"><table><tr><td class="code"><pre><span class="line"><span class="xml"> <span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width,initial-scale=1.0&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>vueweb<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/vue/dist/vue.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;insert&quot;</span>&gt;</span>增加学生<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;remove(index)&quot;</span>&gt;</span>删除学生<span class="tag">&lt;/<span class="name">button</span>&gt;</span>      </span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">&#x27;1px&#x27;</span>&gt;</span>        </span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>班级<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>性别<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>年龄<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">tr</span> <span class="attr">v-for</span> =<span class="string">&quot;(s,index) in users&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.班级</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.姓名</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.性别</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123;<span class="name">s.年龄</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">    var vm =new Vue(&#123;</span></span><br><span class="line"><span class="xml">      el:&quot;#app&quot;,</span></span><br><span class="line"><span class="xml">      data:&#123;</span></span><br><span class="line"><span class="xml">        users:[</span></span><br><span class="line"><span class="xml">          &#123;班级:&#x27;软件2班&#x27;,姓名:&#x27;cxy&#x27;,性别:&#x27;女&#x27;,年龄:&#x27;21&#x27;&#125;</span></span><br><span class="line"><span class="xml">        ]</span></span><br><span class="line"><span class="xml">      &#125;,</span></span><br><span class="line"><span class="xml">      methods:&#123;</span></span><br><span class="line"><span class="xml">        insert:function()&#123;</span></span><br><span class="line"><span class="xml">          this.users.push(&#123;班级:&#x27;软件2班&#x27;,姓名:&#x27;cxy&#x27;,性别:&#x27;女&#x27;,年龄:&#x27;21&#x27;&#125;);</span></span><br><span class="line"><span class="xml">        &#125;,</span></span><br><span class="line"><span class="xml">        remove:function(index)&#123;</span></span><br><span class="line"><span class="xml">          this.users.splice(index,1)</span></span><br><span class="line"><span class="xml">        &#125;</span></span><br><span class="line"><span class="xml">      &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="xml">    &#125;)</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="comment">&lt;!-- built files will be auto injected --&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>study</category>

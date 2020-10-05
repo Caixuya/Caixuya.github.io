@@ -261,10 +261,7 @@
         </li>
     </ul>
   </div>
-<!-- CloudCalendar -->
-<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
-	<div class="widget" id="CloudCalendar"></div>
-</div>
+
       </section>
 	<div>
 	<iframe frameborder="no" scrolling="yes" border="0" marginwidth="0" marginheight="0" width=280 height=240 src="//music.163.com/outchain/player?type=0&id=5271825129&auto=1&height=430"></iframe>
@@ -2179,6 +2176,21 @@ document.addEventListener('pjax:success', () => {
 
   
 <!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
 
 <script>
 NexT.utils.loadComments('#valine-comments', () => {
