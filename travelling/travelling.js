@@ -1,7 +1,7 @@
 function travelling(){
     var url=new Array();
 
-    url[0]="http://www.baidu.com"
+    url[0]="http://www.xieyihui.top"
 
 /*
     if (document.referrer) {
