@@ -446,24 +446,6 @@ WIDGET = {
     <span title="Reading time total">17 mins.</span>
   </span>
 </div>
-<div class="busuanzi-count">
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
     </div>
   </footer>
@@ -530,7 +512,6 @@ document.addEventListener('pjax:success', () => {
 
 
   
-  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
@@ -566,7 +547,7 @@ NexT.utils.loadComments('#valine-comments', () => {
     new Valine(Object.assign({
       el  : '#valine-comments',
       path: "/categories/daily/",
-    }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"lang":null,"visitor":false,"comment_count":true,"recordIP":false,"serverURLs":null,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}
+    }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"serverURLs":null,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}
     ));
   }, window.Valine);
 });
