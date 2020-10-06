@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/source.png">
 <meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/CNAME%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9.png">
 <meta property="article:published_time" content="2020-04-10T05:37:25.000Z">
-<meta property="article:modified_time" content="2020-10-06T02:45:35.060Z">
+<meta property="article:modified_time" content="2020-10-06T02:47:29.565Z">
 <meta property="article:author" content="caixuya">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/new.png">
@@ -381,7 +381,7 @@ WIDGET = {
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-10-06 10:45:35" itemprop="dateModified" datetime="2020-10-06T10:45:35+08:00">2020-10-06</time>
+        <time title="Modified: 2020-10-06 10:47:29" itemprop="dateModified" datetime="2020-10-06T10:47:29+08:00">2020-10-06</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -513,7 +513,7 @@ WIDGET = {
 <li>ls查看博客根目录下的所有文件，找到<code>_config.yml</code>这个文件，输入命令<code>vi _config.yml</code>编辑文件，把以下内容复制粘贴到文件的底部<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git </span><br><span class="line">  <span class="attribute">repo</span>: </span><br><span class="line">      <span class="attribute">github</span>: <span class="attribute">https</span>:<span class="comment">//github.com/你的github用户名/你的github用户名.github.io.git</span></span><br><span class="line">      <span class="attribute">coding</span>: git<span class="variable">@e</span>.coding.<span class="attribute">net</span>:你的coding用户名/你的coding用户名/你的coding用户名.git,master</span><br><span class="line">  <span class="attribute">branch</span>: master</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>github是国外的，coding是国内的，如果用github太慢，可以考虑加一个coding，国内线路走coding，国外线路走github，配置方法和github的大致一样，就不多说了。<br>这里要注意，deploy前面没有缩进;type,repo,branch前面的缩进是两个空格;github前面的缩进是六个空格;所有的冒号后面都有一个空格的缩进，这是makedown语言的格式，冒号后面没有空格，则设置不成功。务必严格缩进格式，不然会报错。</p>
+<p>github是国外的，coding是国内的，如果用github太慢，可以考虑加一个coding，国内线路走coding，国外线路走github，配置方法和github的大致一样，就不多说了。<br>这里要注意，deploy前面没有缩进;type,repo,branch前面的缩进是两个空格;github,coding前面的缩进是六个空格;所有的冒号后面都有一个空格的缩进，这是makedown语言的格式，冒号后面没有空格，则设置不成功。务必严格缩进格式，不然会报错。</p>
 <p>我之前看到有的教程说这个<br><br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">repo: </span><br><span class="line">    github: https:<span class="regexp">//gi</span>thub.com<span class="regexp">/你的github用户名/</span>你的github用户名.github.io.git</span><br></pre></td></tr></table></figure><br>已经无法使用了，我的还可以，如果你们的hexo版本号和我的不同，有可能也用不了这个了，那就把<code>https://github.com/你的github用户名/你的github用户名.io.git</code>换成<code>git@github.com:你的github用户名/你的github用户名.github.io.git</code></p>
 <h6 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h6><p>输入命令<code>hexo d</code>，就成功部署到github啦，打开浏览器，在地址栏输入<code>你的github用户名.github.io</code>就可以访问啦，如果以上步骤都成功了没有报错，可是就是无法进入博客，那可能是端口占用的问题，如果没有的话直接跳过这一步</p>
 <h6 id="端口占用"><a href="#端口占用" class="headerlink" title="端口占用"></a>端口占用</h6><p>hexo默认的端口是4000，不确定是否被占用的情况下，打开终端输入<code>yum install lsof</code>安装lsof，其他系统的安装命令自查，然后输入命令<code>lsof -i:4000</code>查看<br>如果被占用，终端会展示端口的信息，找到端口对应的PID，kill掉即可，命令如下<code>kill -9 PID</code>，假如端口对应的PID是7109，那么命令就是<code>kill -9 7109</code></p>
