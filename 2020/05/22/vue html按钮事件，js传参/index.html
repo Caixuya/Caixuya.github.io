@@ -19,7 +19,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
+    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
   </script>
 
   <meta name="description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253 &lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;head&gt;    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;    &lt;meta">
@@ -379,6 +379,27 @@ WIDGET = {
     </span>
 
   
+    <span id="/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/" class="post-meta-item leancloud_visitors" data-flag-title="vue html按钮事件，js传参" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
       </div>
       <div class="post-meta">
     <span class="post-meta-item" title="Symbols count in article">
@@ -501,6 +522,7 @@ WIDGET = {
 
 
       
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -653,6 +675,17 @@ document.addEventListener('pjax:success', () => {
     });
     </script>
 
+<script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({
+      el  : '#valine-comments',
+      path: "/2020/05/22/vue%20html%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6%EF%BC%8Cjs%E4%BC%A0%E5%8F%82/",
+    }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"serverURLs":null,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true,"adminEmailMd5":null,"mode":"DesertsP","emoticonUrl":["https://cdn.jsdelivr.net/npm/alus@latest","https://cdn.jsdelivr.net/gh/MiniValine/qq@latest","https://cdn.jsdelivr.net/gh/MiniValine/Bilibilis@latest","https://cdn.jsdelivr.net/gh/MiniValine/tieba@latest","https://cdn.jsdelivr.net/gh/MiniValine/twemoji@latest","https://cdn.jsdelivr.net/gh/MiniValine/weibo@latest"],"lazyload":false,"cdn":"https://cdn.jsdelivr.net/npm/minivaline@2/dist/MiniValine.min.js"}
+    ));
+  }, window.Valine);
+});
+</script>
 
     </div>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
