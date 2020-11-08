@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.caixuya.top/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2020-11-08</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.caixuya.top/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</loc>
     
     <lastmod>2020-10-11</lastmod>
@@ -119,6 +126,13 @@
   
   <url>
     <loc>http://www.caixuya.top/categories/daily/</loc>
+    <lastmod>2020-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/categories/SSH/</loc>
     <lastmod>2020-11-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
