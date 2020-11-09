@@ -6,7 +6,7 @@
   <link href="http://www.caixuya.top/atom.xml" rel="self"/>
   
   <link href="http://www.caixuya.top/"/>
-  <updated>2020-11-09T06:51:02.890Z</updated>
+  <updated>2020-10-05T14:09:03.594Z</updated>
   <id>http://www.caixuya.top/</id>
   
   <author>
@@ -15,28 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>oracle数据库的下载以及可视化工具PLSQL Developer的配置</title>
-    <link href="http://www.caixuya.top/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
-    <id>http://www.caixuya.top/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/</id>
-    <published>2020-11-08T10:52:16.000Z</published>
-    <updated>2020-11-09T06:51:02.890Z</updated>
-    
-    <content type="html"><![CDATA[<p>数据库：oracle数据库<br><br>oracle数据库的下载：<a href="https://pan.baidu.com/s/1cMi_EnQAgr9jTMtddsQfKw">点击这里跳转到百度网盘下载</a><br><br>提取码: ocn3<br><br>oracle里面有两个压缩包，两个压缩包一起解压到同一个文件夹里，然后运行setup.exe<br><br>可视化工具：PLSQL Developer<br><br>可视化工具下载地址：<a href="https://pan.baidu.com/s/1RN4-QVkFzKYxAgrkPx0GaQ">点击这里跳转到百度网盘下载</a><br><br>提取码：azmq <br></p><h1 id="oracle官网下载方法"><a href="#oracle官网下载方法" class="headerlink" title="oracle官网下载方法"></a>oracle官网下载方法</h1><h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p>复制以下链接访问oracle官网<br><br><code>oracle.com</code>或点击<a href="http://www.oracle.com">这里</a>访问<br></p><h2 id="更改语言-各国语言切换"><a href="#更改语言-各国语言切换" class="headerlink" title="更改语言(各国语言切换)"></a>更改语言(各国语言切换)</h2><p>在官网底部找到country/region，单击<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_country.png" alt=""><br><br>然后找到<code>Asia Pacific</code>,单击后就可以看到可切换的亚洲的各种语言,点击“中国-简体中文”即可将网页更换到中文版本<br></p><h2 id="oracle下载（oracle-11g）"><a href="#oracle下载（oracle-11g）" class="headerlink" title="oracle下载（oracle_11g）"></a>oracle下载（oracle_11g）</h2><p>点击网页顶部导航栏的“产品”，单击软件目录下的“oracle数据库”，然后点击如下图所示的按钮，就可以看到oracle最新版本以及其他版本的产品信息<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E6%9B%B4%E5%A4%9A%E7%89%88%E6%9C%AC.PNG" alt=""><br><br>我用的是oracle版本是11g，这里就写出如何找到11g这个版本，以上步骤成功以后，把网页进度条拉到中间位置即可看到11g的下载链接<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_11g.PNG" alt=""><br><br>点击后选择适合的oracle下载，注意11g版本windows的和linux的是在这里选择的，按需选择下载<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E4%B8%8B%E8%BD%BD.PNG" alt=""><br></p><h1 id="PLSQL的配置"><a href="#PLSQL的配置" class="headerlink" title="PLSQL的配置"></a>PLSQL的配置</h1><h2 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h2><p>安装好oracle后将<br><br><code>Oracle安装目录\product\11.2.0\dbhome_2\NETWORK\ADMIN\tnsnames.ora</code><br><br>  替换掉<br><br><code>PLSQL解压目录\PLSQL\instantclient_11_2\tnsnames.ora</code><br></p><h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>右键单击电脑，选择<code>属性</code>-<code>高级属性</code>-<code>环境变量</code>-<code>新建</code>，<br><br><code>NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code><br><br><code>TNS_ADMIN = PLSQL解压目录\PLSQL\instantclient_11_2</code><br><br>以上两条分开的，也就是需要新建两条记录，等号前的是变量名，等号后的是变量值<br></p><h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br><br>2.设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;数据库：oracle数据库&lt;br&gt;&lt;br&gt;oracle数据库的下载：&lt;a href=&quot;https://pan.baidu.com/s/1cMi_EnQAgr9jTMtddsQfKw&quot;&gt;点击这里跳转到百度网盘下载&lt;/a&gt;&lt;br&gt;&lt;br&gt;提取码: ocn3&lt;br&gt;&lt;br&gt;ora</summary>
-      
-    
-    
-    
-    <category term="SSH" scheme="http://www.caixuya.top/categories/SSH/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>navicat导入sql文件失败解决办法</title>
