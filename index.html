@@ -344,7 +344,7 @@ WIDGET = {
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">oracle数据库以及可视化工具PLSQL Developer的配置</a>
+            <a href="/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">oracle数据库的下载以及可视化工具PLSQL Developer的配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -362,7 +362,7 @@ WIDGET = {
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-09 08:23:46" itemprop="dateModified" datetime="2020-11-09T08:23:46+08:00">2020-11-09</time>
+        <time title="Modified: 2020-11-09 14:51:02" itemprop="dateModified" datetime="2020-11-09T14:51:02+08:00">2020-11-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -375,7 +375,7 @@ WIDGET = {
     </span>
 
   
-    <span id="/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" class="post-meta-item leancloud_visitors" data-flag-title="oracle数据库以及可视化工具PLSQL Developer的配置" title="Views">
+    <span id="/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" class="post-meta-item leancloud_visitors" data-flag-title="oracle数据库的下载以及可视化工具PLSQL Developer的配置" title="Views">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -403,7 +403,7 @@ WIDGET = {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Symbols count in article: </span>
-      <span>942</span>
+      <span>944</span>
     </span>
     <span class="post-meta-item" title="Reading time">
       <span class="post-meta-item-icon">
@@ -427,10 +427,7 @@ WIDGET = {
 <h2 id="oracle下载（oracle-11g）"><a href="#oracle下载（oracle-11g）" class="headerlink" title="oracle下载（oracle_11g）"></a>oracle下载（oracle_11g）</h2><p>点击网页顶部导航栏的“产品”，单击软件目录下的“oracle数据库”，然后点击如下图所示的按钮，就可以看到oracle最新版本以及其他版本的产品信息<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E6%9B%B4%E5%A4%9A%E7%89%88%E6%9C%AC.PNG" alt=""><br><br>我用的是oracle版本是11g，这里就写出如何找到11g这个版本，以上步骤成功以后，把网页进度条拉到中间位置即可看到11g的下载链接<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_11g.PNG" alt=""><br><br>点击后选择适合的oracle下载，注意11g版本windows的和linux的是在这里选择的，按需选择下载<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E4%B8%8B%E8%BD%BD.PNG" alt=""><br></p>
 <h1 id="PLSQL的配置"><a href="#PLSQL的配置" class="headerlink" title="PLSQL的配置"></a>PLSQL的配置</h1><h2 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h2><p>安装好oracle后将<br><br><code>Oracle安装目录\product\11.2.0\dbhome_2\NETWORK\ADMIN\tnsnames.ora</code><br><br>  替换掉<br><br><code>PLSQL解压目录\PLSQL\instantclient_11_2\tnsnames.ora</code><br></p>
 <h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>右键单击电脑，选择<code>属性</code>-<code>高级属性</code>-<code>环境变量</code>-<code>新建</code>，<br><br><code>NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code><br><br><code>TNS_ADMIN = PLSQL解压目录\PLSQL\instantclient_11_2</code><br><br>以上两条分开的，也就是需要新建两条记录，等号前的是变量名，等号后的是变量值<br></p>
-<h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br></p>
-<ol>
-<li>设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></li>
-</ol>
+<h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br><br>2.设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></p>
 
       
     </div>
