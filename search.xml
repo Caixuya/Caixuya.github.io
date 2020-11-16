@@ -582,6 +582,9 @@
       <categories>
         <category>SSH</category>
       </categories>
+      <tags>
+        <tag>Oracle</tag>
+      </tags>
   </entry>
   <entry>
     <title>struts2入门</title>
@@ -602,5 +605,8 @@
       <categories>
         <category>SSH</category>
       </categories>
+      <tags>
+        <tag>struts2</tag>
+      </tags>
   </entry>
 </search>
