@@ -26,21 +26,23 @@
     var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
   </script>
 
-  <meta name="description" content="html代码如下：123456789101112131415161718192021222324252627&lt;head&gt;&lt;title&gt;记帐本&lt;&#x2F;title&gt;&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&amp;#x">
+  <meta name="description" content="转载自友情链接 课堂笔记Oracle 11g 安装超详细的安装教程：https:&#x2F;&#x2F;blog.csdn.net&#x2F;lidapang123&#x2F;article&#x2F;details&#x2F;88928035 Oracle中的数据类型 Oracle中的数据类型：字符型、数值型、日期型、LOB类型、（BLOB、CLOB）  字符类型（1）以固定长度存放字符串：CHAR(n)、NCHAR(n)说明：CHAR(10)，存一个字">
 <meta property="og:type" content="article">
-<meta property="og:title" content="html+css鼠标移到图片上时显示下拉菜单">
-<meta property="og:url" content="http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">
+<meta property="og:title" content="Oracle数据类型、约束、ROWNUM实现分页查询">
+<meta property="og:url" content="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
 <meta property="og:site_name">
-<meta property="og:description" content="html代码如下：123456789101112131415161718192021222324252627&lt;head&gt;&lt;title&gt;记帐本&lt;&#x2F;title&gt;&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&amp;#x">
+<meta property="og:description" content="转载自友情链接 课堂笔记Oracle 11g 安装超详细的安装教程：https:&#x2F;&#x2F;blog.csdn.net&#x2F;lidapang123&#x2F;article&#x2F;details&#x2F;88928035 Oracle中的数据类型 Oracle中的数据类型：字符型、数值型、日期型、LOB类型、（BLOB、CLOB）  字符类型（1）以固定长度存放字符串：CHAR(n)、NCHAR(n)说明：CHAR(10)，存一个字">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-01T14:50:50.000Z">
-<meta property="article:modified_time" content="2020-11-17T15:42:38.511Z">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png">
+<meta property="article:published_time" content="2020-11-17T15:39:48.000Z">
+<meta property="article:modified_time" content="2020-11-17T15:56:19.739Z">
 <meta property="article:author" content="caixuya">
-<meta property="article:tag" content="html">
+<meta property="article:tag" content="Oracle">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png">
 
 
-<link rel="canonical" href="http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">
+<link rel="canonical" href="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
 
 
 <script data-pjax class="page-configurations">
@@ -79,7 +81,7 @@
 }
 </style>
 
-  <title>html+css鼠标移到图片上时显示下拉菜单 | </title>
+  <title>Oracle数据类型、约束、ROWNUM实现分页查询 | </title>
   
 
 
@@ -250,7 +252,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -262,6 +264,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">课堂笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Oracle-11g-%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">Oracle 11g 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oracle%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Oracle中的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据类型总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-number">1.3.</span> <span class="nav-text">约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROWID%E5%92%8CROWNUM"><span class="nav-number">1.4.</span> <span class="nav-text">ROWID和ROWNUM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rownum%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.5.</span> <span class="nav-text">Rownum实现分页查询</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -346,7 +349,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -362,7 +365,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          html+css鼠标移到图片上时显示下拉菜单
+          Oracle数据类型、约束、ROWNUM实现分页查询
         </h1>
 
         <div class="post-meta-container">
@@ -372,28 +375,22 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2020-05-01 22:50:50" itemprop="dateCreated datePublished" datetime="2020-05-01T22:50:50+08:00">2020-05-01</time>
+      <time title="Created: 2020-11-17 23:39:48 / Modified: 23:56:19" itemprop="dateCreated datePublished" datetime="2020-11-17T23:39:48+08:00">2020-11-17</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-17 23:42:38" itemprop="dateModified" datetime="2020-11-17T23:42:38+08:00">2020-11-17</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/study/" itemprop="url" rel="index"><span itemprop="name">study</span></a>
+          <a href="/categories/SSH/" itemprop="url" rel="index"><span itemprop="name">SSH</span></a>
         </span>
     </span>
 
   
-    <span id="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" class="post-meta-item leancloud_visitors" data-flag-title="html+css鼠标移到图片上时显示下拉菜单" title="Views">
+    <span id="/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" class="post-meta-item leancloud_visitors" data-flag-title="Oracle数据类型、约束、ROWNUM实现分页查询" title="Views">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -408,8 +405,8 @@
       </span>
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -421,14 +418,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Symbols count in article: </span>
-      <span>2.4k</span>
+      <span>1.5k</span>
     </span>
     <span class="post-meta-item" title="Reading time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Reading time &asymp;</span>
-      <span>2 mins.</span>
+      <span>1 mins.</span>
     </span>
 </div>
 
@@ -439,7 +436,67 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>html代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;&#x2F;title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text&#x2F;css&quot; href&#x3D;&quot;css&#x2F;index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;biaoti&quot;&gt;&lt;font face&#x3D;&quot;宋体&quot;&gt;记账本&lt;&#x2F;font&gt;&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;div class&#x3D;&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src&#x3D;&quot;img\more.png&quot; width&#x3D;&quot;50&quot; height&#x3D;&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class&#x3D;&quot;form&quot; align&#x3D;&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;add.jsp&quot;&gt;记账&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;change.jsp&quot;&gt;修改账本&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;check.jsp&quot;&gt;查询&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;delete.jsp&quot;&gt;删除账目&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href&#x3D;&quot;all.jsp&quot;&gt;账目总览&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;&#x2F;ul&gt;</span><br><span class="line">			&lt;&#x2F;form&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure><br>css代码如下:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;<span class="comment">&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span></span><br><span class="line"><span class="comment">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span></span><br><span class="line">	list-style: none;<span class="comment">&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span></span><br><span class="line">	top:-10px;<span class="comment">&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span></span><br><span class="line">	left:-8px;<span class="comment">&lt;!--调整ul这个整体到网页左边的距离--&gt;</span></span><br><span class="line">	text-align:center;<span class="comment">&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span></span><br><span class="line"><span class="comment">	 记账             记账</span></span><br><span class="line"><span class="comment">	修改账本          修改账本 </span></span><br><span class="line"><span class="comment">	 查询             查询</span></span><br><span class="line"><span class="comment">	--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;<span class="comment">&lt;!--标题居中 --&gt;</span></span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey<span class="comment">&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;<span class="comment">&lt;!--去除a标签链接下面的横线 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363<span class="comment">&lt;!--代表当一段文本为链接时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!--代表这段文本被点击之后的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;<span class="comment">&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;<span class="comment">&lt;!--图片向右移动的距离--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; <span class="comment">&lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;<span class="comment">&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top">友情链接</a></p>
+<h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
+<h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
+<ul>
+<li><strong>字符类型</strong><br>（1）以<code>固定长度</code>存放字符串：CHAR(n)、NCHAR(n)<br><br>说明：CHAR(10)，存一个字符串 ’abc’；NCHAR以<code>UNICODE</code>存储每个字符<br><br>区别：n的最大取值：char(n),n的最大取值是2000;nchar(n),n的最大取值是1000.<br><br>（2）以<code>可变长度</code>存储字符串  VARCHAR2(n)、NVARCHAR2(n)<br><br>说明：VARCHAR2(10)，存一个字符串’abc’，NVARCHAR2 以<code>UNICODE编码</code>存储每个字符<br><br>区别：n的最大取值：VARCHAR2(n),n的最大取值是4000;NVARCHAR2(n),n的最大取值是2000.<br></li>
+<li><strong>数值型</strong><br>从输入的数值划分：<code>整数</code>、<code>小数</code><br><br>（1）NUMBER类型<br><br>a.表示小数<br><br>举例： NUMBER(5,2)，总共5个有效数字，小数点后保留2位，例如：123.45<br><br>b.表示整数 NUMBER(P)<br><br>举例：NUMBER(5)，5位数的整数<br></li>
+<li><strong>日期型</strong><ul>
+<li>（1）DATE型<br><br>格式：<code>YYYY-MM-DD HH:MM:SS</code><br><br>精确程度：<code>秒</code><br></li>
+<li>（2）TIMESTAMP<br><br>精确程度：<code>0.000001秒</code><br><br>但使用较少</li>
+</ul>
+</li>
+<li><strong>大对象类型（Large OBject）</strong><ul>
+<li>（1）<code>BLOB</code>类型 <code>(Binary Large OBject)</code><br><br>以<code>二进制</code>形式存储<br><br>举例：图片、音频、视频<br><br>最大存储<code>4G</code>字节<br></li>
+<li>（2）<code>CLOB</code>类型 <code>(Character Large Object)</code><br><br>以<code>字符串</code>形式存储<br><br>举例：简历、新闻、文章<br><br>最大存储<code>4G</code>字节<br><h3 id="数据类型总结"><a href="#数据类型总结" class="headerlink" title="数据类型总结"></a>数据类型总结</h3></li>
+</ul>
+</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数据</th>
+<th style="text-align:center">应采用的类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">字符串</td>
+<td style="text-align:center">Nvarchar2、varchar2</td>
+</tr>
+<tr>
+<td style="text-align:center">数值型</td>
+<td style="text-align:center">Number</td>
+</tr>
+<tr>
+<td style="text-align:center">日期型</td>
+<td style="text-align:center">Date</td>
+</tr>
+<tr>
+<td style="text-align:center">图片、音频、视频</td>
+<td style="text-align:center">BLOB</td>
+</tr>
+<tr>
+<td style="text-align:center">超过千字的文本</td>
+<td style="text-align:center">CLOB</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong><br>| 约束         | 关键字                                     |<br>| :———-: | :————————————————————:|<br>|  主键约束    | primary key                                |<br>|  外键约束    | foreign key                                |<br>|  非空约束    | not null                                    |<br>| 唯一值约束    | unique                                    |<br>|  默认约束    | default  ‘默认值’                            |<br>| Check约束    | 举例：check(gender=’男’ or gender=’女’);    |<br><strong><code>2个</code>添加约束的时机</strong></p>
+<ul>
+<li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
+<li>添加主键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 主键名 PRIMARY <span class="keyword">KEY</span> (主键列);</span><br></pre></td></tr></table></figure></li>
+<li>添加外键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 外键名 <span class="keyword">Foreign</span> <span class="keyword">Key</span>(从表的外键列) <span class="keyword">References</span> 主表名(主表的主键列);</span><br></pre></td></tr></table></figure>
+<strong>使用<code>PL/SQL Developer</code>图形界面添加约束</strong><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png" alt=""><h2 id="ROWID和ROWNUM"><a href="#ROWID和ROWNUM" class="headerlink" title="ROWID和ROWNUM"></a>ROWID和ROWNUM</h2></li>
+</ul>
+</li>
+<li><strong>ROWID</strong><br>说明：RowID可以理解为Oracle为每一张表添加的一个<code>隐藏列</code>。<br><br>表中的每一行（记录），都有一个行地址，ROWID用于查询该行地址。<br><br>任意两行的ROWID不同。<br><br>ROWID只能<code>查询</code>，不能<code>修改</code>、<code>删除</code>。<br></li>
+<li><strong>ROWNUM</strong><br>说明：对于查询结果表，rownum能返回每一行在结果表的序号。<br><br>结果表中的第一行rownum为1、第n行rownum为n。<br><h2 id="Rownum实现分页查询"><a href="#Rownum实现分页查询" class="headerlink" title="Rownum实现分页查询"></a>Rownum实现分页查询</h2><strong>功能：从表X中，查出按字段F排序后的 第M到第N条记录</strong><br><code>命令公式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.*, <span class="keyword">rownum</span> rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> * <span class="keyword">from</span> 表X <span class="keyword">order</span> <span class="keyword">by</span> 字段F 排序方式) e)</span><br><span class="line"><span class="keyword">where</span> rn&gt;=M <span class="keyword">and</span> rn&lt;=N;</span><br></pre></td></tr></table></figure></li>
+</ul>
 
     </div>
 
@@ -481,7 +538,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" title="html+css鼠标移到图片上时显示下拉菜单">http://www.caixuya.top/2020/05/01/html+css鼠标移到图片上时显示下拉菜单/</a>
+      <a href="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" title="Oracle数据类型、约束、ROWNUM实现分页查询">http://www.caixuya.top/2020/11/17/Oracle数据类型、约束、ROWNUM实现分页查询/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -519,20 +576,20 @@
   </div>
 
           <div class="post-tags">
-              <a href="/tags/html/" rel="tag"># html</a>
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/" rel="prev" title="mysql ERROR 1045 (28000) Access denied for user 'ODBC'@'localhost' (using password NO)">
-                  <i class="fa fa-chevron-left"></i> mysql ERROR 1045 (28000) Access denied for user 'ODBC'@'localhost' (using password NO)
+                <a href="/2020/11/16/struts2%E5%85%A5%E9%97%A8/" rel="prev" title="struts2入门">
+                  <i class="fa fa-chevron-left"></i> struts2入门
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/" rel="next" title="心情记录:今天总算把博客完善了">
-                  心情记录:今天总算把博客完善了 <i class="fa fa-chevron-right"></i>
+                <a href="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" rel="next" title="使用SQL语句操作表">
+                  使用SQL语句操作表 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -722,7 +779,7 @@ NexT.utils.loadComments('#valine-comments', () => {
   NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
     new Valine(Object.assign({
       el  : '#valine-comments',
-      path: "/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/",
+      path: "/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/",
     }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"serverURLs":null,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}
     ));
   }, window.Valine);

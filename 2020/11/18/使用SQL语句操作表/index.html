@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+	<!-- 页面点击小红心 -->
+    <script type="text/javascript" src="/js/src/love.js"></script>
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
+  </script>
+
+  <meta name="description" content="转载自友情链接 创建表的命令、插入记录、更改记录、删除记录的命令 创建表的命令 命令格式：123456create table 表名(字段名1  类型  约束(可选)， 字段名2  类型 约束(可选)，...字段名n 类型 约束(可选));   插入记录 命令格式1：12insert into 表名values(字段1的值,字段2的值,...,字段n的值); 命令格式2：12insert into">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用SQL语句操作表">
+<meta property="og:url" content="http://www.caixuya.top/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/">
+<meta property="og:site_name">
+<meta property="og:description" content="转载自友情链接 创建表的命令、插入记录、更改记录、删除记录的命令 创建表的命令 命令格式：123456create table 表名(字段名1  类型  约束(可选)， 字段名2  类型 约束(可选)，...字段名n 类型 约束(可选));   插入记录 命令格式1：12insert into 表名values(字段1的值,字段2的值,...,字段n的值); 命令格式2：12insert into">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-17T16:00:25.000Z">
+<meta property="article:modified_time" content="2020-11-17T16:01:34.129Z">
+<meta property="article:author" content="caixuya">
+<meta property="article:tag" content="Oracle">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.caixuya.top/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+#needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style><style>
+#needsharebutton-float {
+  bottom: 88px;
+  cursor: pointer;
+  left: -8px;
+  position: fixed;
+  z-index: 9999;
+}
+#needsharebutton-float .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 4px;
+  padding: 0 10px 0 14px;
+}
+</style>
+
+  <title>使用SQL语句操作表 | </title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="null" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title"></h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-日程表">
+
+    <a href="/calendar/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="algolia-stats"><hr></div>
+  <div class="algolia-hits"></div>
+  <div class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E3%80%81%E6%8F%92%E5%85%A5%E8%AE%B0%E5%BD%95%E3%80%81%E6%9B%B4%E6%94%B9%E8%AE%B0%E5%BD%95%E3%80%81%E5%88%A0%E9%99%A4%E8%AE%B0%E5%BD%95%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">创建表的命令、插入记录、更改记录、删除记录的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">查询关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">3.</span> <span class="nav-text">SQL操作符</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E4%B9%A0%E9%A2%98"><span class="nav-number"></span> <span class="nav-text">练习习题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%981-%E7%A1%AE%E5%AE%9A%E5%90%88%E9%80%82%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">题1 确定合适的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%982-%E7%BA%A6%E6%9D%9F%E7%9A%84%E7%A7%8D%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">题2 约束的种类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%983-%E5%88%9B%E5%BB%BA%E9%83%A8%E9%97%A8%E8%A1%A8%E3%80%81%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.</span> <span class="nav-text">题3 创建部门表、约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%984-%E4%BD%BF%E7%94%A8rownum%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.</span> <span class="nav-text">题4 使用rownum实现分页查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%985-%E7%AD%9B%E9%80%89%E3%80%81%E6%8E%92%E5%BA%8F%E3%80%81%E9%80%89%E6%8B%A9%E4%B8%8D%E9%87%8D%E5%A4%8D%E8%A1%8C"><span class="nav-number">5.</span> <span class="nav-text">题5 筛选、排序、选择不重复行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%986-SQL%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">6.</span> <span class="nav-text">题6 SQL操作符</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.caixuya.top/" title="http:&#x2F;&#x2F;www.caixuya.top">首页</a>
+        </li>
+    </ul>
+  </div>
+
+      </section>
+	  <div>
+	<iframe frameborder="no" scrolling="yes" border="0" marginwidth="0" marginheight="0" width=280 height=240 src="//music.163.com/outchain/player?type=0&id=5271825129&auto=1&height=430"></iframe>
+	</div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用SQL语句操作表
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2020-11-18 00:00:25 / Modified: 00:01:34" itemprop="dateCreated datePublished" datetime="2020-11-18T00:00:25+08:00">2020-11-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SSH/" itemprop="url" rel="index"><span itemprop="name">SSH</span></a>
+        </span>
+    </span>
+
+  
+    <span id="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" class="post-meta-item leancloud_visitors" data-flag-title="使用SQL语句操作表" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="Symbols count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols count in article: </span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>3 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top">友情链接</a></p>
+<h2 id="创建表的命令、插入记录、更改记录、删除记录的命令"><a href="#创建表的命令、插入记录、更改记录、删除记录的命令" class="headerlink" title="创建表的命令、插入记录、更改记录、删除记录的命令"></a>创建表的命令、插入记录、更改记录、删除记录的命令</h2><ul>
+<li><strong>创建表的命令</strong><ul>
+<li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line">(字段名<span class="number">1</span>  类型  约束(可选)， </span><br><span class="line">字段名<span class="number">2</span>  类型 约束(可选)，</span><br><span class="line">...</span><br><span class="line">字段名n 类型 约束(可选)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>插入记录</strong><ul>
+<li><code>命令格式1：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名</span><br><span class="line"><span class="keyword">values</span>(字段<span class="number">1</span>的值,字段<span class="number">2</span>的值,...,字段n的值);</span><br></pre></td></tr></table></figure></li>
+<li><code>命令格式2：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> table_name(列<span class="number">1</span>,列<span class="number">2</span>,...)</span><br><span class="line"><span class="keyword">values</span>(值<span class="number">1</span>,值<span class="number">2</span>,....)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>更改记录</strong><ul>
+<li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> 表名</span><br><span class="line"><span class="keyword">set</span> 列名=值</span><br><span class="line"><span class="keyword">where</span> 筛选条件;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>清空表中的所有记录</strong><ul>
+<li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> 表名</span><br></pre></td></tr></table></figure>
+<h2 id="查询关键字"><a href="#查询关键字" class="headerlink" title="查询关键字"></a>查询关键字</h2></li>
+</ul>
+</li>
+<li>排序<ul>
+<li>降序<code>desc</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Order by 排序字段 desc</span><br></pre></td></tr></table></figure></li>
+<li>升序<code>asc</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Order by 排序字段 asc</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>不选择重复行</strong><br><code>Distinct</code><br>说明：重复的结果只显示<code>1</code>次</li>
+<li><strong>筛选条件</strong><br><code>where</code><ul>
+<li>命令格式：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>,....</span><br><span class="line"><span class="keyword">from</span> 表名</span><br><span class="line"><span class="keyword">where</span> 筛选条件;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>列取别名</strong><ul>
+<li><code>命令格式1：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 列名 <span class="keyword">as</span> 别名 </span><br><span class="line">from...</span><br></pre></td></tr></table></figure></li>
+<li><code>命令格式2：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 列名 别名 </span><br><span class="line">from...</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>从select结果创建新表</strong><ul>
+<li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line"><span class="keyword">select</span> ....</span><br></pre></td></tr></table></figure>
+<h2 id="SQL操作符"><a href="#SQL操作符" class="headerlink" title="SQL操作符"></a>SQL操作符</h2></li>
+</ul>
+</li>
+<li><strong>算数操作符</strong><br>种类：+  -  *  /<br>功能：number类型的列，可使用算数操作符进行运算</li>
+<li><strong>比较操作符</strong><br>功能: 对两个表达式的值进行比较<br>| 种类                 | 说明                                                     |<br>| :——:                 | :——:                                                 |<br>| =                     |      等于                                                |<br>| !=                     |      不等于                                                |<br>| &gt;                     |      大于                                                |<br>| &lt;                     |      小于                                                |<br>| &gt;=                     |      大于等于                                                |<br>| &lt;=                     |      小于等于                                                |<br>| IN(值1,值2,…)     | 与列表中的值匹配                                         |<br>| LIKE                 | 字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符     |<br>| IS NULL             | 判断字段值为空                                         |</li>
+<li><strong>逻辑运算符</strong><br>| 运算符     | 用法                         |<br>| :——:     | :——:                     |<br>| AND     | Where 条件A  and 条件B     |<br>| OR         | Where 条件A  or 条件B         |<br>| NOT     | Where not 条件             |</li>
+<li><strong>集合运算符</strong><br>| 运算符         | 用法         |<br>| :——:         | :——:     |<br>| Union         | 联合         |<br>| Union All     | 联合所有     |<br>| Intersect     | 交集         |<br>| Minus         | 减集         |</li>
+<li><strong>Minus 差集</strong><br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表     <span class="comment">--结果A</span></span><br><span class="line"><span class="keyword">minus</span></span><br><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表  	<span class="comment">--结果B</span></span><br></pre></td></tr></table></figure>
+说明：<code>A与B的交集</code><br><br>举例：employee表中存放了在职和已退休员工的工号(empno)，retireEmp 存放了已退休员工的工号(rempno)。<br><br>要求：仅查询在职员工的工号<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> empno <span class="keyword">FROM</span> emp  </span><br><span class="line"><span class="keyword">MINUS</span></span><br><span class="line"><span class="keyword">SELECT</span> rempno <span class="keyword">FROM</span> retireEmp;</span><br></pre></td></tr></table></figure></li>
+<li><strong>字符串连接符</strong><br>说明：用于将两个字符串合并成一个新字符串<br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">列A || 列B</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="练习习题"><a href="#练习习题" class="headerlink" title="练习习题"></a>练习习题</h1><h2 id="题1-确定合适的类型"><a href="#题1-确定合适的类型" class="headerlink" title="题1 确定合适的类型"></a>题1 确定合适的类型</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">属性名</th>
+<th style="text-align:center">特征</th>
+<th style="text-align:center">类型（宽度）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">员工编号</td>
+<td style="text-align:center">4位数字。如1111</td>
+<td style="text-align:center"><code>NUMBER(4)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">员工姓名1</td>
+<td style="text-align:center">英文字母，不超过10个字母。<br>要尽量高的存储空间利用率</td>
+<td style="text-align:center"><code>VARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">员工姓名2</td>
+<td style="text-align:center">汉字，不超过10个汉字<br>要尽量高的存储空间利用率</td>
+<td style="text-align:center"><code>NVARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">岗位1</td>
+<td style="text-align:center">英文字母，不超过10个字母</td>
+<td style="text-align:center"><code>VARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">岗位2</td>
+<td style="text-align:center">汉字，不超过10个汉字</td>
+<td style="text-align:center"><code>NVARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">上级经理编号</td>
+<td style="text-align:center">4位数字</td>
+<td style="text-align:center"><code>NUMBER(4)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">入职日期</td>
+<td style="text-align:center">年-月-日</td>
+<td style="text-align:center"><code>DATE</code></td>
+</tr>
+<tr>
+<td style="text-align:center">薪水</td>
+<td style="text-align:center">数字，最大5位数</td>
+<td style="text-align:center"><code>NUMBE(5)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">岗位津贴</td>
+<td style="text-align:center">数字，最大5位数</td>
+<td style="text-align:center"><code>NUMBER(5)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">所属部门编号</td>
+<td style="text-align:center">2位数字。如01</td>
+<td style="text-align:center"><code>NUMBER(2)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">证件照</td>
+<td style="text-align:center">图片</td>
+<td style="text-align:center"><code>BLOB</code></td>
+</tr>
+<tr>
+<td style="text-align:center">自我介绍</td>
+<td style="text-align:center">视频</td>
+<td style="text-align:center"><code>BLOB</code></td>
+</tr>
+<tr>
+<td style="text-align:center">简历</td>
+<td style="text-align:center">可能超过2000汉字</td>
+<td style="text-align:center"><code>CLOB(2000)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="题2-约束的种类"><a href="#题2-约束的种类" class="headerlink" title="题2 约束的种类"></a>题2 约束的种类</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">约束</th>
+<th style="text-align:center">关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">主键约束</td>
+<td style="text-align:center"><code>primary key</code></td>
+</tr>
+<tr>
+<td style="text-align:center">外键约束</td>
+<td style="text-align:center"><code>foreign key</code></td>
+</tr>
+<tr>
+<td style="text-align:center">非空约束</td>
+<td style="text-align:center"><code>not null</code></td>
+</tr>
+<tr>
+<td style="text-align:center">唯一值约束</td>
+<td style="text-align:center"><code>unique</code></td>
+</tr>
+<tr>
+<td style="text-align:center">默认约束</td>
+<td style="text-align:center"><code>default  ‘默认值’</code></td>
+</tr>
+<tr>
+<td style="text-align:center">Check约束</td>
+<td style="text-align:center"><code>举例：check(gender=&#39;男&#39; or gender=&#39;女&#39;);</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="题3-创建部门表、约束"><a href="#题3-创建部门表、约束" class="headerlink" title="题3 创建部门表、约束"></a>题3 创建部门表、约束</h2><ul>
+<li><strong>（1）创建部门表,表名为dept</strong><br>|属性说明    |属性    |类型（宽度）    |约束                |<br>|:——:    |:——:    |:——:            |:——:                |<br>|部门编号    |deptno    |number(2)        |主键                |<br>|部门名称    |dname    |varchar2(14)    |非空、唯一            |<br>|部门地址    |loc    |VARCHAR2(13)    |默认值 ‘company’    |<br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept</span><br><span class="line">(deptno <span class="built_in">number</span>(<span class="number">2</span>) primary <span class="keyword">key</span>,</span><br><span class="line">dname <span class="built_in">varchar2</span>(<span class="number">14</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">unique</span>,</span><br><span class="line">loc <span class="built_in">varchar2</span>(<span class="number">13</span>) <span class="keyword">default</span><span class="string">&#x27;company&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>（2）将以下数据插入到dept中</strong><br>|属性说明    |属性        |类型（宽度）    |约束                                    |<br>|:——:    |:——:        |:——:            |:——:                                    |<br>|员工编号    |eno        |number(4)        |主键约束                                |<br>|员工姓名    |ename        |varchar2(10)    |非空                                    |<br>|岗位        |job        |VARCHAR2(9)    |                                        |<br>|领导编号    |mgr        |number(4)        |                                        |<br>|入职日期    |Hiredate    |date            |                                        |<br>|薪资        |sal        |number(7,2)    |                                        |<br>|福利        |Comm        |number(7,2)    |                                        |<br>|所属部门号    |deptno        |number(2)        |外键，参照部门表的部门号<br>dept(deptno)    |<br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;Accounting&#x27;</span>,<span class="string">&#x27;New York&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">20</span>,<span class="string">&#x27;Research&#x27;</span>,<span class="string">&#x27;Dallas&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">30</span>,<span class="string">&#x27;Sales&#x27;</span>,<span class="string">&#x27;Chicago&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">40</span>,<span class="string">&#x27;Operations&#x27;</span>,<span class="string">&#x27;Boston&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="题4-使用rownum实现分页查询"><a href="#题4-使用rownum实现分页查询" class="headerlink" title="题4 使用rownum实现分页查询"></a>题4 使用rownum实现分页查询</h2></li>
+</ul>
+</li>
+<li><strong>（1）查询employee表中按sal字段 降序排列后的 第5到第9条记录</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> * <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.*, <span class="keyword">rownum</span> rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> * <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn&gt;=<span class="number">5</span> <span class="keyword">and</span> rn&lt;=<span class="number">9</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）查询employee表中按ename字段升序排列后的 第1到第3条记录</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> * <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.*, <span class="keyword">rownum</span> rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> * <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> ename <span class="keyword">asc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn&gt;=<span class="number">1</span> <span class="keyword">and</span> rn&lt;=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="题5-筛选、排序、选择不重复行"><a href="#题5-筛选、排序、选择不重复行" class="headerlink" title="题5 筛选、排序、选择不重复行"></a>题5 筛选、排序、选择不重复行</h2></li>
+<li><strong>（1）选出所有岗位为CLERK的记录的ename属性,sal属性, 按sal降序排序</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,sal <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job=<span class="string">&#x27;CLERK&#x27;</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）选择出employee表中的所有岗位（job），每种岗位只显示1次</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> job <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
+<h2 id="题6-SQL操作符"><a href="#题6-SQL操作符" class="headerlink" title="题6 SQL操作符"></a>题6 SQL操作符</h2></li>
+<li><strong>（1）查询employee表中姓名以字母A开头的员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;A%&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）查询employee表中ename长度为5个字符的所有记录</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;_____&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>（3）查询employee表中comm字段为空的员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> comm <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>（4）查询岗位(job) 为 CLERK、MANAGER、SALSMAN之一的所有员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> * <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">in</span>(<span class="string">&#x27;CLERK&#x27;</span>,<span class="string">&#x27;MANAGER&#x27;</span>,<span class="string">&#x27;SALESMAN&#x27;</span>);</span><br></pre></td></tr></table></figure></li>
+<li><strong>（5）将employee表的job列和ename列进行拼接，显示 出 job列 <em> 姓名列， 新列显示成 “岗位</em>姓名”</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job || <span class="string">&#x27;_&#x27;</span> || ename 岗位_姓名 <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer"><div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="http://www.caixuya.top/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" title="使用SQL语句操作表">http://www.caixuya.top/2020/11/18/使用SQL语句操作表/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          
+
+  <div class="followme">
+    <span>Welcome to my other publishing channels</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" rel="prev" title="Oracle数据类型、约束、ROWNUM实现分页查询">
+                  <i class="fa fa-chevron-left"></i> Oracle数据类型、约束、ROWNUM实现分页查询
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/11/18/%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2%E3%80%81SQL%E5%87%BD%E6%95%B0%E3%80%81%E5%88%86%E7%BB%84%E8%81%9A%E5%90%88/" rel="next" title="第3周 多表连接查询、SQL函数、分组聚合">
+                  第3周 多表连接查询、SQL函数、分组聚合 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Symbols count total">35k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">32 mins.</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="//cdn.jsdelivr.net/npm/algoliasearch@4.4.0/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4.7.1/dist/instantsearch.production.min.js"></script><script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+<div id="needsharebutton-float">
+      <span class="btn">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </span>
+    </div>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+      flOptions = {};
+        flOptions.iconStyle = "box";
+        flOptions.boxForm = "horizontal";
+        flOptions.position = "middleRight";
+        flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      new needShareButton('#needsharebutton-float', flOptions);
+  </script><script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({
+      el  : '#valine-comments',
+      path: "/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/",
+    }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"serverURLs":null,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}
+    ));
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
