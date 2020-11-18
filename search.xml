@@ -633,7 +633,7 @@
   <entry>
     <title>Oracle数据类型、约束、ROWNUM实现分页查询</title>
     <url>/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
-    <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top">友情链接</a></p>
+    <content><![CDATA[<p>转载自<a href="http://www.xieyihui.top">友情链接</a></p>
 <h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
 <h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
 <ul>
@@ -682,7 +682,44 @@
 </tbody>
 </table>
 </div>
-<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong><br>| 约束         | 关键字                                     |<br>| :———-: | :————————————————————:|<br>|  主键约束    | primary key                                |<br>|  外键约束    | foreign key                                |<br>|  非空约束    | not null                                    |<br>| 唯一值约束    | unique                                    |<br>|  默认约束    | default  ‘默认值’                            |<br>| Check约束    | 举例：check(gender=’男’ or gender=’女’);    |<br><strong><code>2个</code>添加约束的时机</strong></p>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">约束</th>
+<th style="text-align:center">关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">主键约束</td>
+<td style="text-align:center">primary key</td>
+</tr>
+<tr>
+<td style="text-align:center">外键约束</td>
+<td style="text-align:center">foreign key</td>
+</tr>
+<tr>
+<td style="text-align:center">非空约束</td>
+<td style="text-align:center">not null</td>
+</tr>
+<tr>
+<td style="text-align:center">唯一值约束</td>
+<td style="text-align:center">unique</td>
+</tr>
+<tr>
+<td style="text-align:center">默认约束</td>
+<td style="text-align:center">default  ‘默认值’</td>
+</tr>
+<tr>
+<td style="text-align:center">Check约束</td>
+<td style="text-align:center">举例：check(gender=’男’ or gender=’女’);</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong><code>2个</code>添加约束的时机</strong></p>
 <ul>
 <li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
 <li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
@@ -705,7 +742,7 @@
   <entry>
     <title>使用SQL语句操作表</title>
     <url>/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/</url>
-    <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top">友情链接</a></p>
+    <content><![CDATA[<p>转载自<a href="http://www.xieyihui.top">友情链接</a></p>
 <h2 id="创建表的命令、插入记录、更改记录、删除记录的命令"><a href="#创建表的命令、插入记录、更改记录、删除记录的命令" class="headerlink" title="创建表的命令、插入记录、更改记录、删除记录的命令"></a>创建表的命令、插入记录、更改记录、删除记录的命令</h2><ul>
 <li><strong>创建表的命令</strong><ul>
 <li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line">(字段名<span class="number">1</span>  类型  约束(可选)， </span><br><span class="line">字段名<span class="number">2</span>  类型 约束(可选)，</span><br><span class="line">...</span><br><span class="line">字段名n 类型 约束(可选)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
@@ -746,9 +783,15 @@
 </ul>
 </li>
 <li><strong>算数操作符</strong><br>种类：+  -  *  /<br>功能：number类型的列，可使用算数操作符进行运算</li>
-<li><strong>比较操作符</strong><br>功能: 对两个表达式的值进行比较<br>| 种类                 | 说明                                                     |<br>| :——:                 | :——:                                                 |<br>| =                     |      等于                                                |<br>| !=                     |      不等于                                                |<br>| &gt;                     |      大于                                                |<br>| &lt;                     |      小于                                                |<br>| &gt;=                     |      大于等于                                                |<br>| &lt;=                     |      小于等于                                                |<br>| IN(值1,值2,…)     | 与列表中的值匹配                                         |<br>| LIKE                 | 字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符     |<br>| IS NULL             | 判断字段值为空                                         |</li>
-<li><strong>逻辑运算符</strong><br>| 运算符     | 用法                         |<br>| :——:     | :——:                     |<br>| AND     | Where 条件A  and 条件B     |<br>| OR         | Where 条件A  or 条件B         |<br>| NOT     | Where not 条件             |</li>
-<li><strong>集合运算符</strong><br>| 运算符         | 用法         |<br>| :——:         | :——:     |<br>| Union         | 联合         |<br>| Union All     | 联合所有     |<br>| Intersect     | 交集         |<br>| Minus         | 减集         |</li>
+<li><p><strong>比较操作符</strong></p>
+<p>功能: 对两个表达式的值进行比较<br>| 种类                 | 说明                                                     |<br>| :——:                 | :——:                                                 |<br>| =                     |      等于                                                |<br>| !=                     |      不等于                                                |<br>| &gt;                     |      大于                                                |<br>| &lt;                     |      小于                                                |<br>| &gt;=                     |      大于等于                                                |<br>| &lt;=                     |      小于等于                                                |<br>| IN(值1,值2,…)     | 与列表中的值匹配                                         |<br>| LIKE                 | 字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符     |<br>| IS NULL             | 判断字段值为空                                         |</p>
+</li>
+<li><p><strong>逻辑运算符</strong></p>
+<p>| 运算符     | 用法                         |<br>| :——:     | :——:                     |<br>| AND     | Where 条件A  and 条件B     |<br>| OR         | Where 条件A  or 条件B         |<br>| NOT     | Where not 条件             |</p>
+</li>
+<li><p><strong>集合运算符</strong></p>
+<p>| 运算符         | 用法         |<br>| :——:         | :——:     |<br>| Union         | 联合         |<br>| Union All     | 联合所有     |<br>| Intersect     | 交集         |<br>| Minus         | 减集         |</p>
+</li>
 <li><strong>Minus 差集</strong><br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表     <span class="comment">--结果A</span></span><br><span class="line"><span class="keyword">minus</span></span><br><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表  	<span class="comment">--结果B</span></span><br></pre></td></tr></table></figure>
 说明：<code>A与B的交集</code><br><br>举例：employee表中存放了在职和已退休员工的工号(empno)，retireEmp 存放了已退休员工的工号(rempno)。<br><br>要求：仅查询在职员工的工号<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> empno <span class="keyword">FROM</span> emp  </span><br><span class="line"><span class="keyword">MINUS</span></span><br><span class="line"><span class="keyword">SELECT</span> rempno <span class="keyword">FROM</span> retireEmp;</span><br></pre></td></tr></table></figure></li>
 <li><strong>字符串连接符</strong><br>说明：用于将两个字符串合并成一个新字符串<br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">列A || 列B</span><br></pre></td></tr></table></figure>
@@ -869,12 +912,15 @@
 </table>
 </div>
 <h2 id="题3-创建部门表、约束"><a href="#题3-创建部门表、约束" class="headerlink" title="题3 创建部门表、约束"></a>题3 创建部门表、约束</h2><ul>
-<li><strong>（1）创建部门表,表名为dept</strong><br>|属性说明    |属性    |类型（宽度）    |约束                |<br>|:——:    |:——:    |:——:            |:——:                |<br>|部门编号    |deptno    |number(2)        |主键                |<br>|部门名称    |dname    |varchar2(14)    |非空、唯一            |<br>|部门地址    |loc    |VARCHAR2(13)    |默认值 ‘company’    |<br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept</span><br><span class="line">(deptno <span class="built_in">number</span>(<span class="number">2</span>) primary <span class="keyword">key</span>,</span><br><span class="line">dname <span class="built_in">varchar2</span>(<span class="number">14</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">unique</span>,</span><br><span class="line">loc <span class="built_in">varchar2</span>(<span class="number">13</span>) <span class="keyword">default</span><span class="string">&#x27;company&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<li><p><strong>（1）创建部门表,表名为dept</strong></p>
+<p>|属性说明    |属性    |类型（宽度）    |约束                |<br>|:——:    |:——:    |:——:            |:——:                |<br>|部门编号    |deptno    |number(2)        |主键                |<br>|部门名称    |dname    |varchar2(14)    |非空、唯一            |<br>|部门地址    |loc    |VARCHAR2(13)    |默认值 ‘company’    |<br><strong>代码：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept</span><br><span class="line">(deptno <span class="built_in">number</span>(<span class="number">2</span>) primary <span class="keyword">key</span>,</span><br><span class="line">dname <span class="built_in">varchar2</span>(<span class="number">14</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">unique</span>,</span><br><span class="line">loc <span class="built_in">varchar2</span>(<span class="number">13</span>) <span class="keyword">default</span><span class="string">&#x27;company&#x27;</span>);</span><br></pre></td></tr></table></figure>
 <ul>
-<li><strong>（2）将以下数据插入到dept中</strong><br>|属性说明    |属性        |类型（宽度）    |约束                                    |<br>|:——:    |:——:        |:——:            |:——:                                    |<br>|员工编号    |eno        |number(4)        |主键约束                                |<br>|员工姓名    |ename        |varchar2(10)    |非空                                    |<br>|岗位        |job        |VARCHAR2(9)    |                                        |<br>|领导编号    |mgr        |number(4)        |                                        |<br>|入职日期    |Hiredate    |date            |                                        |<br>|薪资        |sal        |number(7,2)    |                                        |<br>|福利        |Comm        |number(7,2)    |                                        |<br>|所属部门号    |deptno        |number(2)        |外键，参照部门表的部门号<br>dept(deptno)    |<br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;Accounting&#x27;</span>,<span class="string">&#x27;New York&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">20</span>,<span class="string">&#x27;Research&#x27;</span>,<span class="string">&#x27;Dallas&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">30</span>,<span class="string">&#x27;Sales&#x27;</span>,<span class="string">&#x27;Chicago&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">40</span>,<span class="string">&#x27;Operations&#x27;</span>,<span class="string">&#x27;Boston&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="题4-使用rownum实现分页查询"><a href="#题4-使用rownum实现分页查询" class="headerlink" title="题4 使用rownum实现分页查询"></a>题4 使用rownum实现分页查询</h2></li>
+<li><strong>（2）将以下数据插入到dept中</strong></li>
 </ul>
-</li>
+<p>|属性说明    |属性        |类型（宽度）    |约束                                    |<br>|:——:    |:——:        |:——:            |:——:                                    |<br>|员工编号    |eno        |number(4)        |主键约束                                |<br>|员工姓名    |ename        |varchar2(10)    |非空                                    |<br>|岗位        |job        |VARCHAR2(9)    |                                        |<br>|领导编号    |mgr        |number(4)        |                                        |<br>|入职日期    |Hiredate    |date            |                                        |<br>|薪资        |sal        |number(7,2)    |                                        |<br>|福利        |Comm        |number(7,2)    |                                        |<br>|所属部门号    |deptno        |number(2)        |外键，参照部门表的部门号<br>dept(deptno)    |<br><strong>代码：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;Accounting&#x27;</span>,<span class="string">&#x27;New York&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">20</span>,<span class="string">&#x27;Research&#x27;</span>,<span class="string">&#x27;Dallas&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">30</span>,<span class="string">&#x27;Sales&#x27;</span>,<span class="string">&#x27;Chicago&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">40</span>,<span class="string">&#x27;Operations&#x27;</span>,<span class="string">&#x27;Boston&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="题4-使用rownum实现分页查询"><a href="#题4-使用rownum实现分页查询" class="headerlink" title="题4 使用rownum实现分页查询"></a>题4 使用rownum实现分页查询</h2></li>
 <li><strong>（1）查询employee表中按sal字段 降序排列后的 第5到第9条记录</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Select</span> * <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.*, <span class="keyword">rownum</span> rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> * <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn&gt;=<span class="number">5</span> <span class="keyword">and</span> rn&lt;=<span class="number">9</span>;</span><br></pre></td></tr></table></figure></li>
 <li><strong>（2）查询employee表中按ename字段升序排列后的 第1到第3条记录</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Select</span> * <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.*, <span class="keyword">rownum</span> rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> * <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> ename <span class="keyword">asc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn&gt;=<span class="number">1</span> <span class="keyword">and</span> rn&lt;=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
 <h2 id="题5-筛选、排序、选择不重复行"><a href="#题5-筛选、排序、选择不重复行" class="headerlink" title="题5 筛选、排序、选择不重复行"></a>题5 筛选、排序、选择不重复行</h2></li>
@@ -899,8 +945,32 @@
   <entry>
     <title>多表连接查询、SQL函数、分组聚合</title>
     <url>/2020/11/18/%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2%E3%80%81SQL%E5%87%BD%E6%95%B0%E3%80%81%E5%88%86%E7%BB%84%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top">友情链接</a></p>
-<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p>  功能：同时查询多张表里的数据<br><br>  种类：<code>inner join</code>,<code>left join</code>,<code>right join</code><br><br>|连接方式        |功能                                            |<br>|:——:            |:——:                                            |<br>|inner join     |显示两张表中，符合连接条件的记录。                |<br>|left join        |左表显示所有记录；右表只显示符合连接条件的记录。    |<br>|right join     |右表显示所有记录；左表只显示符合连接条件的记录。    |</p>
+    <content><![CDATA[<p>转载自<a href="http://www.xieyihui.top">友情链接</a></p>
+<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p>  功能：同时查询多张表里的数据<br><br>  种类：<code>inner join</code>,<code>left join</code>,<code>right join</code><br></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">连接方式</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">inner join</td>
+<td style="text-align:center">显示两张表中，符合连接条件的记录。</td>
+</tr>
+<tr>
+<td style="text-align:center">left join</td>
+<td style="text-align:center">左表显示所有记录；右表只显示符合连接条件的记录。</td>
+</tr>
+<tr>
+<td style="text-align:center">right join</td>
+<td style="text-align:center">右表显示所有记录；左表只显示符合连接条件的记录。</td>
+</tr>
+</tbody>
+</table>
+</div>
 <ul>
 <li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Select</span> 字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式：inner join 交集</span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段=表B.共有字段		<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
@@ -917,8 +987,13 @@
 <li><strong>日期型转字符串</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">to_char(sysdate,&#x27;dd&#x27;)   <span class="comment">--取出几号</span></span><br><span class="line">to_char(sysdate,&#x27;mm&#x27;)   <span class="comment">--取出月份 </span></span><br><span class="line">to_char(sysdate,&#x27;yyyy&#x27;) <span class="comment">--取出年份</span></span><br><span class="line">to_char(sysdate,&#x27;ddd&#x27;)  <span class="comment">--取出年中的第几天(1-366)</span></span><br><span class="line">to_char(sysdate,&#x27;ww&#x27;)   <span class="comment">--取出第几周（1-53）</span></span><br><span class="line">to_char(sysdate,&#x27;q&#x27;)    <span class="comment">--取出第几季度(1、2、3、4)</span></span><br><span class="line">to_char(sysdate,&#x27;d&#x27;)    <span class="comment">--取出是周几（1-7）</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br><br>|函数                                    |    结果    |<br>|:——:                                |:——:        |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</li>
-<li><strong>to_number(字符串X)</strong><br>功能：字符串转成数值类型<br><br>返回：<code>number</code>类型<br><br>|函数                    |结果    |<br>|:——:                |:——:    |<br>|to_number(‘1234’)        |1234    |<br>|to_number(‘123.45’)    |123.4     |<h3 id="滤空函数"><a href="#滤空函数" class="headerlink" title="滤空函数"></a>滤空函数</h3>背景：Oracle中，NULL + 任意数，结果都为NULL<br><br>这种情况与实际情况相违背。为了解决这个问题，Oracle提供了滤空函数。<br></li>
+<li><p><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br></p>
+<p>|函数                                    |    结果    |<br>|:——:                                |:——:        |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</p>
+</li>
+<li><p><strong>to_number(字符串X)</strong><br>功能：字符串转成数值类型<br><br>返回：<code>number</code>类型<br></p>
+<p>|函数                    |结果    |<br>|:——:                |:——:    |<br>|to_number(‘1234’)        |1234    |<br>|to_number(‘123.45’)    |123.4     |</p>
+<h3 id="滤空函数"><a href="#滤空函数" class="headerlink" title="滤空函数"></a>滤空函数</h3><p>背景：Oracle中，NULL + 任意数，结果都为NULL<br><br>这种情况与实际情况相违背。为了解决这个问题，Oracle提供了滤空函数。<br></p>
+</li>
 <li><strong>nvl(表达示一, 表达式二)</strong><br>功能：一空，则返回二。</li>
 <li><p><strong>nvl2(表达式一, 表达式二, 表达式三)</strong><br>功能：一空，则返回三；否则返回二。</p>
 <h3 id="转换器函数-decode"><a href="#转换器函数-decode" class="headerlink" title="转换器函数 decode"></a>转换器函数 decode</h3><p>表达式：(value1,output1,elseoutput)<br><br>功能：输出转换。<br><br>说明：当表达式的值为 value1时，返回output1，否则返回elseoutput。<br></p>

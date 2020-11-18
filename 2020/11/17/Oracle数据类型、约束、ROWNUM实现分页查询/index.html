@@ -36,7 +36,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png">
 <meta property="article:published_time" content="2020-11-17T15:39:48.000Z">
-<meta property="article:modified_time" content="2020-11-17T15:56:19.739Z">
+<meta property="article:modified_time" content="2020-11-18T14:12:36.711Z">
 <meta property="article:author" content="caixuya">
 <meta property="article:tag" content="Oracle">
 <meta name="twitter:card" content="summary">
@@ -376,10 +376,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-11-17 23:39:48 / Modified: 23:56:19" itemprop="dateCreated datePublished" datetime="2020-11-17T23:39:48+08:00">2020-11-17</time>
+      <time title="Created: 2020-11-17 23:39:48" itemprop="dateCreated datePublished" datetime="2020-11-17T23:39:48+08:00">2020-11-17</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-11-18 22:12:36" itemprop="dateModified" datetime="2020-11-18T22:12:36+08:00">2020-11-18</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -437,7 +443,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top">友情链接</a></p>
+        <p>转载自<a target="_blank" rel="noopener" href="http://www.xieyihui.top">友情链接</a></p>
 <h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
 <h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
 <ul>
@@ -486,7 +492,44 @@
 </tbody>
 </table>
 </div>
-<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong><br>| 约束         | 关键字                                     |<br>| :———-: | :————————————————————:|<br>|  主键约束    | primary key                                |<br>|  外键约束    | foreign key                                |<br>|  非空约束    | not null                                    |<br>| 唯一值约束    | unique                                    |<br>|  默认约束    | default  ‘默认值’                            |<br>| Check约束    | 举例：check(gender=’男’ or gender=’女’);    |<br><strong><code>2个</code>添加约束的时机</strong></p>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">约束</th>
+<th style="text-align:center">关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">主键约束</td>
+<td style="text-align:center">primary key</td>
+</tr>
+<tr>
+<td style="text-align:center">外键约束</td>
+<td style="text-align:center">foreign key</td>
+</tr>
+<tr>
+<td style="text-align:center">非空约束</td>
+<td style="text-align:center">not null</td>
+</tr>
+<tr>
+<td style="text-align:center">唯一值约束</td>
+<td style="text-align:center">unique</td>
+</tr>
+<tr>
+<td style="text-align:center">默认约束</td>
+<td style="text-align:center">default  ‘默认值’</td>
+</tr>
+<tr>
+<td style="text-align:center">Check约束</td>
+<td style="text-align:center">举例：check(gender=’男’ or gender=’女’);</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong><code>2个</code>添加约束的时机</strong></p>
 <ul>
 <li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
 <li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
