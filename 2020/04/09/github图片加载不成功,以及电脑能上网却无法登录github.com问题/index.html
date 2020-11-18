@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en,zh-CN,default">
+	<!-- 页面点击小红心 -->
+    <script type="text/javascript" src="/js/src/love.js"></script>
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.2.0">
-
-
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -16,13 +16,15 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
+    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10}}};
   </script>
 
   <meta name="description" content="[目录]windows端修改内容修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页linux端用gedit修改文件ubuntu，deeping系列安装命令centos系列安装命令用vim&#x2F;vi修改文件大功告成 windows端 找到hosts文件，路径如下:c:\windows\system32\drivers\etc 因为hosts文件是系统文件，不可以直接修改，wi">
@@ -271,21 +273,20 @@
         </li>
       </ul>
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#windows%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">windows端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">修改内容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub-Start"><span class="nav-number"></span> <span class="nav-text">GitHub Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5"><span class="nav-number">1.</span> <span class="nav-text">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub-Start-1"><span class="nav-number"></span> <span class="nav-text">GitHub Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">linux端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">用gedit修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">ubuntu，deeping系列的linux系统安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">centos系列的安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8vim-vi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">用vim&#x2F;vi修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90"><span class="nav-number">6.</span> <span class="nav-text">大功告成</span></a></li></ol></div>
-        </section>
-        <!--/noindex-->
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#windows%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">windows端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">修改内容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub-Start"><span class="nav-number"></span> <span class="nav-text">GitHub Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5"><span class="nav-number">1.</span> <span class="nav-text">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub-Start-1"><span class="nav-number"></span> <span class="nav-text">GitHub Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">linux端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">用gedit修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">ubuntu，deeping系列的linux系统安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">centos系列的安装命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8vim-vi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">用vim&#x2F;vi修改文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90"><span class="nav-number">6.</span> <span class="nav-text">大功告成</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="caixuya"
       src="/images/avatar.gif">
   <p class="site-author-name" itemprop="name">caixuya</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
@@ -305,7 +306,7 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author animated">
       <span class="links-of-author-item">
         <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
@@ -315,7 +316,7 @@
   </div>
 
 
-  <div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll animated">
     <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
       Links
     </div>
@@ -326,8 +327,10 @@
     </ul>
   </div>
 
-        </section>
-      </div>
+      </section>
+	  <div>
+	<iframe frameborder="no" scrolling="yes" border="0" marginwidth="0" marginheight="0" width=280 height=240 src="//music.163.com/outchain/player?type=0&id=5271825129&auto=1&height=430"></iframe>
+	</div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -353,14 +356,10 @@
 
       
 
-  
-
-
-<div class="post-block">
+    
   
   
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -372,6 +371,9 @@
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="">
     </span>
+
+    
+    
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           github图片加载不成功,以及电脑能上网却无法登录github首页
@@ -593,32 +595,34 @@
 </ul>
 </div>
 
-          <div class="followme">
-  <span>Welcome to my other publishing channels</span>
+          
 
-  <div class="social-list">
+  <div class="followme">
+    <span>Welcome to my other publishing channels</span>
 
-      <div class="social-item">
-        <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
-          <span class="icon">
-            <i class="fab fa-weixin"></i>
-          </span>
+    <div class="social-list">
 
-          <span class="label">WeChat</span>
-        </a>
-      </div>
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
 
-      <div class="social-item">
-        <a target="_blank" class="social-link" href="/atom.xml">
-          <span class="icon">
-            <i class="fa fa-rss"></i>
-          </span>
+            <span class="label">WeChat</span>
+          </a>
+        </div>
 
-          <span class="label">RSS</span>
-        </a>
-      </div>
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
   </div>
-</div>
 
           <div class="post-tags">
               <a href="/tags/github/" rel="tag"># github</a>
@@ -640,10 +644,9 @@
           </div>
     </footer>
   </article>
-</div>
-
-
-
+  
+  
+  
 
 
 
@@ -711,9 +714,9 @@
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
 
   
@@ -721,11 +724,8 @@
 
 
 
-  <script src="//cdn.jsdelivr.net/npm/algoliasearch@4.5.1/dist/algoliasearch-lite.umd.js"></script>
-<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4.8.4/dist/instantsearch.production.min.js"></script><script src="/js/algolia-search.js"></script>
-
-
-
+  <script src="//cdn.jsdelivr.net/npm/algoliasearch@4.4.0/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4.7.1/dist/instantsearch.production.min.js"></script><script src="/js/algolia-search.js"></script>
 
 
 
@@ -787,15 +787,14 @@
         flOptions.position = "middleRight";
         flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
       new needShareButton('#needsharebutton-float', flOptions);
-  </script>
-<script>
+  </script><script>
 NexT.utils.loadComments('#valine-comments', () => {
   NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
-    new Valine(Object.assign({"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","serverURLs":"https://tia.avosapps.us","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}, {
-      el: '#valine-comments',
+    new Valine(Object.assign({
+      el  : '#valine-comments',
       path: "/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/",
-      serverURLs: "https://tia.avosapps.us"
-    }));
+    }, {"enable":true,"appId":"FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI","appKey":"Gyj6ShemJFGC9eDL9IsQKl9c","placeholder":"点击“回复”给我的文章加点评论吧~","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"lang":null,"visitor":true,"comment_count":true,"recordIP":false,"serverURLs":"https://tia.avosapps.us","enableQQ":false,"requiredFields":["nick","mail"],"notify":true,"md":true}
+    ));
   }, window.Valine);
 });
 </script>
