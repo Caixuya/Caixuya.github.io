@@ -34,7 +34,7 @@
 <meta property="og:description" content="转载自友情链接 多表连接查询  功能：同时查询多张表里的数据  种类：inner join,left join,right join     连接方式 功能     inner join 显示两张表中，符合连接条件的记录。   left join 左表显示所有记录；右表只显示符合连接条件的记录。   right join 右表显示所有记录；左表只显示符合连接条件的记录。      inner jo">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-11-17T16:10:03.000Z">
-<meta property="article:modified_time" content="2020-11-19T04:54:21.890Z">
+<meta property="article:modified_time" content="2020-11-19T04:58:50.335Z">
 <meta property="article:author" content="caixuya">
 <meta property="article:tag" content="Oracle">
 <meta name="twitter:card" content="summary">
@@ -381,7 +381,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-19 12:54:21" itemprop="dateModified" datetime="2020-11-19T12:54:21+08:00">2020-11-19</time>
+        <time title="Modified: 2020-11-19 12:58:50" itemprop="dateModified" datetime="2020-11-19T12:58:50+08:00">2020-11-19</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -467,7 +467,7 @@
 </table>
 </div>
 <ul>
-<li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><ul>
+<li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><br>&lt; !—more—&gt;<ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> 字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式：inner join 交集</span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段=表B.共有字段		<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
 <li><strong>inner join查询的步骤</strong><br>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.数一数两张表种，哪张表要查的字段更多，出字段多的表，放在from后面；出字段少的表，放在inner join后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br></li>
 </ul>
