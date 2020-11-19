@@ -988,7 +988,7 @@
 </ul>
 </li>
 <li><p><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br></p>
-<p>|函数                                    |    结果    |<br>|:——:                                |:——:        |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</p>
+<p>|函数                                    |    结果    |<br>|:——:                                    |:——:     |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</p>
 </li>
 <li><p><strong>to_number(字符串X)</strong><br>功能：字符串转成数值类型<br><br>返回：<code>number</code>类型<br></p>
 <p>|函数                    |结果    |<br>|:——:                |:——:    |<br>|to_number(‘1234’)        |1234    |<br>|to_number(‘123.45’)    |123.4     |</p>
