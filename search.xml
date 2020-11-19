@@ -972,7 +972,8 @@
 </table>
 </div>
 <ul>
-<li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><br>&lt; !—more—&gt;<ul>
+<li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><a id="more"></a>
+<ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Select</span> 字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式：inner join 交集</span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段=表B.共有字段		<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
 <li><strong>inner join查询的步骤</strong><br>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.数一数两张表种，哪张表要查的字段更多，出字段多的表，放在from后面；出字段少的表，放在inner join后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br></li>
 </ul>
