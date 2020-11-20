@@ -801,7 +801,55 @@
 <li><strong>算数操作符</strong><br>种类：+  -  *  /<br>功能：number类型的列，可使用算数操作符进行运算</li>
 <li><strong>比较操作符</strong></li>
 </ul>
-<p>功能: 对两个表达式的值进行比较<br>| 种类                 | 说明                                                     |<br>| :——:                 | :——:                                                 |<br>| =                     |      等于                                                |<br>| !=                     |      不等于                                                |<br>| &gt;                     |      大于                                                |<br>| &lt;                     |      小于                                                |<br>| &gt;=                     |      大于等于                                                |<br>| &lt;=                     |      小于等于                                                |<br>| IN(值1,值2,…)     | 与列表中的值匹配                                         |<br>| LIKE                 | 字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符     |<br>| IS NULL             | 判断字段值为空                                         |</p>
+<p>功能: 对两个表达式的值进行比较</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">种类</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">=</td>
+<td style="text-align:center">等于</td>
+</tr>
+<tr>
+<td style="text-align:center">!=</td>
+<td style="text-align:center">不等于</td>
+</tr>
+<tr>
+<td style="text-align:center">&gt;</td>
+<td style="text-align:center">大于</td>
+</tr>
+<tr>
+<td style="text-align:center">&lt;</td>
+<td style="text-align:center">小于</td>
+</tr>
+<tr>
+<td style="text-align:center">&gt;=</td>
+<td style="text-align:center">大于等于</td>
+</tr>
+<tr>
+<td style="text-align:center">&lt;=</td>
+<td style="text-align:center">小于等于</td>
+</tr>
+<tr>
+<td style="text-align:center">IN(值1,值2,…)</td>
+<td style="text-align:center">与列表中的值匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">LIKE</td>
+<td style="text-align:center">字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符</td>
+</tr>
+<tr>
+<td style="text-align:center">IS NULL</td>
+<td style="text-align:center">判断字段值为空</td>
+</tr>
+</tbody>
+</table>
+</div>
 <ul>
 <li><strong>逻辑运算符</strong></li>
 </ul>
