@@ -989,9 +989,33 @@
 <li><strong>日期型转字符串</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">to_char(sysdate,&#x27;dd&#x27;)   <span class="comment">--取出几号</span></span><br><span class="line">to_char(sysdate,&#x27;mm&#x27;)   <span class="comment">--取出月份 </span></span><br><span class="line">to_char(sysdate,&#x27;yyyy&#x27;) <span class="comment">--取出年份</span></span><br><span class="line">to_char(sysdate,&#x27;ddd&#x27;)  <span class="comment">--取出年中的第几天(1-366)</span></span><br><span class="line">to_char(sysdate,&#x27;ww&#x27;)   <span class="comment">--取出第几周（1-53）</span></span><br><span class="line">to_char(sysdate,&#x27;q&#x27;)    <span class="comment">--取出第几季度(1、2、3、4)</span></span><br><span class="line">to_char(sysdate,&#x27;d&#x27;)    <span class="comment">--取出是周几（1-7）</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><p><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br></p>
-<p>|函数                                    |    结果    |<br>|:——:            |:——:    |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</p>
-</li>
+<li><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br></li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">函数</th>
+<th style="text-align:center">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">to_date(‘2020.09.14’,’yyyy.mm.dd’)</td>
+<td style="text-align:center">2020/09/14</td>
+</tr>
+<tr>
+<td style="text-align:center">to_date(‘20200914’,’yyyymmdd’)</td>
+<td style="text-align:center">2020/09/14</td>
+</tr>
+<tr>
+<td style="text-align:center">to_date(‘2020-09-14’,’yyyy-mm-dd’)</td>
+<td style="text-align:center">2020/09/14</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
 <li><p><strong>to_number(字符串X)</strong><br>功能：字符串转成数值类型<br><br>返回：<code>number</code>类型</p>
 <p>|函数                    |结果    |<br>|:——:            |:——:    |<br>|to_number(‘1234’)        |1234    |<br>|to_number(‘123.45’)    |123.4     |</p>
 <h3 id="滤空函数"><a href="#滤空函数" class="headerlink" title="滤空函数"></a>滤空函数</h3><p>背景：Oracle中，NULL + 任意数，结果都为NULL<br><br>这种情况与实际情况相违背。为了解决这个问题，Oracle提供了滤空函数。<br></p>
