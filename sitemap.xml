@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.caixuya.top/2020/12/29/ssm/</loc>
+    
+    <lastmod>2020-12-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.caixuya.top/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/</loc>
     
     <lastmod>2020-11-20</lastmod>
@@ -144,7 +151,7 @@
 
   <url>
     <loc>http://www.caixuya.top/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -152,56 +159,56 @@
   
   <url>
     <loc>http://www.caixuya.top/tags/Oracle/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/struts2/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/html/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/hexo/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/markdown/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/mysql/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/linux/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/tags/github/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -210,21 +217,21 @@
   
   <url>
     <loc>http://www.caixuya.top/categories/study/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/categories/daily/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/categories/SSH/</loc>
-    <lastmod>2020-11-20</lastmod>
+    <lastmod>2020-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
