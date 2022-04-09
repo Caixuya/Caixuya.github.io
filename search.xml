@@ -372,7 +372,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#x65;&#x73;&#116;&#46;&#x74;&#x65;&#115;&#x74;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;">&#x74;&#x65;&#x73;&#116;&#46;&#x74;&#x65;&#115;&#x74;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;</a>  <a href="mailto:&#x77;&#x77;&#119;&#64;&#x76;&#105;&#112;&#46;&#x71;&#x71;&#x2e;&#x63;&#x6f;&#x6d;">&#x77;&#x77;&#119;&#64;&#x76;&#105;&#112;&#46;&#x71;&#x71;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#101;&#115;&#116;&#46;&#116;&#x65;&#115;&#116;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;">&#x74;&#101;&#115;&#116;&#46;&#116;&#x65;&#115;&#116;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;</a>  <a href="mailto:&#119;&#x77;&#x77;&#x40;&#118;&#x69;&#x70;&#x2e;&#113;&#x71;&#x2e;&#x63;&#111;&#x6d;">&#119;&#x77;&#x77;&#x40;&#118;&#x69;&#x70;&#x2e;&#113;&#x71;&#x2e;&#x63;&#111;&#x6d;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -654,10 +654,10 @@
       </tags>
   </entry>
   <entry>
-    <title>python</title>
+    <title>navicat导入sql文件失败解决办法</title>
     <url>/2022/04/09/python/</url>
     <content><![CDATA[<p>本文是学习总结，学习网站是廖雪峰网站，连接在这：<a href="https://www.liaoxuefeng.com/" title="廖雪峰的官方网站">https://www.liaoxuefeng.com/</a><br></p>
-<h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h2><p>###一：函数的调用<br>######&lt;1&gt;普通函数调用</p>
+<h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用<br></h2><p>###一：函数的调用<br><br>######&lt;1&gt;普通函数调用<br></p>
 <pre><code>def enroll(name, gender):
     print(&#39;name:&#39;, name)
     print(&#39;gender:&#39;, gender)
@@ -674,7 +674,7 @@ if __name__ == &quot;__main__&quot;:
 <pre><code>name: sarah
 gender: F
 </code></pre>
-<p>######&lt;2&gt;调用数组</p>
+<p>######&lt;2&gt;调用数组<br></p>
 <pre><code>def calc():
     global nums               #先定义一个全局变量
     nums = [1, 2, 3]       #然后把数组赋值给变量
@@ -688,14 +688,14 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </code></pre>
-<p>###二：设置默认参数<br>定义一个enroll函数，它的参数有name,gender,age,city<br></p>
+<p>###二：设置默认参数<br><br>定义一个enroll函数，它的参数有name,gender,age,city<br></p>
 <pre><code>def enroll(name, gender, age=6, city=&#39;Beijing&#39;):
     print(&#39;name:&#39;, name)
     print(&#39;gender:&#39;, gender)
     print(&#39;age:&#39;, age)
     print(&#39;city:&#39;, city)
 </code></pre>
-<p>定义完函数后，在主函数调用，一个是默认参数调用，一个是更改默认参数调用<br><br>######&lt;1&gt;当<code>age</code> 和<code>city</code>与默认参数相同时，不需要再设置</p>
+<p>定义完函数后，在主函数调用，一个是默认参数调用，一个是更改默认参数调用<br><br>######&lt;1&gt;当<code>age</code> 和<code>city</code>与默认参数相同时，不需要再设置<br></p>
 <pre><code>def main():
     enroll(&#39;sarah&#39;, &#39;F&#39;)
 
@@ -709,12 +709,12 @@ gender: F
 age: 6
 city: Beijing
 </code></pre>
-<p>######&lt;2&gt;当与默认参数不符时，提供值覆盖默认参数值：</p>
+<p>######&lt;2&gt;当与默认参数不符时，提供值覆盖默认参数值：<br></p>
 <pre><code>def main():
     enroll(&#39;sarah&#39;, &#39;F&#39;, 7)                   #按顺序可以不写参数名
     enroll(&#39;Adam&#39;, &#39;M&#39;, city=&#39;TianJin&#39;)       #不按顺序要写参数名
 </code></pre>
-<p>#####&lt;3&gt;默认参数需要设置成不变的对象（重要）<br>错误例子：<br></p>
+<p>#####&lt;3&gt;默认参数需要设置成不变的对象（重要）<br><br>错误例子：<br></p>
 <pre><code>def add_end(L=[]):
     L.append(&#39;END&#39;)
     print(L)
@@ -801,7 +801,7 @@ if __name__ == &quot;__main__&quot;:
 [&#39;END&#39;, &#39;END&#39;]
 [&#39;END&#39;, &#39;END&#39;, &#39;END&#39;]
 </code></pre>
-<p>以上输出结果可以看到，当在调用函数的时候，每次调用函数都传空数组，相当于重置数组的初始值，所以得到的结果是正确的，如果啥都不传，直接调用，数据就会叠加<br><br>###三：可变参数<br>可变参数就是传入的参数个数是可变的，可以是1个、2个到任意个，还可以是0个<br><br>######&lt;1&gt;主函数–没有元素、单个元素或者多个元素传入</p>
+<p>以上输出结果可以看到，当在调用函数的时候，每次调用函数都传空数组，相当于重置数组的初始值，所以得到的结果是正确的，如果啥都不传，直接调用，数据就会叠加<br><br>###三：可变参数<br><br>可变参数就是传入的参数个数是可变的，可以是1个、2个到任意个，还可以是0个<br><br>######&lt;1&gt;主函数–没有元素、单个元素或者多个元素传入<br></p>
 <pre><code>def calc(*numbers):        #这里的*表示把number改成可变参数，让函数传入的参数个数是可变的。
     sum = 0
     for number in numbers:
@@ -843,7 +843,7 @@ if __name__ == &quot;__main__&quot;:
 <p>输出结果为：<br></p>
 <pre><code>14
 </code></pre>
-<p>######&lt;2&gt;主函数–数组元素传入</p>
+<p>######&lt;2&gt;主函数–数组元素传入<br></p>
 <pre><code>def calc(*numbers):
     sum = 0
     for number in numbers:
@@ -863,7 +863,7 @@ if __name__ == &quot;__main__&quot;:
 <p>输出结果为：<br></p>
 <pre><code>14
 </code></pre>
-<p>######&lt;3&gt;关键字参数<br>关键字参数的作用是：如下代码所示：name和age是必填参数，**kw是选填参数</p>
+<p>######&lt;3&gt;关键字参数<br><br>关键字参数的作用是：如下代码所示：name和age是必填参数，**kw是选填参数<br></p>
 <pre><code>def person(name, age, **kw):            #形参前加&#39;*&#39;和&#39;**&#39;表示动态形参
     print(&#39;name:&#39;, name, &#39;age:&#39;, age, &#39;other:&#39;, **kw)
 
@@ -878,7 +878,7 @@ if __name__ == &quot;__main__&quot;:
 <p>输出结果为：<br></p>
 <pre><code>name: Michael age: 30 other: &#123;&#39;city&#39;: &#39;Beijing&#39;&#125;
 </code></pre>
-<p>######&lt;4&gt;</p>
+<p>######&lt;4&gt;<br></p>
 ]]></content>
       <categories>
         <category>study</category>
@@ -1537,13 +1537,13 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 ]]></content>
   </entry>
   <entry>
-    <title>categories</title>
-    <url>/categories/index.html</url>
+    <title>tags</title>
+    <url>/tags/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>tags</title>
-    <url>/tags/index.html</url>
+    <title>categories</title>
+    <url>/categories/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
