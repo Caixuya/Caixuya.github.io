@@ -20,8 +20,8 @@ http://www.caixuya.top/404
 http://www.caixuya.top/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/
 http://www.caixuya.top/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/
 http://www.caixuya.top/
-http://www.caixuya.top/tags/github/
 http://www.caixuya.top/tags/Oracle/
+http://www.caixuya.top/tags/github/
 http://www.caixuya.top/tags/html/
 http://www.caixuya.top/tags/hexo/
 http://www.caixuya.top/tags/markdown/
@@ -29,6 +29,6 @@ http://www.caixuya.top/tags/mysql/
 http://www.caixuya.top/tags/python/
 http://www.caixuya.top/tags/struts2/
 http://www.caixuya.top/tags/linux/
-http://www.caixuya.top/categories/study/
 http://www.caixuya.top/categories/SSH/
+http://www.caixuya.top/categories/study/
 http://www.caixuya.top/categories/daily/

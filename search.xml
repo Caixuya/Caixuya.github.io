@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Oracle数据类型、约束、ROWNUM实现分页查询</title>
+    <url>/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
+    <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top/">友情链接</a></p>
+<h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
+<h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
+<ul>
+<li><strong>字符类型</strong><br> （1）以<code>固定长度</code>存放字符串：CHAR(n)、NCHAR(n)<br><br> 说明：CHAR(10)，存一个字符串 ’abc’；NCHAR以<code>UNICODE</code>存储每个字符<br><br> 区别：n的最大取值：char(n),n的最大取值是2000;nchar(n),n的最大取值是1000.<br><br> （2）以<code>可变长度</code>存储字符串  VARCHAR2(n)、NVARCHAR2(n)<br><br>  说明：VARCHAR2(10)，存一个字符串’abc’，NVARCHAR2 以<code>UNICODE编码</code>存储每个字符<br><br> 区别：n的最大取值：VARCHAR2(n),n的最大取值是4000;NVARCHAR2(n),n的最大取值是2000.<br></li>
+<li><strong>数值型</strong><br> 从输入的数值划分：<code>整数</code>、<code>小数</code><br><br> （1）NUMBER类型<br><br>a.表示小数<br><br>举例： NUMBER(5,2)，总共5个有效数字，小数点后保留2位，例如：123.45<br><br>b.表示整数 NUMBER(P)<br><br>举例：NUMBER(5)，5位数的整数<br></li>
+<li><strong>日期型</strong><ul>
+<li>（1）DATE型<br><br> 格式：<code>YYYY-MM-DD HH:MM:SS</code><br><br> 精确程度：<code>秒</code><br></li>
+<li>（2）TIMESTAMP<br><br> 精确程度：<code>0.000001秒</code><br><br> 但使用较少</li>
+</ul>
+</li>
+<li><strong>大对象类型（Large OBject）</strong><ul>
+<li>（1）<code>BLOB</code>类型 <code>(Binary Large OBject)</code><br><br> 以<code>二进制</code>形式存储<br><br> 举例：图片、音频、视频<br><br> 最大存储<code>4G</code>字节<br></li>
+<li>（2）<code>CLOB</code>类型 <code>(Character Large Object)</code><br><br> 以<code>字符串</code>形式存储<br><br> 举例：简历、新闻、文章<br><br> 最大存储<code>4G</code>字节<br><h3 id="数据类型总结"><a href="#数据类型总结" class="headerlink" title="数据类型总结"></a>数据类型总结</h3></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">数据</th>
+<th align="center">应采用的类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">字符串</td>
+<td align="center">Nvarchar2、varchar2</td>
+</tr>
+<tr>
+<td align="center">数值型</td>
+<td align="center">Number</td>
+</tr>
+<tr>
+<td align="center">日期型</td>
+<td align="center">Date</td>
+</tr>
+<tr>
+<td align="center">图片、音频、视频</td>
+<td align="center">BLOB</td>
+</tr>
+<tr>
+<td align="center">超过千字的文本</td>
+<td align="center">CLOB</td>
+</tr>
+</tbody></table>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">约束</th>
+<th align="center">关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">主键约束</td>
+<td align="center">primary key</td>
+</tr>
+<tr>
+<td align="center">外键约束</td>
+<td align="center">foreign key</td>
+</tr>
+<tr>
+<td align="center">非空约束</td>
+<td align="center">not null</td>
+</tr>
+<tr>
+<td align="center">唯一值约束</td>
+<td align="center">unique</td>
+</tr>
+<tr>
+<td align="center">默认约束</td>
+<td align="center">default  ‘默认值’</td>
+</tr>
+<tr>
+<td align="center">Check约束</td>
+<td align="center">举例：check(gender&#x3D;’男’ or gender&#x3D;’女’);</td>
+</tr>
+<tr>
+<td align="center"><strong><code>2个</code>添加约束的时机</strong></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
+<li>添加主键约束<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 主键名 <span class="keyword">PRIMARY</span> KEY (主键列);</span><br></pre></td></tr></table></figure></li>
+<li>添加外键约束<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 外键名 <span class="keyword">Foreign</span> Key(从表的外键列) <span class="keyword">References</span> 主表名(主表的主键列);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>使用<code>PL/SQL Developer</code>图形界面添加约束</strong><br>   <img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png"></p>
+<h2 id="ROWID和ROWNUM"><a href="#ROWID和ROWNUM" class="headerlink" title="ROWID和ROWNUM"></a>ROWID和ROWNUM</h2><ul>
+<li><strong>ROWID</strong><br> 说明：RowID可以理解为Oracle为每一张表添加的一个<code>隐藏列</code>。<br><br> 表中的每一行（记录），都有一个行地址，ROWID用于查询该行地址。<br><br> 任意两行的ROWID不同。<br><br> ROWID只能<code>查询</code>，不能<code>修改</code>、<code>删除</code>。<br></li>
+<li><strong>ROWNUM</strong><br> 说明：对于查询结果表，rownum能返回每一行在结果表的序号。<br><br>  结果表中的第一行rownum为1、第n行rownum为n。<br><h2 id="Rownum实现分页查询"><a href="#Rownum实现分页查询" class="headerlink" title="Rownum实现分页查询"></a>Rownum实现分页查询</h2></li>
+</ul>
+<p><strong>功能：从表X中，查出按字段F排序后的 第M到第N条记录</strong><br><code>命令公式：</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 表X <span class="keyword">order</span> <span class="keyword">by</span> 字段F 排序方式) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span>M <span class="keyword">and</span> rn<span class="operator">&lt;=</span>N;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>SSH</category>
+      </categories>
+      <tags>
+        <tag>Oracle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim&#x2F;vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p>
@@ -110,113 +217,6 @@
       </categories>
       <tags>
         <tag>github</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Oracle数据类型、约束、ROWNUM实现分页查询</title>
-    <url>/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
-    <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top/">友情链接</a></p>
-<h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
-<h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
-<ul>
-<li><strong>字符类型</strong><br> （1）以<code>固定长度</code>存放字符串：CHAR(n)、NCHAR(n)<br><br> 说明：CHAR(10)，存一个字符串 ’abc’；NCHAR以<code>UNICODE</code>存储每个字符<br><br> 区别：n的最大取值：char(n),n的最大取值是2000;nchar(n),n的最大取值是1000.<br><br> （2）以<code>可变长度</code>存储字符串  VARCHAR2(n)、NVARCHAR2(n)<br><br>  说明：VARCHAR2(10)，存一个字符串’abc’，NVARCHAR2 以<code>UNICODE编码</code>存储每个字符<br><br> 区别：n的最大取值：VARCHAR2(n),n的最大取值是4000;NVARCHAR2(n),n的最大取值是2000.<br></li>
-<li><strong>数值型</strong><br> 从输入的数值划分：<code>整数</code>、<code>小数</code><br><br> （1）NUMBER类型<br><br>a.表示小数<br><br>举例： NUMBER(5,2)，总共5个有效数字，小数点后保留2位，例如：123.45<br><br>b.表示整数 NUMBER(P)<br><br>举例：NUMBER(5)，5位数的整数<br></li>
-<li><strong>日期型</strong><ul>
-<li>（1）DATE型<br><br> 格式：<code>YYYY-MM-DD HH:MM:SS</code><br><br> 精确程度：<code>秒</code><br></li>
-<li>（2）TIMESTAMP<br><br> 精确程度：<code>0.000001秒</code><br><br> 但使用较少</li>
-</ul>
-</li>
-<li><strong>大对象类型（Large OBject）</strong><ul>
-<li>（1）<code>BLOB</code>类型 <code>(Binary Large OBject)</code><br><br> 以<code>二进制</code>形式存储<br><br> 举例：图片、音频、视频<br><br> 最大存储<code>4G</code>字节<br></li>
-<li>（2）<code>CLOB</code>类型 <code>(Character Large Object)</code><br><br> 以<code>字符串</code>形式存储<br><br> 举例：简历、新闻、文章<br><br> 最大存储<code>4G</code>字节<br><h3 id="数据类型总结"><a href="#数据类型总结" class="headerlink" title="数据类型总结"></a>数据类型总结</h3></li>
-</ul>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">数据</th>
-<th align="center">应采用的类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">字符串</td>
-<td align="center">Nvarchar2、varchar2</td>
-</tr>
-<tr>
-<td align="center">数值型</td>
-<td align="center">Number</td>
-</tr>
-<tr>
-<td align="center">日期型</td>
-<td align="center">Date</td>
-</tr>
-<tr>
-<td align="center">图片、音频、视频</td>
-<td align="center">BLOB</td>
-</tr>
-<tr>
-<td align="center">超过千字的文本</td>
-<td align="center">CLOB</td>
-</tr>
-</tbody></table>
-<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">约束</th>
-<th align="center">关键字</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">主键约束</td>
-<td align="center">primary key</td>
-</tr>
-<tr>
-<td align="center">外键约束</td>
-<td align="center">foreign key</td>
-</tr>
-<tr>
-<td align="center">非空约束</td>
-<td align="center">not null</td>
-</tr>
-<tr>
-<td align="center">唯一值约束</td>
-<td align="center">unique</td>
-</tr>
-<tr>
-<td align="center">默认约束</td>
-<td align="center">default  ‘默认值’</td>
-</tr>
-<tr>
-<td align="center">Check约束</td>
-<td align="center">举例：check(gender&#x3D;’男’ or gender&#x3D;’女’);</td>
-</tr>
-<tr>
-<td align="center"><strong><code>2个</code>添加约束的时机</strong></td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<ul>
-<li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
-<li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
-<li>添加主键约束<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 主键名 <span class="keyword">PRIMARY</span> KEY (主键列);</span><br></pre></td></tr></table></figure></li>
-<li>添加外键约束<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 外键名 <span class="keyword">Foreign</span> Key(从表的外键列) <span class="keyword">References</span> 主表名(主表的主键列);</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ul>
-<p><strong>使用<code>PL/SQL Developer</code>图形界面添加约束</strong><br>   <img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png"></p>
-<h2 id="ROWID和ROWNUM"><a href="#ROWID和ROWNUM" class="headerlink" title="ROWID和ROWNUM"></a>ROWID和ROWNUM</h2><ul>
-<li><strong>ROWID</strong><br> 说明：RowID可以理解为Oracle为每一张表添加的一个<code>隐藏列</code>。<br><br> 表中的每一行（记录），都有一个行地址，ROWID用于查询该行地址。<br><br> 任意两行的ROWID不同。<br><br> ROWID只能<code>查询</code>，不能<code>修改</code>、<code>删除</code>。<br></li>
-<li><strong>ROWNUM</strong><br> 说明：对于查询结果表，rownum能返回每一行在结果表的序号。<br><br>  结果表中的第一行rownum为1、第n行rownum为n。<br><h2 id="Rownum实现分页查询"><a href="#Rownum实现分页查询" class="headerlink" title="Rownum实现分页查询"></a>Rownum实现分页查询</h2></li>
-</ul>
-<p><strong>功能：从表X中，查出按字段F排序后的 第M到第N条记录</strong><br><code>命令公式：</code></p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 表X <span class="keyword">order</span> <span class="keyword">by</span> 字段F 排序方式) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span>M <span class="keyword">and</span> rn<span class="operator">&lt;=</span>N;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>SSH</category>
-      </categories>
-      <tags>
-        <tag>Oracle</tag>
       </tags>
   </entry>
   <entry>
@@ -372,7 +372,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#x65;&#115;&#x74;&#46;&#x74;&#101;&#115;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;">&#116;&#x65;&#115;&#x74;&#46;&#x74;&#101;&#115;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a>  <a href="mailto:&#x77;&#119;&#119;&#64;&#x76;&#x69;&#112;&#x2e;&#x71;&#113;&#46;&#99;&#x6f;&#109;">&#x77;&#119;&#119;&#64;&#x76;&#x69;&#112;&#x2e;&#x71;&#113;&#46;&#99;&#x6f;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#101;&#115;&#116;&#46;&#x74;&#x65;&#115;&#x74;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#116;&#101;&#115;&#116;&#46;&#x74;&#x65;&#115;&#x74;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a>  <a href="mailto:&#x77;&#119;&#x77;&#64;&#x76;&#x69;&#x70;&#x2e;&#x71;&#113;&#46;&#99;&#111;&#x6d;">&#x77;&#119;&#x77;&#64;&#x76;&#x69;&#x70;&#x2e;&#x71;&#113;&#46;&#99;&#111;&#x6d;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -636,24 +636,6 @@
       </tags>
   </entry>
   <entry>
-    <title>oracle数据库的下载以及可视化工具PLSQL Developer的配置</title>
-    <url>/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<p>数据库：oracle数据库<br><br>oracle数据库下载地址：<a href="https://pan.baidu.com/s/1IWGulfEeP8DYrF6dnOF6BQ">oracle</a><br>提取码：os0i<br>可视化工具：PLSQL Developer<br><br>可视化工具下载地址：<a href="https://pan.baidu.com/s/1R71jc8ojjt8cm6nDD3b3mw">PLSQL Developer</a><br><br>提取码：i2ay  <br></p>
-<h1 id="oracle官网下载方法"><a href="#oracle官网下载方法" class="headerlink" title="oracle官网下载方法"></a>oracle官网下载方法</h1><h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p>复制以下链接访问oracle官网<br><br><code>oracle.com</code>或点击<a href="http://www.oracle.com/">这里</a>访问<br></p>
-<h2 id="更改语言-各国语言切换"><a href="#更改语言-各国语言切换" class="headerlink" title="更改语言(各国语言切换)"></a>更改语言(各国语言切换)</h2><p>在官网底部找到country&#x2F;region，单击<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_country.png"><br><br>然后找到<code>Asia Pacific</code>,单击后就可以看到可切换的亚洲的各种语言,点击“中国-简体中文”即可将网页更换到中文版本<br></p>
-<h2 id="oracle下载（oracle-11g）"><a href="#oracle下载（oracle-11g）" class="headerlink" title="oracle下载（oracle_11g）"></a>oracle下载（oracle_11g）</h2><p>点击网页顶部导航栏的“产品”，单击软件目录下的“oracle数据库”，然后点击如下图所示的按钮，就可以看到oracle最新版本以及其他版本的产品信息<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E6%9B%B4%E5%A4%9A%E7%89%88%E6%9C%AC.PNG"><br><br>我用的是oracle版本是11g，这里就写出如何找到11g这个版本，以上步骤成功以后，把网页进度条拉到中间位置即可看到11g的下载链接<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_11g.PNG"><br><br>点击后选择适合的oracle下载，注意11g版本windows的和linux的是在这里选择的，按需选择下载<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E4%B8%8B%E8%BD%BD.PNG"><br></p>
-<h1 id="PLSQL的配置"><a href="#PLSQL的配置" class="headerlink" title="PLSQL的配置"></a>PLSQL的配置</h1><h2 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h2><p>安装好oracle后将<br><br><code>Oracle安装目录\product\11.2.0\dbhome_2\NETWORK\ADMIN\tnsnames.ora</code><br><br>  替换掉<br><br><code>PLSQL解压目录\PLSQL\instantclient_11_2\tnsnames.ora</code><br></p>
-<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>右键单击电脑，选择<code>属性</code>-<code>高级属性</code>-<code>环境变量</code>-<code>新建</code>，<br><br><code>NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code><br><br><code>TNS_ADMIN = PLSQL解压目录\PLSQL\instantclient_11_2</code><br><br>以上两条分开的，也就是需要新建两条记录，等号前的是变量名，等号后的是变量值<br></p>
-<h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br><br>2.设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></p>
-]]></content>
-      <categories>
-        <category>SSH</category>
-      </categories>
-      <tags>
-        <tag>Oracle</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>navicat导入sql文件失败解决办法</title>
     <url>/2022/04/09/python/</url>
     <content><![CDATA[<p>本文是学习总结，学习网站是廖雪峰网站，连接在这：<a href="https://www.liaoxuefeng.com/" title="廖雪峰的官方网站">https://www.liaoxuefeng.com/</a><br></p>
@@ -885,6 +867,24 @@ if __name__ == &quot;__main__&quot;:
       </categories>
       <tags>
         <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>oracle数据库的下载以及可视化工具PLSQL Developer的配置</title>
+    <url>/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<p>数据库：oracle数据库<br><br>oracle数据库下载地址：<a href="https://pan.baidu.com/s/1IWGulfEeP8DYrF6dnOF6BQ">oracle</a><br>提取码：os0i<br>可视化工具：PLSQL Developer<br><br>可视化工具下载地址：<a href="https://pan.baidu.com/s/1R71jc8ojjt8cm6nDD3b3mw">PLSQL Developer</a><br><br>提取码：i2ay  <br></p>
+<h1 id="oracle官网下载方法"><a href="#oracle官网下载方法" class="headerlink" title="oracle官网下载方法"></a>oracle官网下载方法</h1><h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p>复制以下链接访问oracle官网<br><br><code>oracle.com</code>或点击<a href="http://www.oracle.com/">这里</a>访问<br></p>
+<h2 id="更改语言-各国语言切换"><a href="#更改语言-各国语言切换" class="headerlink" title="更改语言(各国语言切换)"></a>更改语言(各国语言切换)</h2><p>在官网底部找到country&#x2F;region，单击<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_country.png"><br><br>然后找到<code>Asia Pacific</code>,单击后就可以看到可切换的亚洲的各种语言,点击“中国-简体中文”即可将网页更换到中文版本<br></p>
+<h2 id="oracle下载（oracle-11g）"><a href="#oracle下载（oracle-11g）" class="headerlink" title="oracle下载（oracle_11g）"></a>oracle下载（oracle_11g）</h2><p>点击网页顶部导航栏的“产品”，单击软件目录下的“oracle数据库”，然后点击如下图所示的按钮，就可以看到oracle最新版本以及其他版本的产品信息<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E6%9B%B4%E5%A4%9A%E7%89%88%E6%9C%AC.PNG"><br><br>我用的是oracle版本是11g，这里就写出如何找到11g这个版本，以上步骤成功以后，把网页进度条拉到中间位置即可看到11g的下载链接<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_11g.PNG"><br><br>点击后选择适合的oracle下载，注意11g版本windows的和linux的是在这里选择的，按需选择下载<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E4%B8%8B%E8%BD%BD.PNG"><br></p>
+<h1 id="PLSQL的配置"><a href="#PLSQL的配置" class="headerlink" title="PLSQL的配置"></a>PLSQL的配置</h1><h2 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h2><p>安装好oracle后将<br><br><code>Oracle安装目录\product\11.2.0\dbhome_2\NETWORK\ADMIN\tnsnames.ora</code><br><br>  替换掉<br><br><code>PLSQL解压目录\PLSQL\instantclient_11_2\tnsnames.ora</code><br></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>右键单击电脑，选择<code>属性</code>-<code>高级属性</code>-<code>环境变量</code>-<code>新建</code>，<br><br><code>NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code><br><br><code>TNS_ADMIN = PLSQL解压目录\PLSQL\instantclient_11_2</code><br><br>以上两条分开的，也就是需要新建两条记录，等号前的是变量名，等号后的是变量值<br></p>
+<h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br><br>2.设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></p>
+]]></content>
+      <categories>
+        <category>SSH</category>
+      </categories>
+      <tags>
+        <tag>Oracle</tag>
       </tags>
   </entry>
   <entry>
