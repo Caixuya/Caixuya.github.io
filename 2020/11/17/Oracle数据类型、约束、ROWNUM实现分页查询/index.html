@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="转载自友情链接 课堂笔记Oracle 11g 安装超详细的安装教程：https:&#x2F;&#x2F;blog.csdn.net&#x2F;lidapang123&#x2F;article&#x2F;details&#x2F;88928035 Oracle中的数据类型 Oracle中的数据类型：字符型、数值型、日期型、LOB类型、（BLOB、CLOB）  字符类型 （1）以固定长度存放字符串：CHAR(n)、NCHAR(n) 说明：CHAR(10)，存一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle数据类型、约束、ROWNUM实现分页查询">
+<meta property="og:url" content="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
+<meta property="og:site_name">
+<meta property="og:description" content="转载自友情链接 课堂笔记Oracle 11g 安装超详细的安装教程：https:&#x2F;&#x2F;blog.csdn.net&#x2F;lidapang123&#x2F;article&#x2F;details&#x2F;88928035 Oracle中的数据类型 Oracle中的数据类型：字符型、数值型、日期型、LOB类型、（BLOB、CLOB）  字符类型 （1）以固定长度存放字符串：CHAR(n)、NCHAR(n) 说明：CHAR(10)，存一">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png">
+<meta property="article:published_time" content="2020-11-17T15:39:48.000Z">
+<meta property="article:modified_time" content="2020-11-17T15:56:18.000Z">
+<meta property="article:author" content="caixuya">
+<meta property="article:tag" content="Oracle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png">
+
+<link rel="canonical" href="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Oracle数据类型、约束、ROWNUM实现分页查询 | </title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title"></h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Oracle数据类型、约束、ROWNUM实现分页查询
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-11-17 23:39:48 / Modified: 23:56:18" itemprop="dateCreated datePublished" datetime="2020-11-17T23:39:48+08:00">2020-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SSH/" itemprop="url" rel="index"><span itemprop="name">SSH</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top/">友情链接</a></p>
+<h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
+<h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
+<ul>
+<li><strong>字符类型</strong><br> （1）以<code>固定长度</code>存放字符串：CHAR(n)、NCHAR(n)<br><br> 说明：CHAR(10)，存一个字符串 ’abc’；NCHAR以<code>UNICODE</code>存储每个字符<br><br> 区别：n的最大取值：char(n),n的最大取值是2000;nchar(n),n的最大取值是1000.<br><br> （2）以<code>可变长度</code>存储字符串  VARCHAR2(n)、NVARCHAR2(n)<br><br>  说明：VARCHAR2(10)，存一个字符串’abc’，NVARCHAR2 以<code>UNICODE编码</code>存储每个字符<br><br> 区别：n的最大取值：VARCHAR2(n),n的最大取值是4000;NVARCHAR2(n),n的最大取值是2000.<br></li>
+<li><strong>数值型</strong><br> 从输入的数值划分：<code>整数</code>、<code>小数</code><br><br> （1）NUMBER类型<br><br>a.表示小数<br><br>举例： NUMBER(5,2)，总共5个有效数字，小数点后保留2位，例如：123.45<br><br>b.表示整数 NUMBER(P)<br><br>举例：NUMBER(5)，5位数的整数<br></li>
+<li><strong>日期型</strong><ul>
+<li>（1）DATE型<br><br> 格式：<code>YYYY-MM-DD HH:MM:SS</code><br><br> 精确程度：<code>秒</code><br></li>
+<li>（2）TIMESTAMP<br><br> 精确程度：<code>0.000001秒</code><br><br> 但使用较少</li>
+</ul>
+</li>
+<li><strong>大对象类型（Large OBject）</strong><ul>
+<li>（1）<code>BLOB</code>类型 <code>(Binary Large OBject)</code><br><br> 以<code>二进制</code>形式存储<br><br> 举例：图片、音频、视频<br><br> 最大存储<code>4G</code>字节<br></li>
+<li>（2）<code>CLOB</code>类型 <code>(Character Large Object)</code><br><br> 以<code>字符串</code>形式存储<br><br> 举例：简历、新闻、文章<br><br> 最大存储<code>4G</code>字节<br><h3 id="数据类型总结"><a href="#数据类型总结" class="headerlink" title="数据类型总结"></a>数据类型总结</h3></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">数据</th>
+<th align="center">应采用的类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">字符串</td>
+<td align="center">Nvarchar2、varchar2</td>
+</tr>
+<tr>
+<td align="center">数值型</td>
+<td align="center">Number</td>
+</tr>
+<tr>
+<td align="center">日期型</td>
+<td align="center">Date</td>
+</tr>
+<tr>
+<td align="center">图片、音频、视频</td>
+<td align="center">BLOB</td>
+</tr>
+<tr>
+<td align="center">超过千字的文本</td>
+<td align="center">CLOB</td>
+</tr>
+</tbody></table>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">约束</th>
+<th align="center">关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">主键约束</td>
+<td align="center">primary key</td>
+</tr>
+<tr>
+<td align="center">外键约束</td>
+<td align="center">foreign key</td>
+</tr>
+<tr>
+<td align="center">非空约束</td>
+<td align="center">not null</td>
+</tr>
+<tr>
+<td align="center">唯一值约束</td>
+<td align="center">unique</td>
+</tr>
+<tr>
+<td align="center">默认约束</td>
+<td align="center">default  ‘默认值’</td>
+</tr>
+<tr>
+<td align="center">Check约束</td>
+<td align="center">举例：check(gender&#x3D;’男’ or gender&#x3D;’女’);</td>
+</tr>
+<tr>
+<td align="center"><strong><code>2个</code>添加约束的时机</strong></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
+<li>添加主键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 主键名 <span class="keyword">PRIMARY</span> KEY (主键列);</span><br></pre></td></tr></table></figure></li>
+<li>添加外键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 外键名 <span class="keyword">Foreign</span> Key(从表的外键列) <span class="keyword">References</span> 主表名(主表的主键列);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>使用<code>PL/SQL Developer</code>图形界面添加约束</strong><br>   <img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png"></p>
+<h2 id="ROWID和ROWNUM"><a href="#ROWID和ROWNUM" class="headerlink" title="ROWID和ROWNUM"></a>ROWID和ROWNUM</h2><ul>
+<li><strong>ROWID</strong><br> 说明：RowID可以理解为Oracle为每一张表添加的一个<code>隐藏列</code>。<br><br> 表中的每一行（记录），都有一个行地址，ROWID用于查询该行地址。<br><br> 任意两行的ROWID不同。<br><br> ROWID只能<code>查询</code>，不能<code>修改</code>、<code>删除</code>。<br></li>
+<li><strong>ROWNUM</strong><br> 说明：对于查询结果表，rownum能返回每一行在结果表的序号。<br><br>  结果表中的第一行rownum为1、第n行rownum为n。<br><h2 id="Rownum实现分页查询"><a href="#Rownum实现分页查询" class="headerlink" title="Rownum实现分页查询"></a>Rownum实现分页查询</h2></li>
+</ul>
+<p><strong>功能：从表X中，查出按字段F排序后的 第M到第N条记录</strong><br><code>命令公式：</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 表X <span class="keyword">order</span> <span class="keyword">by</span> 字段F 排序方式) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span>M <span class="keyword">and</span> rn<span class="operator">&lt;=</span>N;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/16/struts2%E5%85%A5%E9%97%A8/" rel="prev" title="struts2入门">
+      <i class="fa fa-chevron-left"></i> struts2入门
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" rel="next" title="使用SQL语句操作表">
+      使用SQL语句操作表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">课堂笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Oracle-11g-%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">Oracle 11g 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oracle%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Oracle中的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据类型总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-number">1.3.</span> <span class="nav-text">约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROWID%E5%92%8CROWNUM"><span class="nav-number">1.4.</span> <span class="nav-text">ROWID和ROWNUM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rownum%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.5.</span> <span class="nav-text">Rownum实现分页查询</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
