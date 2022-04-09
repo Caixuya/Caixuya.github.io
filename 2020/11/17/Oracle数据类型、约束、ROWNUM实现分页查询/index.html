@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+
+<html lang="en,zh-CN,default" >
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Oracle数据类型、约束、ROWNUM实现分页查询 |  
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+<link rel="alternate" href="/atom.xml" title="null" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-Oracle数据类型、约束、ROWNUM实现分页查询" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Oracle数据类型、约束、ROWNUM实现分页查询
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" class="article-date">
+  <time datetime="2020-11-17T15:39:48.000Z" itemprop="datePublished">2020-11-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SSH/">SSH</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">739</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">2 min</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top/">友情链接</a></p>
+<h1 id="课堂笔记"><a href="#课堂笔记" class="headerlink" title="课堂笔记"></a>课堂笔记</h1><h2 id="Oracle-11g-安装"><a href="#Oracle-11g-安装" class="headerlink" title="Oracle 11g 安装"></a>Oracle 11g 安装</h2><p><code>超详细</code>的安装教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lidapang123/article/details/88928035">https://blog.csdn.net/lidapang123/article/details/88928035</a><br></p>
+<h2 id="Oracle中的数据类型"><a href="#Oracle中的数据类型" class="headerlink" title="Oracle中的数据类型"></a>Oracle中的数据类型</h2><p> <strong>Oracle中的数据类型：<code>字符型</code>、<code>数值型</code>、<code>日期型</code>、<code>LOB类型</code>、<code>（BLOB、CLOB）</code></strong><br></p>
+<ul>
+<li><strong>字符类型</strong><br> （1）以<code>固定长度</code>存放字符串：CHAR(n)、NCHAR(n)<br><br> 说明：CHAR(10)，存一个字符串 ’abc’；NCHAR以<code>UNICODE</code>存储每个字符<br><br> 区别：n的最大取值：char(n),n的最大取值是2000;nchar(n),n的最大取值是1000.<br><br> （2）以<code>可变长度</code>存储字符串  VARCHAR2(n)、NVARCHAR2(n)<br><br>  说明：VARCHAR2(10)，存一个字符串’abc’，NVARCHAR2 以<code>UNICODE编码</code>存储每个字符<br><br> 区别：n的最大取值：VARCHAR2(n),n的最大取值是4000;NVARCHAR2(n),n的最大取值是2000.<br></li>
+<li><strong>数值型</strong><br> 从输入的数值划分：<code>整数</code>、<code>小数</code><br><br> （1）NUMBER类型<br><br>a.表示小数<br><br>举例： NUMBER(5,2)，总共5个有效数字，小数点后保留2位，例如：123.45<br><br>b.表示整数 NUMBER(P)<br><br>举例：NUMBER(5)，5位数的整数<br></li>
+<li><strong>日期型</strong><ul>
+<li>（1）DATE型<br><br> 格式：<code>YYYY-MM-DD HH:MM:SS</code><br><br> 精确程度：<code>秒</code><br></li>
+<li>（2）TIMESTAMP<br><br> 精确程度：<code>0.000001秒</code><br><br> 但使用较少</li>
+</ul>
+</li>
+<li><strong>大对象类型（Large OBject）</strong><ul>
+<li>（1）<code>BLOB</code>类型 <code>(Binary Large OBject)</code><br><br> 以<code>二进制</code>形式存储<br><br> 举例：图片、音频、视频<br><br> 最大存储<code>4G</code>字节<br></li>
+<li>（2）<code>CLOB</code>类型 <code>(Character Large Object)</code><br><br> 以<code>字符串</code>形式存储<br><br> 举例：简历、新闻、文章<br><br> 最大存储<code>4G</code>字节<br><h3 id="数据类型总结"><a href="#数据类型总结" class="headerlink" title="数据类型总结"></a>数据类型总结</h3></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">数据</th>
+<th align="center">应采用的类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">字符串</td>
+<td align="center">Nvarchar2、varchar2</td>
+</tr>
+<tr>
+<td align="center">数值型</td>
+<td align="center">Number</td>
+</tr>
+<tr>
+<td align="center">日期型</td>
+<td align="center">Date</td>
+</tr>
+<tr>
+<td align="center">图片、音频、视频</td>
+<td align="center">BLOB</td>
+</tr>
+<tr>
+<td align="center">超过千字的文本</td>
+<td align="center">CLOB</td>
+</tr>
+</tbody></table>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p><strong><code>6种</code>常用约束</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">约束</th>
+<th align="center">关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">主键约束</td>
+<td align="center">primary key</td>
+</tr>
+<tr>
+<td align="center">外键约束</td>
+<td align="center">foreign key</td>
+</tr>
+<tr>
+<td align="center">非空约束</td>
+<td align="center">not null</td>
+</tr>
+<tr>
+<td align="center">唯一值约束</td>
+<td align="center">unique</td>
+</tr>
+<tr>
+<td align="center">默认约束</td>
+<td align="center">default  ‘默认值’</td>
+</tr>
+<tr>
+<td align="center">Check约束</td>
+<td align="center">举例：check(gender&#x3D;’男’ or gender&#x3D;’女’);</td>
+</tr>
+<tr>
+<td align="center"><strong><code>2个</code>添加约束的时机</strong></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>（1）创建时添加约束</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 </span><br><span class="line">(列名<span class="number">1</span> 数值类型<span class="number">1</span> 约束<span class="number">1</span>,</span><br><span class="line">列名<span class="number">2</span> 数值类型<span class="number">2</span> 约束<span class="number">2</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li><strong>（2）创建表之后，使用<code>alter table</code>命令</strong><ul>
+<li>添加主键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 主键名 <span class="keyword">PRIMARY</span> KEY (主键列);</span><br></pre></td></tr></table></figure></li>
+<li>添加外键约束<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> 外键名 <span class="keyword">Foreign</span> Key(从表的外键列) <span class="keyword">References</span> 主表名(主表的主键列);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>使用<code>PL/SQL Developer</code>图形界面添加约束</strong><br>   <img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/PLSQL_%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%93%8D%E4%BD%9C.png"></p>
+<h2 id="ROWID和ROWNUM"><a href="#ROWID和ROWNUM" class="headerlink" title="ROWID和ROWNUM"></a>ROWID和ROWNUM</h2><ul>
+<li><strong>ROWID</strong><br> 说明：RowID可以理解为Oracle为每一张表添加的一个<code>隐藏列</code>。<br><br> 表中的每一行（记录），都有一个行地址，ROWID用于查询该行地址。<br><br> 任意两行的ROWID不同。<br><br> ROWID只能<code>查询</code>，不能<code>修改</code>、<code>删除</code>。<br></li>
+<li><strong>ROWNUM</strong><br> 说明：对于查询结果表，rownum能返回每一行在结果表的序号。<br><br>  结果表中的第一行rownum为1、第n行rownum为n。<br><h2 id="Rownum实现分页查询"><a href="#Rownum实现分页查询" class="headerlink" title="Rownum实现分页查询"></a>Rownum实现分页查询</h2></li>
+</ul>
+<p><strong>功能：从表X中，查出按字段F排序后的 第M到第N条记录</strong><br><code>命令公式：</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 表X <span class="keyword">order</span> <span class="keyword">by</span> 字段F 排序方式) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span>M <span class="keyword">and</span> rn<span class="operator">&lt;=</span>N;</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        Reward
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>Copyright： </strong>
+              Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.caixuya.top/2020/11/17/Oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81ROWNUM%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/11/18/%E4%BD%BF%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E8%A1%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            使用SQL语句操作表
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/11/16/struts2%E5%85%A5%E9%97%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">struts2入门</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: 'FNs0guwagpT3LsPFt6njoMt6-MdYXbMMI',
+        app_key: 'Gyj6ShemJFGC9eDL9IsQKl9c',
+        path: window.location.pathname,
+        notify: 'true',
+        verify: 'true',
+        avatar: 'mm',
+        placeholder: '点击“回复”给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2020-2022
+        caixuya
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>本站总访问量:<span id="busuanzi_value_page_pv"></span></i>
+  <i>本站访客数:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <a href="http://www.beian.miit.gov.cn/" target="_black">粤ICP备20064368</a>
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">目录</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/study">学习</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="查询(search)">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我吃个小蛋糕吧～</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['苔藓吞食巨石,虽然缓慢,却具破坏性', '寄言燕雀莫相唣,自有云霄万里高', '能受天磨真铁汉，不遭人嫉是庸才'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+  
+<script src="/js/clickLove.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
