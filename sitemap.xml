@@ -119,6 +119,24 @@
   </url>
   
   <url>
+    <loc>http://www.caixuya.top/2022/04/09/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</loc>
+    
+    <lastmod>2022-04-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/2022/04/09/cpu%E8%AE%B0%E5%BD%95/</loc>
+    
+    <lastmod>2022-04-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.caixuya.top/about/</loc>
     
     <lastmod>2022-04-09</lastmod>
@@ -200,7 +218,7 @@
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
+    <loc>http://www.caixuya.top/categories/python/</loc>
     <lastmod>2022-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -208,6 +226,13 @@
   
   <url>
     <loc>http://www.caixuya.top/categories/github/</loc>
+    <lastmod>2022-04-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
     <lastmod>2022-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -229,13 +254,6 @@
   
   <url>
     <loc>http://www.caixuya.top/categories/mysql/</loc>
-    <lastmod>2022-04-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.caixuya.top/categories/python/</loc>
     <lastmod>2022-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

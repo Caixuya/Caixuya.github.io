@@ -210,6 +210,188 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/" class="post-title-link" itemprop="url">html+css鼠标移到图片上时显示下拉菜单</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-01 22:50:50" itemprop="dateCreated datePublished" datetime="2020-05-01T22:50:50+08:00">2020-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-14 23:42:01" itemprop="dateModified" datetime="2022-04-14T23:42:01+08:00">2022-04-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/" itemprop="url" rel="index"><span itemprop="name">前端页面</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>html代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;记帐本&lt;/title&gt;</span><br><span class="line"></span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/index.css&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class=&quot;biaoti&quot;&gt;&lt;font face=&quot;宋体&quot;&gt;记账本&lt;/font&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div class=&quot;logo&quot;&gt;&lt;!--这一步是创建图片的容器，方便待会儿对图片进行处理--&gt;</span><br><span class="line">	&lt;img src=&quot;img\more.png&quot; width=&quot;50&quot; height=&quot;50&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;form&quot; align=&quot;left&quot;&gt;</span><br><span class="line">			&lt;form&gt;</span><br><span class="line">				&lt;ul&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href=&quot;add.jsp&quot;&gt;记账&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href=&quot;change.jsp&quot;&gt;修改账本&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href=&quot;check.jsp&quot;&gt;查询&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href=&quot;delete.jsp&quot;&gt;删除账目&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">					&lt;li&gt;&lt;a href=&quot;all.jsp&quot;&gt;账目总览&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">				&lt;/ul&gt;</span><br><span class="line">			&lt;/form&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>css代码如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;<span class="comment">&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span></span><br><span class="line"><span class="comment">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span></span><br><span class="line">	list-style: none;<span class="comment">&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span></span><br><span class="line">	top:-10px;<span class="comment">&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span></span><br><span class="line">	left:-8px;<span class="comment">&lt;!--调整ul这个整体到网页左边的距离--&gt;</span></span><br><span class="line">	text-align:center;<span class="comment">&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span></span><br><span class="line"><span class="comment">	 记账             记账</span></span><br><span class="line"><span class="comment">	修改账本          修改账本 </span></span><br><span class="line"><span class="comment">	 查询             查询</span></span><br><span class="line"><span class="comment">	--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;<span class="comment">&lt;!--标题居中 --&gt;</span></span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey<span class="comment">&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;<span class="comment">&lt;!--去除a标签链接下面的横线 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363<span class="comment">&lt;!--代表当一段文本为链接时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!--代表这段文本被点击之后的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;<span class="comment">&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;<span class="comment">&lt;!--图片向右移动的距离--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; <span class="comment">&lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;<span class="comment">&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/" class="post-title-link" itemprop="url">mysql ERROR 1045 (28000) Access denied for user 'ODBC'@'localhost' (using password NO)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-01 22:50:50" itemprop="dateCreated datePublished" datetime="2020-05-01T22:50:50+08:00">2020-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-14 23:39:53" itemprop="dateModified" datetime="2022-04-14T23:39:53+08:00">2022-04-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>764</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
+<blockquote>
+<p>mysql ERROR 1045 (28000) Access denied for user ‘ODBC‘@’localhost’ (using password NO)</p>
+</blockquote>
+<p>在找答案的过程中受一位网友的启发，翻译了这句话，尝试了一下，惊喜地发现困扰了我好几天的问题解决了<br><br>不过好像这个问题解决和不解决都没什么关系，我只是单纯强迫症犯了和这个问题刚起来了<br></p>
+<p>这句话翻译过来就是你的mysql没有一个不用输入密码就可以登录的ODBC用户，解决方案就是：创建一个没有密码的ODBC用户，如下所示：<br></p>
+<p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
+<p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql.png"></p>
+<p>另外附上mysql登录命令：<code>mysql -u root -p;</code><br>关闭命令：<code>service mysqld stop;</code><br>修改密码命令：<code>set password for &#39;root&#39;@&#39;localhost&#39;=password(&#39;991007&#39;);</code><br>赋予所有权限：<code>grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;root&#39;;</code><br>更新权限命令<code>update mysql.user set Grant_priv=&#39;Y&#39;,Super_priv=&#39;Y&#39; where user = &#39;root&#39; and host = &#39;%&#39;;</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
     <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -774,7 +956,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a target="_blank" rel="noopener" href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a target="_blank" rel="noopener" href="https://www.mdeditor.com/">普通链接</a><br><a target="_blank" rel="noopener" href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a target="_blank" rel="noopener" href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a target="_blank" rel="noopener" href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#101;&#x73;&#x74;&#x2e;&#x74;&#101;&#115;&#x74;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#116;&#101;&#x73;&#x74;&#x2e;&#x74;&#101;&#115;&#x74;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a>  <a href="mailto:&#119;&#119;&#x77;&#x40;&#x76;&#105;&#x70;&#46;&#113;&#x71;&#46;&#99;&#111;&#109;">&#119;&#119;&#x77;&#x40;&#x76;&#105;&#x70;&#46;&#113;&#x71;&#46;&#99;&#111;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a target="_blank" rel="noopener" href="https://www.mdeditor.com/">普通链接</a><br><a target="_blank" rel="noopener" href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a target="_blank" rel="noopener" href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a target="_blank" rel="noopener" href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#101;&#x73;&#x74;&#46;&#x74;&#x65;&#115;&#116;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;">&#116;&#101;&#x73;&#x74;&#46;&#x74;&#x65;&#115;&#116;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;</a>  <a href="mailto:&#x77;&#119;&#119;&#x40;&#x76;&#x69;&#112;&#x2e;&#x71;&#x71;&#x2e;&#99;&#x6f;&#109;">&#x77;&#119;&#119;&#x40;&#x76;&#x69;&#112;&#x2e;&#x71;&#x71;&#x2e;&#99;&#x6f;&#109;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -1168,7 +1350,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1230,12 +1412,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">39k</span>
+    <span title="Symbols count total">43k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">35 mins.</span>
+    <span title="Reading time total">39 mins.</span>
 </div>
 
         
