@@ -1,3 +1,6 @@
+http://www.caixuya.top/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/
+http://www.caixuya.top/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/
+http://www.caixuya.top/2022/04/09/python/
 http://www.caixuya.top/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/
 http://www.caixuya.top/2020/05/01/html+css%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%88%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E6%97%B6%E6%98%BE%E7%A4%BA%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/
 http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/
@@ -10,7 +13,6 @@ http://www.caixuya.top/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%
 http://www.caixuya.top/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/
 http://www.caixuya.top/2020/04/04/markdown%E8%AF%AD%E6%B3%95%E9%9B%86/
 http://www.caixuya.top/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20'ODBC'@'localhost'%20(using%20password%20NO)/
-http://www.caixuya.top/2022/04/09/python/
 http://www.caixuya.top/2022/04/09/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/
 http://www.caixuya.top/2022/04/09/cpu%E8%AE%B0%E5%BD%95/
 http://www.caixuya.top/about/
@@ -22,11 +24,11 @@ http://www.caixuya.top/travelling/
 http://www.caixuya.top/404
 http://www.caixuya.top/
 http://www.caixuya.top/categories/python/
-http://www.caixuya.top/categories/Oracle/
 http://www.caixuya.top/categories/github/
-http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
+http://www.caixuya.top/categories/Oracle/
 http://www.caixuya.top/categories/hexo/
 http://www.caixuya.top/categories/markdown/
+http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
 http://www.caixuya.top/categories/mysql/
 http://www.caixuya.top/categories/SSH-struts2/
 http://www.caixuya.top/categories/daily/
