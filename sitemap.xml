@@ -229,14 +229,14 @@
 
   
   <url>
-    <loc>http://www.caixuya.top/categories/python/</loc>
+    <loc>http://www.caixuya.top/categories/Oracle/</loc>
     <lastmod>2022-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/Oracle/</loc>
+    <loc>http://www.caixuya.top/categories/python/</loc>
     <lastmod>2022-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -257,14 +257,14 @@
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/hexo/</loc>
+    <loc>http://www.caixuya.top/categories/markdown/</loc>
     <lastmod>2022-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/markdown/</loc>
+    <loc>http://www.caixuya.top/categories/hexo/</loc>
     <lastmod>2022-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
