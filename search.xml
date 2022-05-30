@@ -374,7 +374,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#x65;&#115;&#x74;&#46;&#116;&#101;&#x73;&#116;&#x40;&#103;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#109;">&#116;&#x65;&#115;&#x74;&#46;&#116;&#101;&#x73;&#116;&#x40;&#103;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#109;</a>  <a href="mailto:&#119;&#x77;&#119;&#64;&#x76;&#105;&#x70;&#46;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;">&#119;&#x77;&#119;&#64;&#x76;&#105;&#x70;&#46;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#x65;&#115;&#116;&#x2e;&#x74;&#101;&#x73;&#116;&#x40;&#x67;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#109;">&#116;&#x65;&#115;&#116;&#x2e;&#x74;&#101;&#x73;&#116;&#x40;&#x67;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#109;</a>  <a href="mailto:&#119;&#x77;&#119;&#64;&#x76;&#105;&#112;&#46;&#113;&#x71;&#x2e;&#x63;&#111;&#109;">&#119;&#x77;&#119;&#64;&#x76;&#105;&#112;&#46;&#113;&#x71;&#x2e;&#x63;&#111;&#109;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -1498,6 +1498,30 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
       </categories>
   </entry>
   <entry>
+    <title>心情记录:今天总算把博客完善了</title>
+    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
+    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
+]]></content>
+      <categories>
+        <category>daily</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>测试方法之改表测试</title>
+    <url>/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<p>为什么要改表测试：</p>
+<p>1.检查配置表中的字段是否生效</p>
+<p>2.测试“环境配置”</p>
+<p>举例：抽奖得抽100次以后，也就是第101次数才能抽到，为了测试方便，把100次改成10次</p>
+<p>3.权重测试</p>
+<p>举例：同样是抽奖的，改成10次后，担心改了抽奖次数后，概率变高，所以把概率调成0，变成必须让这个奖励在第11次抽到</p>
+<p>4.容错：配置空白</p>
+]]></content>
+      <categories>
+        <category>测试</category>
+      </categories>
+  </entry>
+  <entry>
     <title>生成器</title>
     <url>/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/</url>
     <content><![CDATA[<h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
@@ -1546,30 +1570,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 ]]></content>
       <categories>
         <category>python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>测试方法之改表测试</title>
-    <url>/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<p>为什么要改表测试：</p>
-<p>1.检查配置表中的字段是否生效</p>
-<p>2.测试“环境配置”</p>
-<p>举例：抽奖得抽100次以后，也就是第101次数才能抽到，为了测试方便，把100次改成10次</p>
-<p>3.权重测试</p>
-<p>举例：同样是抽奖的，改成10次后，担心改了抽奖次数后，概率变高，所以把概率调成0，变成必须让这个奖励在第11次抽到</p>
-<p>4.容错：配置空白</p>
-]]></content>
-      <categories>
-        <category>测试</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>心情记录:今天总算把博客完善了</title>
-    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
-    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
-]]></content>
-      <categories>
-        <category>daily</category>
       </categories>
   </entry>
   <entry>
@@ -1687,23 +1687,12 @@ if __name__ == &quot;__main__&quot;:
 </html>]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/travelling/travelling.js</url>
-    <content><![CDATA[function travelling(){
-    var url=new Array();
-
-    url[0]="http://www.xieyihui.top"
-
-/*
-    if (document.referrer) {
-      var origin = new URL(document.referrer).origin;
-      url.splice(url.indexOf(origin), 1);
-    }
-    */
-    
-    //var ints=Math.floor(Math.random() * url.length);
-    window.location=url[0];
-   }
+    <title>更新日历</title>
+    <url>/calendar/index.html</url>
+    <content><![CDATA[<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+    <div class="widget" id="CloudCalendar"></div>
+</div>
 ]]></content>
   </entry>
   <entry>
@@ -1713,13 +1702,9 @@ if __name__ == &quot;__main__&quot;:
 ]]></content>
   </entry>
   <entry>
-    <title>更新日历</title>
-    <url>/calendar/index.html</url>
-    <content><![CDATA[<!-- CloudCalendar -->
-<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
-    <div class="widget" id="CloudCalendar"></div>
-</div>
-]]></content>
+    <title>categories</title>
+    <url>/categories/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
@@ -1841,8 +1826,23 @@ if __name__ == &quot;__main__&quot;:
 </html>]]></content>
   </entry>
   <entry>
-    <title>categories</title>
-    <url>/categories/index.html</url>
-    <content><![CDATA[]]></content>
+    <title></title>
+    <url>/travelling/travelling.js</url>
+    <content><![CDATA[function travelling(){
+    var url=new Array();
+
+    url[0]="http://www.xieyihui.top"
+
+/*
+    if (document.referrer) {
+      var origin = new URL(document.referrer).origin;
+      url.splice(url.indexOf(origin), 1);
+    }
+    */
+    
+    //var ints=Math.floor(Math.random() * url.length);
+    window.location=url[0];
+   }
+]]></content>
   </entry>
 </search>

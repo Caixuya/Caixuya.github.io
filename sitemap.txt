@@ -34,6 +34,6 @@ http://www.caixuya.top/categories/hexo/
 http://www.caixuya.top/categories/markdown/
 http://www.caixuya.top/categories/mysql/
 http://www.caixuya.top/categories/SSH-struts2/
-http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/
 http://www.caixuya.top/categories/daily/
+http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/
 http://www.caixuya.top/categories/linux/
