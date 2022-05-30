@@ -26,14 +26,14 @@ http://www.caixuya.top/calendar/
 http://www.caixuya.top/travelling/
 http://www.caixuya.top/404
 http://www.caixuya.top/
-http://www.caixuya.top/categories/Oracle/
 http://www.caixuya.top/categories/python/
+http://www.caixuya.top/categories/Oracle/
 http://www.caixuya.top/categories/github/
 http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
 http://www.caixuya.top/categories/hexo/
 http://www.caixuya.top/categories/markdown/
 http://www.caixuya.top/categories/mysql/
 http://www.caixuya.top/categories/SSH-struts2/
-http://www.caixuya.top/categories/daily/
 http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/
+http://www.caixuya.top/categories/daily/
 http://www.caixuya.top/categories/linux/
