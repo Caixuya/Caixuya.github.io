@@ -272,6 +272,7 @@
       
           <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">g = <span class="keyword">lambda</span> x: x + <span class="number">1</span></span><br><span class="line"><span class="comment"># 上面这句等价于这句</span></span><br><span class="line"><span class="comment">#def g(x):</span></span><br><span class="line"><span class="comment">#    return x + 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 无参数</span></span><br><span class="line">t = <span class="keyword">lambda</span>: <span class="literal">True</span></span><br><span class="line">wc = <span class="keyword">lambda</span>: <span class="string">&quot;这是一个无参的lambda&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个或多个参数</span></span><br><span class="line">b = <span class="keyword">lambda</span> x: x ** <span class="number">3</span></span><br><span class="line">c = <span class="keyword">lambda</span> x, y=<span class="number">3</span>: x * y</span><br><span class="line">cc = <span class="keyword">lambda</span> name, age: (name, age)</span><br><span class="line">a = <span class="keyword">lambda</span> x, y, z: x + y + z</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不定长参数</span></span><br><span class="line">d = <span class="keyword">lambda</span> *z: <span class="built_in">sum</span>(z) / <span class="built_in">len</span>(z)</span><br><span class="line"><span class="comment"># *z为不定长参数，可以输入多个参数，没有固定长度，可用于求取平均值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 键值对参数</span></span><br><span class="line">e = <span class="keyword">lambda</span> **arg: arg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回多个表达式（需要将表达式用元组或列表的方式返回）</span></span><br><span class="line">dg = <span class="keyword">lambda</span> a, b: (a * b, a + b, a // b, a / b, a % b)</span><br><span class="line"></span><br><span class="line"><span class="comment">#map函数</span></span><br><span class="line">li = <span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(t())</span><br><span class="line">    <span class="built_in">print</span>(wc())</span><br><span class="line">    <span class="built_in">print</span>(g(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(b(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;sum = &#x27;</span>, a(<span class="number">3</span>, <span class="number">6</span>, <span class="number">2</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接在print中用f-string输出，其中:.2f表示显示小数点后两位</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;梯形 = <span class="subst">&#123;(<span class="keyword">lambda</span> tx, tk, h: (tx + tk) * h / <span class="number">2</span>)(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>):<span class="number">.2</span>f&#125;</span>&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接输出</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])))  <span class="comment"># 1</span></span><br><span class="line">    <span class="comment">#也可以在上面定义</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(li))</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(cc(age=<span class="number">25</span>, name=<span class="string">&quot;小明&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(c(<span class="number">8</span>))</span><br><span class="line">    <span class="built_in">print</span>(d(<span class="number">1</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(yellow=<span class="number">1</span>, blue=<span class="number">2</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(a=<span class="number">34</span>, b=<span class="number">56</span>))</span><br><span class="line">    <span class="built_in">print</span>(dg(<span class="number">10</span>, <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
 
+
       
     </div>
 
@@ -418,7 +419,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>718</span>
+              <span>723</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -437,10 +438,15 @@
 
       
           <h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">例子的延申：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">g</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">        <span class="keyword">return</span> i * i</span><br><span class="line">    <span class="keyword">return</span> f()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(g(k))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
 <h3 id="“闭包”和“nonlocal”关键词"><a href="#“闭包”和“nonlocal”关键词" class="headerlink" title="“闭包”和“nonlocal”关键词"></a>“闭包”和“nonlocal”关键词</h3><p>闭包：就是能够读取其他函数内部变量的函数，其实就是内层函数引用了外层函数的局部变量，可以理解为“定义在一个函数内部的函数”，本质上，闭包是将函数内部和函数外部连接起来的桥梁。如下所示：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inc</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="comment"># 仅读取x的值:</span></span><br><span class="line">        <span class="keyword">return</span> x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inc()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是：1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x=0一样，如下所示：</p>
+
+<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x&#x3D;0一样，如下所示：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>
       
     </div>
@@ -522,32 +528,51 @@
       
           <p>列表中，比较少用的是列表生成式，之前用的一直是比较常规的方式，所以列表生成式这种比较简便的方式在这里做个记录，方便以后自己反复查看</p>
 <h4 id="1-使用函数range创建数字列表"><a href="#1-使用函数range创建数字列表" class="headerlink" title="1.使用函数range创建数字列表"></a>1.使用函数range创建数字列表</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list1</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    numbers = []</span><br><span class="line">    numbers = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(numbers)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">list2</span>():</span><br><span class="line">    num = []</span><br><span class="line">    num = <span class="built_in">range</span>(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> num:</span><br><span class="line">        <span class="built_in">print</span>(i, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    list1()</span><br><span class="line">    list2()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight leaf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输出结果为:</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8, 9]      <span class="function"><span class="keyword">#</span><span class="title">list1</span><span class="params">()</span></span>的输出结果</span><br><span class="line">0 1 2 3 4 5 6 7 8 9 			 <span class="function"><span class="keyword">#</span><span class="title">list2</span><span class="params">()</span></span>的输出结果</span><br></pre></td></tr></table></figure>
+
 <p>如果要生成<code>[1x1, 2x2, 3x3, ..., 10x10]</code>这种形式的话，可以用常规的方式：遍历数组中的数，让数组中的数相乘，如下:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        L.append(x * x)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen()</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+
 <p>用列表生成式的方法做就是：把要生成的元素（以上面的例子为例：要生成的元素是<code>x * x</code>）放在前面,后面跟<code>for</code>循环，如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
+
 <p>输出结果和上面的常规方法输出的结果一样：</p>
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+
 <h4 id="2-列表生成式-if"><a href="#2-列表生成式-if" class="headerlink" title="2.列表生成式 + if"></a>2.列表生成式 + if</h4><p>跟在<code>for</code>后面的<code>if</code>是一个筛选条件，不能带<code>else</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[4, 16, 36, 64, 100]</span></span><br></pre></td></tr></table></figure>
+
+
+
 <p>相当于：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            x_all = x * x</span><br><span class="line">            L.append(x_all)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_()</span><br></pre></td></tr></table></figure>
+
 <h4 id="3-列表生成式-if-…-else"><a href="#3-列表生成式-if-…-else" class="headerlink" title="3.列表生成式 + if ….else"></a>3.列表生成式 + if ….else</h4><p><code>if</code>写在<code>for</code>前面必须加<code>else</code>,因为<code>for</code>前面的部分是一个表达式，它必须根据<code>x</code>计算出一个结果</p>
 <p>如下这条表达式，<code>x if x % 2 == 0</code>，它无法根据<code>x</code>计算出结果，因为缺少<code>else</code>，必须加上<code>else</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_ruguo</span>():</span><br><span class="line">    L = [x <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> -x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _ruguo()</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[<span class="string">-1</span>, 2, <span class="string">-3</span>, 4, <span class="string">-5</span>, 6, <span class="string">-7</span>, 8, <span class="string">-9</span>, 10]</span><br></pre></td></tr></table></figure>
+
 <p>这个的效果就相当于：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">ru_guo</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            x1 = x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x1 = -x</span><br><span class="line">        L.append(x1)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    ru_guo()</span><br></pre></td></tr></table></figure>
+
 <h4 id="4-两层循环，生成全排列"><a href="#4-两层循环，生成全排列" class="headerlink" title="4.两层循环，生成全排列"></a>4.两层循环，生成全排列</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pai_lie</span>():</span><br><span class="line">    L = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;ABC&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;XYZ&#x27;</span>]</span><br><span class="line">    W = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>]</span><br><span class="line">    <span class="built_in">print</span>(W)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># pai_lie()函数等价于qing_xi()，但是并不是完全等价，pai_lie这个函数输出来以后是一个列表，如下输出结果4.1所示</span></span><br><span class="line"><span class="comment">#而qing_xi函数输出来的是一个一个单独的，如下图输出结果4.2所示</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            <span class="built_in">print</span>(m + n)</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pai_lie()</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果<span class="number">4.1</span></span><br><span class="line"><span class="selector-attr">[<span class="string">&#x27;14&#x27;</span>, <span class="string">&#x27;15&#x27;</span>, <span class="string">&#x27;16&#x27;</span>, <span class="string">&#x27;24&#x27;</span>, <span class="string">&#x27;25&#x27;</span>, <span class="string">&#x27;26&#x27;</span>, <span class="string">&#x27;34&#x27;</span>, <span class="string">&#x27;35&#x27;</span>, <span class="string">&#x27;36&#x27;</span>]</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输出结果4.2</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td></tr></table></figure>
+
 <p>如果想和pai_lie完全一样，还应该定义一个空的列表，将(m+n)放进列表中</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            L.append(m+n)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    qing_xi()</span><br></pre></td></tr></table></figure>
-<h4 id="5-例题："><a href="#5-例题：" class="headerlink" title="5.例题："></a>5.例题：</h4><p>题目：有L1列表如下：L1 = [‘Hello’, ‘World’, 18, ‘Apple’, None]，列表中有数字有字符（字符有大写有小写）有空值，现要求输出成[‘hello’, ‘world’, ‘apple’]。用<code>lower</code> 函数将将所有字母都转换成小写，用<code>isinstance</code>函数判断一个变量是不是字符串。编写代码如下：</p>
+
+<h4 id="5-例题："><a href="#5-例题：" class="headerlink" title="5.例题："></a>5.例题：</h4><p>题目：有L1列表如下：L1 &#x3D; [‘Hello’, ‘World’, 18, ‘Apple’, None]，列表中有数字有字符（字符有大写有小写）有空值，现要求输出成[‘hello’, ‘world’, ‘apple’]。用<code>lower</code> 函数将将所有字母都转换成小写，用<code>isinstance</code>函数判断一个变量是不是字符串。编写代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_li_ti</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</span><br><span class="line">    L1 = [<span class="string">&#x27;Hello&#x27;</span>, <span class="string">&#x27;World&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;Apple&#x27;</span>, <span class="literal">None</span>]</span><br><span class="line">    L2 = [x.lower() <span class="keyword">for</span> x <span class="keyword">in</span> L1 <span class="keyword">if</span> <span class="built_in">isinstance</span>(x, <span class="built_in">str</span>) <span class="keyword">is</span> <span class="literal">True</span>]</span><br><span class="line">    <span class="built_in">print</span>(L2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _li_ti()</span><br></pre></td></tr></table></figure>
+
 <p>另一种形式为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_instance</span>():</span><br><span class="line">    L = []</span><br><span class="line">    L1 = [<span class="string">&#x27;Hello&#x27;</span>, <span class="string">&#x27;World&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;Apple&#x27;</span>, <span class="literal">None</span>]</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> L1:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(s, <span class="built_in">str</span>) <span class="keyword">is</span> <span class="literal">True</span>:</span><br><span class="line">            L.append(s.lower())</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    is_instance()</span><br></pre></td></tr></table></figure>
 
@@ -631,35 +656,47 @@
       
           <h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
 <p>如果可以先不创建完整的list，而是先创建一个东西，使得这个东西可以在循环的过程中计算出后面的元素，这样可以节省大量的空间。这个一边循环一边计算的机制，成为生成器：generator</p>
-<h3 id="2-创建generator"><a href="#2-创建generator" class="headerlink" title="2. 创建generator"></a>2. 创建generator</h3><h4 id="第一种方法：把列表生成式的-改成"><a href="#第一种方法：把列表生成式的-改成" class="headerlink" title=" 第一种方法：把列表生成式的[]改成()"></a><1> 第一种方法：把列表生成式的[]改成()</h4><p>这里可以看到，函数gen_ner只是把gen_list最外层的[]改成了()，结果就是L是一个list，而g是一个generator</p>
+<h3 id="2-创建generator"><a href="#2-创建generator" class="headerlink" title="2. 创建generator"></a>2. 创建generator</h3><h4 id="lt-1-gt-第一种方法：把列表生成式的-改成"><a href="#lt-1-gt-第一种方法：把列表生成式的-改成" class="headerlink" title="&lt;1&gt; 第一种方法：把列表生成式的[]改成()"></a>&lt;1&gt; 第一种方法：把列表生成式的[]改成()</h4><p>这里可以看到，函数gen_ner只是把gen_list最外层的[]改成了()，结果就是L是一个list，而g是一个generator</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"><span class="comment">#gen_list的输出结果为：</span></span><br><span class="line"><span class="comment">#[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]  </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gen_ner</span>():</span><br><span class="line">    g = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(g)</span><br><span class="line"><span class="comment">#gen_ner()的输出结果为：</span></span><br><span class="line"><span class="comment">#&lt;generator object gen_ner.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002245435B970&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    gen_list()</span><br><span class="line">    gen_ner()</span><br></pre></td></tr></table></figure>
+
 <p>从上面的结果可以看到，generator是一个对象，如何打印出放在里面的元素呢，可以一个一个用next()打印，不过用next的话有一个缺点是，需要不断地调用next去计算g的下一个元素（next(g)），这种方法不能指定需要的那个元素，而且在没有更多元素的时候，会抛出StopIteration的错误。</p>
 <p>那么更便捷的方法是什么呢？用for循环打印：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_ner</span>():</span><br><span class="line">    g = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> g:</span><br><span class="line">        <span class="built_in">print</span>(n)</span><br><span class="line"></span><br><span class="line">      </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    gen_ner()</span><br></pre></td></tr></table></figure>
+
 <h5 id="2-1-例子（斐波拉契数列）"><a href="#2-1-例子（斐波拉契数列）" class="headerlink" title="2.1 例子（斐波拉契数列）"></a>2.1 例子（斐波拉契数列）</h5><p>著名的斐波拉契数列（Fibonacci），除第一个和第二个数外，任意一个数都可由前两个数相加得到：</p>
 <p>1, 1, 2, 3, 5, 8, 13, 21, 34, …</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="built_in">print</span>(b)</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    fib(<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">执行结果是：</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br></pre></td></tr></table></figure>
-<p>其中：a, b = b, a + b为赋值语句，相当于：</p>
+
+<p>其中：a, b &#x3D; b, a + b为赋值语句，相当于：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">t</span> = (b, a + b) <span class="comment"># t是一个tuple</span></span><br><span class="line"><span class="attr">a</span> = t[<span class="number">0</span>]</span><br><span class="line"><span class="attr">b</span> = t[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
 <p>但不必显式写出临时变量t就可以赋值，也就是说，<code>a, b = b, a + b</code>这句话的意思是：把a赋值给b，把b赋值给a+b。t只是作为一个中间变量出现，不用中间变量的时候可以直接赋值。</p>
 <p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E7%94%9F%E6%88%90%E5%99%A81.png" alt="image-20220424192351161"></p>
 <h5 id="2-2-斐波拉契数列类似generator"><a href="#2-2-斐波拉契数列类似generator" class="headerlink" title="2.2  斐波拉契数列类似generator"></a>2.2  斐波拉契数列类似generator</h5><p>斐波拉契数列的推算规则，可以从第一个元素开始，推算出后续任意的元素，这种逻辑其实非常类似generator，也就是”2.1 例子（斐波拉契数列）“的函数和generator仅一步之遥。要把<code>fib</code>函数变成generator函数，只需要把<code>print(b)</code>改为<code>yield b</code>就可以了：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="keyword">yield</span> b</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = fib(<span class="number">8</span>)		<span class="comment">#调用generator对象</span></span><br><span class="line">    <span class="built_in">print</span>(f)</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">运行的结果是：</span><br><span class="line">&lt;generator object <span class="built_in">fib</span> <span class="built_in">at</span> <span class="number">0x000001EAE925B970</span>&gt;</span><br></pre></td></tr></table></figure>
+
 <h3 id="3-generator函数的执行顺序"><a href="#3-generator函数的执行顺序" class="headerlink" title="3. generator函数的执行顺序"></a>3. generator函数的执行顺序</h3><p>普通函数是顺序执行，遇到<code>return</code>语句或者最后一行函数语句就返回。</p>
 <p>generator的函数，在每次调用<code>next()</code>的时候执行，遇到<code>yield</code>语句返回，再次执行时从上次返回的<code>yield</code>语句处继续执行，例子如下：</p>
 <p>先定义一个generator函数，依次返回数字1,3,5:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span>(<span class="number">3</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span>(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
 <p>调用该generator函数时，首先要生成一个generator对象，然后用<code>next()</code>函数不断获得下一个返回值：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>o = odd()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">StopIteration</span><br></pre></td></tr></table></figure>
+
 <p>可以看到，<code>odd</code>不是普通函数，而是generator函数，在执行过程中，遇到<code>yield</code>就中断，下次又继续执行。执行3次<code>yield</code>后，已经没有<code>yield</code>可以执行了，所以，第4次调用<code>next(o)</code>就报错。</p>
 <p>我们在循环过程中不断调用<code>yield</code>，就会不断中断。当然要给循环设置一个条件来退出循环，不然就会产生一个无限数列出来。</p>
 <p>同样的，把函数改成generator函数后，我们基本上从来不会用<code>next()</code>来获取下一个返回值，而是直接使用<code>for</code>循环来迭代：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> odd():</span><br><span class="line">        <span class="built_in">print</span>(n)</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">结果是：</span><br><span class="line">step <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">step <span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">step <span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure>
+
 <p>但是用<code>for</code>循环调用generator时，发现拿不到generator的<code>return</code>语句的返回值。如果想要拿到返回值，必须捕获<code>StopIteration</code>错误，返回值包含在<code>StopIteration</code>的<code>value</code>中：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    g = odd()</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            x = <span class="built_in">next</span>(g)</span><br><span class="line">            <span class="built_in">print</span>(x)</span><br><span class="line">        <span class="keyword">except</span> StopIteration <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Generator return value:&#x27;</span>, e.value)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -747,8 +784,10 @@
       
           <p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>.sh文件如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pid=$1</span><br><span class="line">cat /proc/stat | grep cpu[^0-9]</span><br><span class="line">cat /proc/$&#123;pid&#125;/stat</span><br><span class="line">dumpsys meminfo $&#123;pid&#125; | grep TOTAL:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -816,7 +855,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>3.6k</span>
+              <span>3.7k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -835,7 +874,7 @@
 
       
           <p>本文是学习总结，学习网站是廖雪峰网站，连接在这：<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/" title="廖雪峰的官方网站">https://www.liaoxuefeng.com/</a><br></p>
-<h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用<br></h2><h3 id="一：函数的调用"><a href="#一：函数的调用" class="headerlink" title="一：函数的调用"></a>一：函数的调用<br></h3><h6 id="普通函数调用"><a href="#普通函数调用" class="headerlink" title="普通函数调用"></a><1>普通函数调用<br></h6><pre><code>def enroll(name, gender):
+<h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用<br></h2><h3 id="一：函数的调用"><a href="#一：函数的调用" class="headerlink" title="一：函数的调用"></a>一：函数的调用<br></h3><h6 id="lt-1-gt-普通函数调用"><a href="#lt-1-gt-普通函数调用" class="headerlink" title="&lt;1&gt;普通函数调用"></a>&lt;1&gt;普通函数调用<br></h6><pre><code>def enroll(name, gender):
     print(&#39;name:&#39;, name)
     print(&#39;gender:&#39;, gender)
 
@@ -846,10 +885,12 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出是这个样子的：<br></p>
+</code></pre>
+<p>输出是这个样子的：<br></p>
 <pre><code>name: sarah
 gender: F
-</code></pre><h6 id="调用数组"><a href="#调用数组" class="headerlink" title="调用数组"></a><2>调用数组<br></h6><pre><code>def calc():
+</code></pre>
+<h6 id="lt-2-gt-调用数组"><a href="#lt-2-gt-调用数组" class="headerlink" title="&lt;2&gt;调用数组"></a>&lt;2&gt;调用数组<br></h6><pre><code>def calc():
     global nums               #先定义一个全局变量
     nums = [1, 2, 3]       #然后把数组赋值给变量
 
@@ -861,28 +902,33 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><h3 id="二：设置默认参数"><a href="#二：设置默认参数" class="headerlink" title="二：设置默认参数"></a>二：设置默认参数<br></h3><p>定义一个enroll函数，它的参数有name,gender,age,city<br></p>
+</code></pre>
+<h3 id="二：设置默认参数"><a href="#二：设置默认参数" class="headerlink" title="二：设置默认参数"></a>二：设置默认参数<br></h3><p>定义一个enroll函数，它的参数有name,gender,age,city<br></p>
 <pre><code>def enroll(name, gender, age=6, city=&#39;Beijing&#39;):
     print(&#39;name:&#39;, name)
     print(&#39;gender:&#39;, gender)
     print(&#39;age:&#39;, age)
     print(&#39;city:&#39;, city)
-</code></pre><p>定义完函数后，在主函数调用，一个是默认参数调用，一个是更改默认参数调用<br></p>
-<h6 id="当age-和city与默认参数相同时，不需要再设置"><a href="#当age-和city与默认参数相同时，不需要再设置" class="headerlink" title="当age 和city与默认参数相同时，不需要再设置"></a><1>当<code>age</code> 和<code>city</code>与默认参数相同时，不需要再设置<br></h6><pre><code>def main():
+</code></pre>
+<p>定义完函数后，在主函数调用，一个是默认参数调用，一个是更改默认参数调用<br></p>
+<h6 id="lt-1-gt-当age-和city与默认参数相同时，不需要再设置"><a href="#lt-1-gt-当age-和city与默认参数相同时，不需要再设置" class="headerlink" title="&lt;1&gt;当age 和city与默认参数相同时，不需要再设置"></a>&lt;1&gt;当<code>age</code> 和<code>city</code>与默认参数相同时，不需要再设置<br></h6><pre><code>def main():
     enroll(&#39;sarah&#39;, &#39;F&#39;)
 
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果为：<br></p>
+</code></pre>
+<p>输出结果为：<br></p>
 <pre><code>name: sarah
 gender: F
 age: 6
 city: Beijing
-</code></pre><h6 id="当与默认参数不符时，提供值覆盖默认参数值："><a href="#当与默认参数不符时，提供值覆盖默认参数值：" class="headerlink" title="当与默认参数不符时，提供值覆盖默认参数值："></a><2>当与默认参数不符时，提供值覆盖默认参数值：<br></h6><pre><code>def main():
+</code></pre>
+<h6 id="lt-2-gt-当与默认参数不符时，提供值覆盖默认参数值："><a href="#lt-2-gt-当与默认参数不符时，提供值覆盖默认参数值：" class="headerlink" title="&lt;2&gt;当与默认参数不符时，提供值覆盖默认参数值："></a>&lt;2&gt;当与默认参数不符时，提供值覆盖默认参数值：<br></h6><pre><code>def main():
     enroll(&#39;sarah&#39;, &#39;F&#39;, 7)                   #按顺序可以不写参数名
     enroll(&#39;Adam&#39;, &#39;M&#39;, city=&#39;TianJin&#39;)       #不按顺序要写参数名
-</code></pre><h5 id="默认参数需要设置成不变的对象（重要）"><a href="#默认参数需要设置成不变的对象（重要）" class="headerlink" title="默认参数需要设置成不变的对象（重要）"></a><3>默认参数需要设置成不变的对象（重要）<br></h5><p>错误例子：<br></p>
+</code></pre>
+<h5 id="lt-3-gt-默认参数需要设置成不变的对象（重要）"><a href="#lt-3-gt-默认参数需要设置成不变的对象（重要）" class="headerlink" title="&lt;3&gt;默认参数需要设置成不变的对象（重要）"></a>&lt;3&gt;默认参数需要设置成不变的对象（重要）<br></h5><p>错误例子：<br></p>
 <pre><code>def add_end(L=[]):
     L.append(&#39;END&#39;)
     print(L)
@@ -899,13 +945,15 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果：<br></p>
+</code></pre>
+<p>输出结果：<br></p>
 <pre><code>[1, 2, 3, &#39;END&#39;]
 [&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;END&#39;]
 [&#39;END&#39;]
 [&#39;END&#39;, &#39;END&#39;]
 [&#39;END&#39;, &#39;END&#39;, &#39;END&#39;]
-</code></pre><p>从结果中可以看到：当调用函数时传参了，显示的结果是正确的。但是如果直接调用，不传入参数，那数组就会记录上一个数组的值，从而导致结果累加，如结果第三，四，五条所示。<br></p>
+</code></pre>
+<p>从结果中可以看到：当调用函数时传参了，显示的结果是正确的。但是如果直接调用，不传入参数，那数组就会记录上一个数组的值，从而导致结果累加，如结果第三，四，五条所示。<br></p>
 <p>正确例子1：<br></p>
 <pre><code>def add_end(L = []):    #也可以让L等于None 即def add_end(L = None):
     if L == []:            #这里同样要改成None 即if L == None:          
@@ -926,13 +974,15 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果：<br></p>
+</code></pre>
+<p>输出结果：<br></p>
 <pre><code>[1, 2, 3, &#39;END&#39;]
 [&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;END&#39;]
 [&#39;END&#39;]
 [&#39;END&#39;]
 [&#39;END&#39;]
-</code></pre><p>除此以外，还可以在错误例子的基础上改主函数，不过有点麻烦，每一个都要改，好处就是可以选择哪些要像错误例子里面那样，把结果叠加起来的，哪些不想把结果叠加起来的，代码如下：<br><br>正确例子2：<br></p>
+</code></pre>
+<p>除此以外，还可以在错误例子的基础上改主函数，不过有点麻烦，每一个都要改，好处就是可以选择哪些要像错误例子里面那样，把结果叠加起来的，哪些不想把结果叠加起来的，代码如下：<br><br>正确例子2：<br></p>
 <pre><code>def add_end(L=[]):
     L.append(&#39;END&#39;)
     print(L)
@@ -953,7 +1003,8 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果：<br></p>
+</code></pre>
+<p>输出结果：<br></p>
 <pre><code>[1, 2, 3, &#39;END&#39;]
 [&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;END&#39;]
 [&#39;END&#39;]
@@ -963,9 +1014,10 @@ if __name__ == &quot;__main__&quot;:
 [&#39;END&#39;]
 [&#39;END&#39;, &#39;END&#39;]
 [&#39;END&#39;, &#39;END&#39;, &#39;END&#39;]
-</code></pre><p>以上输出结果可以看到，当在调用函数的时候，每次调用函数都传空数组，相当于重置数组的初始值，所以得到的结果是正确的，如果啥都不传，直接调用，数据就会叠加<br></p>
+</code></pre>
+<p>以上输出结果可以看到，当在调用函数的时候，每次调用函数都传空数组，相当于重置数组的初始值，所以得到的结果是正确的，如果啥都不传，直接调用，数据就会叠加<br></p>
 <h3 id="三：可变参数"><a href="#三：可变参数" class="headerlink" title="三：可变参数"></a>三：可变参数<br></h3><p>可变参数就是传入的参数个数是可变的，可以是1个、2个到任意个，还可以是0个<br></p>
-<h6 id="主函数—没有元素、单个元素或者多个元素传入"><a href="#主函数—没有元素、单个元素或者多个元素传入" class="headerlink" title="主函数—没有元素、单个元素或者多个元素传入"></a><1>主函数—没有元素、单个元素或者多个元素传入<br></h6><pre><code>def calc(*numbers):        #这里的*表示把number改成可变参数，让函数传入的参数个数是可变的。
+<h6 id="lt-1-gt-主函数–没有元素、单个元素或者多个元素传入"><a href="#lt-1-gt-主函数–没有元素、单个元素或者多个元素传入" class="headerlink" title="&lt;1&gt;主函数–没有元素、单个元素或者多个元素传入"></a>&lt;1&gt;主函数–没有元素、单个元素或者多个元素传入<br></h6><pre><code>def calc(*numbers):        #这里的*表示把number改成可变参数，让函数传入的参数个数是可变的。
     sum = 0
     for number in numbers:
         sum = sum + number * number        #这里是number乘number
@@ -981,11 +1033,13 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果为：<br></p>
+</code></pre>
+<p>输出结果为：<br></p>
 <pre><code>14
 13
 0
-</code></pre><p>如果不把calc函数的参数变成可变参数，那么在主函数中调用的时候就要先组装出一个list或者tuple，如下所示<br></p>
+</code></pre>
+<p>如果不把calc函数的参数变成可变参数，那么在主函数中调用的时候就要先组装出一个list或者tuple，如下所示<br></p>
 <pre><code>def calc(numbers):
     sum = 0
     for number in numbers:
@@ -1000,9 +1054,11 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果为：<br></p>
+</code></pre>
+<p>输出结果为：<br></p>
 <pre><code>14
-</code></pre><h6 id="主函数—数组元素传入"><a href="#主函数—数组元素传入" class="headerlink" title="主函数—数组元素传入"></a><2>主函数—数组元素传入<br></h6><pre><code>def calc(*numbers):
+</code></pre>
+<h6 id="lt-2-gt-主函数–数组元素传入"><a href="#lt-2-gt-主函数–数组元素传入" class="headerlink" title="&lt;2&gt;主函数–数组元素传入"></a>&lt;2&gt;主函数–数组元素传入<br></h6><pre><code>def calc(*numbers):
     sum = 0
     for number in numbers:
         sum = sum + number * number
@@ -1017,9 +1073,11 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果为：<br></p>
+</code></pre>
+<p>输出结果为：<br></p>
 <pre><code>14
-</code></pre><h6 id="关键字参数"><a href="#关键字参数" class="headerlink" title="关键字参数"></a><3>关键字参数<br></h6><p>关键字参数的作用是：如下代码所示：name和age是必填参数，**kw是选填参数<br></p>
+</code></pre>
+<h6 id="lt-3-gt-关键字参数"><a href="#lt-3-gt-关键字参数" class="headerlink" title="&lt;3&gt;关键字参数"></a>&lt;3&gt;关键字参数<br></h6><p>关键字参数的作用是：如下代码所示：name和age是必填参数，**kw是选填参数<br></p>
 <pre><code>def person(name, age, **kw):            #形参前加&#39;*&#39;和&#39;**&#39;表示动态形参
     print(&#39;name:&#39;, name, &#39;age:&#39;, age, &#39;other:&#39;, **kw)
 
@@ -1030,9 +1088,11 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()
-</code></pre><p>输出结果为：<br></p>
+</code></pre>
+<p>输出结果为：<br></p>
 <pre><code>name: Michael age: 30 other: &#123;&#39;city&#39;: &#39;Beijing&#39;&#125;
-</code></pre><h6 id=""><a href="#" class="headerlink" title=""></a><4><br></h6>
+</code></pre>
+<h6 id="lt-4-gt"><a href="#lt-4-gt" class="headerlink" title="&lt;4&gt;"></a>&lt;4&gt;<br></h6>
       
     </div>
 
@@ -1099,7 +1159,7 @@ if __name__ == &quot;__main__&quot;:
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>910</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1117,7 +1177,7 @@ if __name__ == &quot;__main__&quot;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="递归函数—递归，尾递归"><a href="#递归函数—递归，尾递归" class="headerlink" title="递归函数—递归，尾递归"></a>递归函数—递归，尾递归</h3><p>函数在内部可以调用其他函数，也可以自己调用自己，自己调用自己的函数叫递归函数。<br></p>
+          <h3 id="递归函数–递归，尾递归"><a href="#递归函数–递归，尾递归" class="headerlink" title="递归函数–递归，尾递归"></a>递归函数–递归，尾递归</h3><p>函数在内部可以调用其他函数，也可以自己调用自己，自己调用自己的函数叫递归函数。<br></p>
 <p>例子一：<br><br>如：<br></p>
 <pre><code>python
 def fact(n):
@@ -1125,18 +1185,19 @@ def fact(n):
         return 1        
      #n * fact(n-1)中，当n=1时(n-1)=0，为了避免n=1时出错，直接让n=1时返回1
     return n * fact(n-1)
-</code></pre><p>假设这里n=5,即 def fact(5)：<br></p>
+</code></pre>
+<p>假设这里n&#x3D;5,即 def fact(5)：<br></p>
 <p>这个函数的执行过程是：先调用fact函数的返回值：n * fact(n-1)<br></p>
-<p>fact(5) ==&gt;n <em> fact(n-1)，==&gt; 5 </em> fact(5 - 1) ==&gt; 5 * fact(4)<br></p>
+<p>fact(5) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt; 5 * fact(5 - 1) &#x3D;&#x3D;&gt; 5 * fact(4)<br></p>
 <p>这里fact（4）再次调用fact函数，即将算式中的fact(4)替换成返回值<br></p>
-<p>fact(4) ==&gt;n <em> fact(n-1)，==&gt;5 </em> (4 <em> fact(4 - 1)) ==&gt; 5 </em> (4 * fact(3))<br></p>
+<p>fact(4) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * fact(4 - 1)) &#x3D;&#x3D;&gt; 5 * (4 * fact(3))<br></p>
 <p>以此类推，直到算式中没有fact()函数<br></p>
-<p>fact(3) ==&gt;n <em> fact(n-1)，==&gt;5 </em> (4 <em> (3 </em> fact(3-1))) ==&gt; 5 <em> (4 </em> (3 * fact(2)))<br></p>
-<p>fact(2) ==&gt;n <em> fact(n-1)，==&gt;5 </em> (4 <em> (3 </em> (2 <em> fact(2-1)))) ==&gt; 5 </em> (4 <em> (3 </em> (2 * fact(1))))<br></p>
-<p>fact(1) ==&gt;n <em> fact(n-1)，==&gt;5 </em> (4 <em> (3 </em> (2 <em> (2-1)))) ==&gt; 5 </em> (4 <em> (3 </em> (2 * fact(1))))<br></p>
-<p>n = 1的是时，return 1 ，所以最终是：5 <em> (4 </em> fact(3 <em> fact(2 </em> 1)))<br></p>
-<p>因此fact(1) ==&gt;n <em> fact(n-1)，==&gt;5 </em> (4 <em> (3 </em> (2 <em> (2-1)))) ==&gt; 5 </em> (4 <em> (3 </em> (2 * 1)))<br></p>
-<p>即 5 <em> 4 </em> 3 <em> 2 </em> 1 = 5!=120<br></p>
+<p>fact(3) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * fact(3-1))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * fact(2)))<br></p>
+<p>fact(2) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * fact(2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * fact(1))))<br></p>
+<p>fact(1) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * (2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * fact(1))))<br></p>
+<p>n &#x3D; 1的是时，return 1 ，所以最终是：5 * (4 * fact(3 * fact(2 * 1)))<br></p>
+<p>因此fact(1) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * (2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * 1)))<br></p>
+<p>即 5 * 4 * 3 * 2 * 1 &#x3D; 5!&#x3D;120<br></p>
 <p>例子二：<br><br>尾递归<br></p>
 <pre><code>def fact(n):
     print(fact_iter(n, 1))
@@ -1153,6 +1214,7 @@ def fact_iter(num, product):
 if __name__ == &quot;__main__&quot;:
     fact(3)
 </code></pre>
+
       
     </div>
 
@@ -1219,7 +1281,7 @@ if __name__ == &quot;__main__&quot;:
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>4.1k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1237,59 +1299,117 @@ if __name__ == &quot;__main__&quot;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top">友情链接</a></p>
-<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p>  功能：同时查询多张表里的数据<br><br>  种类：<code>inner join</code>,<code>left join</code>,<code>right join</code><br><br>|连接方式        |功能                                            |<br>|:——:            |:——:                                            |<br>|inner join     |显示两张表中，符合连接条件的记录。                |<br>|left join        |左表显示所有记录；右表只显示符合连接条件的记录。    |<br>|right join     |右表显示所有记录；左表只显示符合连接条件的记录。    |</p>
+          <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top/">友情链接</a></p>
+<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p>  功能：同时查询多张表里的数据<br><br>  种类：<code>inner join</code>,<code>left join</code>,<code>right join</code><br></p>
+<table>
+<thead>
+<tr>
+<th align="center">连接方式</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">inner join</td>
+<td align="center">显示两张表中，符合连接条件的记录。</td>
+</tr>
+<tr>
+<td align="center">left join</td>
+<td align="center">左表显示所有记录；右表只显示符合连接条件的记录。</td>
+</tr>
+<tr>
+<td align="center">right join</td>
+<td align="center">右表显示所有记录；左表只显示符合连接条件的记录。</td>
+</tr>
+</tbody></table>
 <ul>
-<li><strong>inner join（内连接）</strong><br>功能：显示两张表中，符合连接条件的记录。<br><ul>
-<li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> 字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式：inner join 交集</span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段<span class="operator">=</span>表B.共有字段		<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>inner join查询的步骤</strong><br>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.数一数两张表种，哪张表要查的字段更多，出字段多的表，放在from后面；出字段少的表，放在inner join后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br></li>
+<li><strong>inner join（内连接）</strong><br>  功能：显示两张表中，符合连接条件的记录。<br><ul>
+<li><strong>命令格式：</strong> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> 字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式：inner join 交集</span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段<span class="operator">=</span>表B.共有字段		<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>inner join查询的步骤</strong></li>
 </ul>
+<p>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.数一数两张表种，哪张表要查的字段更多，出字段多的表，放在from后面；出字段少的表，放在inner join后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br></p>
 </li>
-<li><strong>Left join (左连接)</strong><br>功能：左表显示所有记录；右表只显示符合连接条件的记录。<br><ul>
+<li><strong>Left join (左连接)</strong><br>  功能：左表显示所有记录；右表只显示符合连接条件的记录。<br><ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span>  字段清单(表名.字段名), …. <span class="keyword">From</span> 表A</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> 表B						<span class="comment">--连接方式 </span></span><br><span class="line"><span class="keyword">on</span> 表A.共有字段<span class="operator">=</span>表B.共有字段			<span class="comment">--连接条件</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>Left join查询的步骤</strong><br>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.观察两张表中，哪一张需要显示所有记录，要显示所有记录的表，放在 from后面。另一张表放在left join 后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br><h2 id="常用SQL函数"><a href="#常用SQL函数" class="headerlink" title="常用SQL函数"></a>常用SQL函数</h2><h3 id="类型转换函数"><a href="#类型转换函数" class="headerlink" title="类型转换函数"></a>类型转换函数</h3><code>to_char()</code>、<code>to_date()</code>、<code>to_number()</code></li>
+<li><strong>Left join查询的步骤</strong></li>
 </ul>
+<p>1.列出要查的字段清单，以 表名.字段名 的形式列在 Select后面。<br><br>2.观察两张表中，哪一张需要显示所有记录，要显示所有记录的表，放在 from后面。另一张表放在left join 后面。<br><br>3.两张表的共有属性用等号连接，放在on后面，作为连接条件。<br></p>
+<h2 id="常用SQL函数"><a href="#常用SQL函数" class="headerlink" title="常用SQL函数"></a>常用SQL函数</h2><h3 id="类型转换函数"><a href="#类型转换函数" class="headerlink" title="类型转换函数"></a>类型转换函数</h3><p><code>to_char()</code>、<code>to_date()</code>、<code>to_number()</code></p>
 </li>
-<li><strong>to_char(X, 格式,NLS参数)</strong><br>功能：将数据X（数值型或日期型），转成对应的字符串<br><br>说明：数据X为要转换的数据；参数2为格式，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>字符串类型</code><br><ul>
+<li><strong>to_char(X, 格式,NLS参数)</strong><br>  功能：将数据X（数值型或日期型），转成对应的字符串<br><br>  说明：数据X为要转换的数据；参数2为格式，可为空；参数3为NLS参数，可为空。<br><br>  返回：<code>字符串类型</code><br><ul>
 <li><strong>数值型转字符串</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">to_char(<span class="number">1210</span>)                返回 <span class="string">&#x27;1234&#x27;</span></span><br><span class="line">to_char(<span class="number">1210.73</span>, <span class="string">&#x27;9999.9&#x27;</span>)   返回 <span class="string">&#x27;1210.7&#x27;</span></span><br><span class="line">to_char(<span class="number">1210.73</span>, <span class="string">&#x27;9,999.99&#x27;</span>) 返回 <span class="string">&#x27;1,210.73&#x27;</span></span><br><span class="line">to_char(<span class="number">21</span>, <span class="string">&#x27;000099&#x27;</span>)        返回 <span class="string">&#x27;000021&#x27;</span></span><br><span class="line">to_char(<span class="number">852</span>,<span class="string">&#x27;xxxx&#x27;</span>)          返回 <span class="string">&#x27;354&#x27;</span></span><br></pre></td></tr></table></figure></li>
 <li><strong>日期型转字符串</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">to_char(sysdate,<span class="string">&#x27;dd&#x27;</span>)   <span class="comment">--取出几号</span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;mm&#x27;</span>)   <span class="comment">--取出月份 </span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;yyyy&#x27;</span>) <span class="comment">--取出年份</span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;ddd&#x27;</span>)  <span class="comment">--取出年中的第几天(1-366)</span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;ww&#x27;</span>)   <span class="comment">--取出第几周（1-53）</span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;q&#x27;</span>)    <span class="comment">--取出第几季度(1、2、3、4)</span></span><br><span class="line">to_char(sysdate,<span class="string">&#x27;d&#x27;</span>)    <span class="comment">--取出是周几（1-7）</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><p><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>功能：将字符串X转化为日期型<br><br>说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>返回：<code>日期型</code><br></p>
-<p>|函数                                    |    结果    |<br>|:——:                                |:——:        |<br>|to_date(‘2020.09.14’,’yyyy.mm.dd’)     | 2020/09/14|<br>|to_date(‘20200914’,’yyyymmdd’)        | 2020/09/14|<br>|to_date(‘2020-09-14’,’yyyy-mm-dd’)    | 2020/09/14|</p>
-</li>
-<li><p><strong>to_number(字符串X)</strong><br>功能：字符串转成数值类型<br><br>返回：<code>number</code>类型<br></p>
-<p>|函数                    |结果    |<br>|:——:                |:——:    |<br>|to_number(‘1234’)        |1234    |<br>|to_number(‘123.45’)    |123.4     |</p>
-<h3 id="滤空函数"><a href="#滤空函数" class="headerlink" title="滤空函数"></a>滤空函数</h3><p>背景：Oracle中，NULL + 任意数，结果都为NULL<br><br>这种情况与实际情况相违背。为了解决这个问题，Oracle提供了滤空函数。<br></p>
-</li>
-<li><strong>nvl(表达示一, 表达式二)</strong><br>功能：一空，则返回二。</li>
-<li><p><strong>nvl2(表达式一, 表达式二, 表达式三)</strong><br>功能：一空，则返回三；否则返回二。</p>
-<h3 id="转换器函数-decode"><a href="#转换器函数-decode" class="headerlink" title="转换器函数 decode"></a>转换器函数 decode</h3><p>表达式：(value1,output1,elseoutput)<br><br>功能：输出转换。<br><br>说明：当表达式的值为 value1时，返回output1，否则返回elseoutput。<br></p>
-<h3 id="分析函数"><a href="#分析函数" class="headerlink" title="分析函数"></a>分析函数</h3><p>功能：对一组查询结果进行运算，返回多行<br><br>说明：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ename,deptno,sal,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号相同,</span></span><br><span class="line">  <span class="comment">--且和下一条不同记录的排名之间空出排名</span></span><br><span class="line">  <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;RANK&quot;,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号相同,</span></span><br><span class="line">  <span class="comment">--且和下一条不同记录的排名之间不空出排名</span></span><br><span class="line">  <span class="built_in">DENSE_RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;DENSE_RANK&quot;,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号继续</span></span><br><span class="line">  <span class="comment">--递增，顺序排名</span></span><br><span class="line">  <span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;ROW_NUMBER&quot;</span><br><span class="line"> <span class="keyword">FROM</span> employee;</span><br></pre></td></tr></table></figure>
-<h2 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h2><p><strong>（1）常用的聚合函数：</strong><br><br>sum:返回表达式中所有值的和<br><br>avg:计算平均值<br><br>min:返回表达式的最小值<br><br>max:返回表达式的最大值<br><br>count:返回组中项目的数量<br></p>
-<p><strong>（2）特征：</strong><br>a.对一列值进行计算，并返回一个值<br>举例：<code>select min(sal) from employee</code><br>b.聚合函数经常与<code>group by</code>分组依据一起使用</p>
-</li>
+<li><strong>to_date(字符串X, 格式说明, NLS参数)</strong><br>  功能：将字符串X转化为日期型<br><br>  说明：字符串X为要转换的数据；参数2为格式说明，可为空；参数3为NLS参数，可为空。<br><br>  返回：<code>日期型</code><br></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">函数</th>
+<th align="center">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">to_date(‘2020.09.14’,’yyyy.mm.dd’)</td>
+<td align="center">2020&#x2F;09&#x2F;14</td>
+</tr>
+<tr>
+<td align="center">to_date(‘20200914’,’yyyymmdd’)</td>
+<td align="center">2020&#x2F;09&#x2F;14</td>
+</tr>
+<tr>
+<td align="center">to_date(‘2020-09-14’,’yyyy-mm-dd’)</td>
+<td align="center">2020&#x2F;09&#x2F;14</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>to_number(字符串X)</strong><br>  功能：字符串转成数值类型<br><br>  返回：<code>number</code>类型<br></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">函数</th>
+<th align="center">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">to_number(‘1234’)</td>
+<td align="center">1234</td>
+</tr>
+<tr>
+<td align="center">to_number(‘123.45’)</td>
+<td align="center">123.4</td>
+</tr>
+</tbody></table>
+<h3 id="滤空函数"><a href="#滤空函数" class="headerlink" title="滤空函数"></a>滤空函数</h3><p>  背景：Oracle中，NULL + 任意数，结果都为NULL<br><br>这种情况与实际情况相违背。为了解决这个问题，Oracle提供了滤空函数。<br></p>
+<ul>
+<li><strong>nvl(表达示一, 表达式二)</strong><br>  功能：一空，则返回二。</li>
+<li><strong>nvl2(表达式一, 表达式二, 表达式三)</strong><br>  功能：一空，则返回三；否则返回二。<h3 id="转换器函数-decode"><a href="#转换器函数-decode" class="headerlink" title="转换器函数 decode"></a>转换器函数 decode</h3>  表达式：(value1,output1,elseoutput)<br><br>  功能：输出转换。<br><br>  说明：当表达式的值为 value1时，返回output1，否则返回elseoutput。<br><h3 id="分析函数"><a href="#分析函数" class="headerlink" title="分析函数"></a>分析函数</h3>  功能：对一组查询结果进行运算，返回多行<br><br>  说明：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ename,deptno,sal,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号相同,</span></span><br><span class="line">  <span class="comment">--且和下一条不同记录的排名之间空出排名</span></span><br><span class="line">  <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;RANK&quot;,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号相同,</span></span><br><span class="line">  <span class="comment">--且和下一条不同记录的排名之间不空出排名</span></span><br><span class="line">  <span class="built_in">DENSE_RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;DENSE_RANK&quot;,</span><br><span class="line">  <span class="comment">--按照每个部门分组,对薪水从大到小排序,每个部门序号从1开始,同一个部门相同薪水序号继续</span></span><br><span class="line">  <span class="comment">--递增，顺序排名</span></span><br><span class="line">  <span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> deptno <span class="keyword">ORDER</span> <span class="keyword">BY</span> sal <span class="keyword">DESC</span>) &quot;ROW_NUMBER&quot;</span><br><span class="line"> <span class="keyword">FROM</span> employee;</span><br></pre></td></tr></table></figure>
+<h2 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h2></li>
+</ul>
+<p>  <strong>（1）常用的聚合函数：</strong><br><br>  sum:返回表达式中所有值的和<br><br>  avg:计算平均值<br><br>  min:返回表达式的最小值<br><br>  max:返回表达式的最大值<br><br>  count:返回组中项目的数量<br></p>
+<p>  <strong>（2）特征：</strong><br>a.对一列值进行计算，并返回一个值<br>举例：<code>select min(sal) from employee</code><br>b.聚合函数经常与<code>group by</code>分组依据一起使用</p>
+<ul>
 <li><strong>（单列）分组聚合：</strong><ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 分组依据, 聚合函数(列) <span class="keyword">from</span> 表</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> 分组依据</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><strong>（多列）分组聚合：</strong><ul>
 <li><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 分组依据<span class="number">1</span>,分组依据<span class="number">2</span>,聚合函数(列) <span class="keyword">from</span> 表</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> 分组依据<span class="number">1</span>, 分组依据<span class="number">2</span></span><br></pre></td></tr></table></figure>
-c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后使用<code>having</code>聚合表达式 …. 构成筛选条件。<br><strong>命令格式：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 分组依据,聚合函数(列) <span class="keyword">from</span> 表</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> 分组依据</span><br><span class="line"><span class="keyword">having</span> 聚合函数(列) ….</span><br></pre></td></tr></table></figure>
-<h1 id="练习习题"><a href="#练习习题" class="headerlink" title="练习习题"></a>练习习题</h1><h2 id="题1-显示所有员工的姓名、入职年度（hiredate中的YYYY部分）"><a href="#题1-显示所有员工的姓名、入职年度（hiredate中的YYYY部分）" class="headerlink" title="题1 显示所有员工的姓名、入职年度（hiredate中的YYYY部分）"></a>题1 显示所有员工的姓名、入职年度（hiredate中的YYYY部分）</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,to_char(hiredate,<span class="string">&#x27;yyyy&#x27;</span>) <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
-<h2 id="题2-显示入职日期在每个月最后一天的所有员工"><a href="#题2-显示入职日期在每个月最后一天的所有员工" class="headerlink" title="题2 显示入职日期在每个月最后一天的所有员工"></a>题2 显示入职日期在每个月最后一天的所有员工</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> hiredate<span class="operator">=</span>last_day(hiredate);</span><br></pre></td></tr></table></figure>
-<h2 id="题3-（分组聚合）列出每个部门的deptno-dname-员工总数"><a href="#题3-（分组聚合）列出每个部门的deptno-dname-员工总数" class="headerlink" title="题3 （分组聚合）列出每个部门的deptno,dname,员工总数"></a>题3 （分组聚合）列出每个部门的deptno,dname,员工总数</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> dept.deptno,dept.dname,<span class="built_in">count</span>(empno) 员工总数 <span class="keyword">from</span> dept</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> employee</span><br><span class="line"><span class="keyword">on</span> dept.deptno<span class="operator">=</span>employee.deptno</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> dept.deptno,dept.dname;</span><br></pre></td></tr></table></figure>
-<h2 id="题4-（子查询）列出sal比SMITH-多的所有员工"><a href="#题4-（子查询）列出sal比SMITH-多的所有员工" class="headerlink" title="题4 （子查询）列出sal比SMITH 多的所有员工"></a>题4 （子查询）列出sal比SMITH 多的所有员工</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> sal<span class="operator">&gt;</span></span><br><span class="line">(<span class="keyword">select</span> sal <span class="keyword">from</span> employee <span class="keyword">where</span> ename<span class="operator">=</span><span class="string">&#x27;SMITH&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="题5-（连接查询）列出岗位（job）为clerk的员工的姓名、部门名称"><a href="#题5-（连接查询）列出岗位（job）为clerk的员工的姓名、部门名称" class="headerlink" title="题5 （连接查询）列出岗位（job）为clerk的员工的姓名、部门名称"></a>题5 （连接查询）列出岗位（job）为clerk的员工的姓名、部门名称</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> employee.ename,dept.dname <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dept</span><br><span class="line"><span class="keyword">on</span> employee.deptno<span class="operator">=</span>dept.deptno</span><br><span class="line"><span class="keyword">where</span> job<span class="operator">=</span><span class="string">&#x27;CLERK&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="题6-（分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录"><a href="#题6-（分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录" class="headerlink" title="题6 （分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录"></a>题6 （分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job,<span class="built_in">min</span>(sal) <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job</span><br><span class="line"><span class="keyword">having</span> <span class="built_in">min</span>(sal)<span class="operator">&gt;</span><span class="number">6500</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="题7-（子查询）对客户表-customers-中地域（nls-territory）为AMERICA-的记录的客户经理，查询出客户经理的姓名（employee-ename）、薪水-employee-sal"><a href="#题7-（子查询）对客户表-customers-中地域（nls-territory）为AMERICA-的记录的客户经理，查询出客户经理的姓名（employee-ename）、薪水-employee-sal" class="headerlink" title="题7 （子查询）对客户表(customers)中地域（nls_territory）为AMERICA 的记录的客户经理，查询出客户经理的姓名（employee.ename）、薪水(employee.sal)"></a>题7 （子查询）对客户表(customers)中地域（nls_territory）为AMERICA 的记录的客户经理，查询出客户经理的姓名（employee.ename）、薪水(employee.sal)</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,sal <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> empno <span class="keyword">in</span></span><br><span class="line">(<span class="keyword">select</span> <span class="keyword">distinct</span> account_mgr_id <span class="keyword">from</span> customers</span><br><span class="line"><span class="keyword">where</span> nls_territory<span class="operator">=</span><span class="string">&#x27;AMERICA&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="题8-（操作符in）在客户表中查出地域（nls-territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer-id）、语言-nls-language"><a href="#题8-（操作符in）在客户表中查出地域（nls-territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer-id）、语言-nls-language" class="headerlink" title="题8 （操作符in）在客户表中查出地域（nls_territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer_id）、语言(nls_language);"></a>题8 （操作符in）在客户表中查出地域（nls_territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer_id）、语言(nls_language);</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> customer_id,nls_language <span class="keyword">from</span> customers</span><br><span class="line"><span class="keyword">where</span> nls_territory <span class="keyword">in</span></span><br><span class="line">(<span class="string">&#x27;AMERICA&#x27;</span>,<span class="string">&#x27;ITALY&#x27;</span>,<span class="string">&#x27;INDIA&#x27;</span>,<span class="string">&#x27;CHINA&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="题9-查询employee表，显示每个部门、每个岗位的最高工资"><a href="#题9-查询employee表，显示每个部门、每个岗位的最高工资" class="headerlink" title="题9 查询employee表，显示每个部门、每个岗位的最高工资"></a>题9 查询employee表，显示每个部门、每个岗位的最高工资</h2><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,job,<span class="built_in">max</span>(sal) <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> deptno,job</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure>
-</li>
+c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后使用<code>having</code>聚合表达式 …. 构成筛选条件。</li>
 </ul>
 </li>
 </ul>
+<p>  <strong>命令格式：</strong><br>   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 分组依据,聚合函数(列) <span class="keyword">from</span> 表</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> 分组依据</span><br><span class="line"><span class="keyword">having</span> 聚合函数(列) ….</span><br></pre></td></tr></table></figure></p>
+<h1 id="练习习题"><a href="#练习习题" class="headerlink" title="练习习题"></a>练习习题</h1><h2 id="题1-显示所有员工的姓名、入职年度（hiredate中的YYYY部分）"><a href="#题1-显示所有员工的姓名、入职年度（hiredate中的YYYY部分）" class="headerlink" title="题1 显示所有员工的姓名、入职年度（hiredate中的YYYY部分）"></a>题1 显示所有员工的姓名、入职年度（hiredate中的YYYY部分）</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,to_char(hiredate,<span class="string">&#x27;yyyy&#x27;</span>) <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure></p>
+<h2 id="题2-显示入职日期在每个月最后一天的所有员工"><a href="#题2-显示入职日期在每个月最后一天的所有员工" class="headerlink" title="题2 显示入职日期在每个月最后一天的所有员工"></a>题2 显示入职日期在每个月最后一天的所有员工</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> hiredate<span class="operator">=</span>last_day(hiredate);</span><br></pre></td></tr></table></figure></p>
+<h2 id="题3-（分组聚合）列出每个部门的deptno-dname-员工总数"><a href="#题3-（分组聚合）列出每个部门的deptno-dname-员工总数" class="headerlink" title="题3 （分组聚合）列出每个部门的deptno,dname,员工总数"></a>题3 （分组聚合）列出每个部门的deptno,dname,员工总数</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> dept.deptno,dept.dname,<span class="built_in">count</span>(empno) 员工总数 <span class="keyword">from</span> dept</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> employee</span><br><span class="line"><span class="keyword">on</span> dept.deptno<span class="operator">=</span>employee.deptno</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> dept.deptno,dept.dname;</span><br></pre></td></tr></table></figure></p>
+<h2 id="题4-（子查询）列出sal比SMITH-多的所有员工"><a href="#题4-（子查询）列出sal比SMITH-多的所有员工" class="headerlink" title="题4 （子查询）列出sal比SMITH 多的所有员工"></a>题4 （子查询）列出sal比SMITH 多的所有员工</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> sal<span class="operator">&gt;</span></span><br><span class="line">(<span class="keyword">select</span> sal <span class="keyword">from</span> employee <span class="keyword">where</span> ename<span class="operator">=</span><span class="string">&#x27;SMITH&#x27;</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="题5-（连接查询）列出岗位（job）为clerk的员工的姓名、部门名称"><a href="#题5-（连接查询）列出岗位（job）为clerk的员工的姓名、部门名称" class="headerlink" title="题5 （连接查询）列出岗位（job）为clerk的员工的姓名、部门名称"></a>题5 （连接查询）列出岗位（job）为clerk的员工的姓名、部门名称</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> employee.ename,dept.dname <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dept</span><br><span class="line"><span class="keyword">on</span> employee.deptno<span class="operator">=</span>dept.deptno</span><br><span class="line"><span class="keyword">where</span> job<span class="operator">=</span><span class="string">&#x27;CLERK&#x27;</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="题6-（分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录"><a href="#题6-（分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录" class="headerlink" title="题6 （分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录"></a>题6 （分组聚合）列出各种工作类别的最低薪金，显示最低薪金大于6500的记录</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job,<span class="built_in">min</span>(sal) <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job</span><br><span class="line"><span class="keyword">having</span> <span class="built_in">min</span>(sal)<span class="operator">&gt;</span><span class="number">6500</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="题7-（子查询）对客户表-customers-中地域（nls-territory）为AMERICA-的记录的客户经理，查询出客户经理的姓名（employee-ename）、薪水-employee-sal"><a href="#题7-（子查询）对客户表-customers-中地域（nls-territory）为AMERICA-的记录的客户经理，查询出客户经理的姓名（employee-ename）、薪水-employee-sal" class="headerlink" title="题7 （子查询）对客户表(customers)中地域（nls_territory）为AMERICA 的记录的客户经理，查询出客户经理的姓名（employee.ename）、薪水(employee.sal)"></a>题7 （子查询）对客户表(customers)中地域（nls_territory）为AMERICA 的记录的客户经理，查询出客户经理的姓名（employee.ename）、薪水(employee.sal)</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,sal <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> empno <span class="keyword">in</span></span><br><span class="line">(<span class="keyword">select</span> <span class="keyword">distinct</span> account_mgr_id <span class="keyword">from</span> customers</span><br><span class="line"><span class="keyword">where</span> nls_territory<span class="operator">=</span><span class="string">&#x27;AMERICA&#x27;</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="题8-（操作符in）在客户表中查出地域（nls-territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer-id）、语言-nls-language"><a href="#题8-（操作符in）在客户表中查出地域（nls-territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer-id）、语言-nls-language" class="headerlink" title="题8 （操作符in）在客户表中查出地域（nls_territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer_id）、语言(nls_language);"></a>题8 （操作符in）在客户表中查出地域（nls_territory）为AMERICA、ITALY、INDIA、CHINA的客户编号（customer_id）、语言(nls_language);</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> customer_id,nls_language <span class="keyword">from</span> customers</span><br><span class="line"><span class="keyword">where</span> nls_territory <span class="keyword">in</span></span><br><span class="line">(<span class="string">&#x27;AMERICA&#x27;</span>,<span class="string">&#x27;ITALY&#x27;</span>,<span class="string">&#x27;INDIA&#x27;</span>,<span class="string">&#x27;CHINA&#x27;</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="题9-查询employee表，显示每个部门、每个岗位的最高工资"><a href="#题9-查询employee表，显示每个部门、每个岗位的最高工资" class="headerlink" title="题9 查询employee表，显示每个部门、每个岗位的最高工资"></a>题9 查询employee表，显示每个部门、每个岗位的最高工资</h2><p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,job,<span class="built_in">max</span>(sal) <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> deptno,job</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -1357,7 +1477,7 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>3.3k</span>
+              <span>3.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1375,10 +1495,10 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top">友情链接</a></p>
+          <p>转载自<a target="_blank" rel="noopener" href="https://www.xieyihui.top/">友情链接</a></p>
 <h2 id="创建表的命令、插入记录、更改记录、删除记录的命令"><a href="#创建表的命令、插入记录、更改记录、删除记录的命令" class="headerlink" title="创建表的命令、插入记录、更改记录、删除记录的命令"></a>创建表的命令、插入记录、更改记录、删除记录的命令</h2><ul>
 <li><strong>创建表的命令</strong><ul>
-<li><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line">(字段名<span class="number">1</span>  类型  约束(可选)， </span><br><span class="line">字段名<span class="number">2</span>  类型 约束(可选)，</span><br><span class="line">...</span><br><span class="line">字段名n 类型 约束(可选)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li><code>命令格式：</code> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line">(字段名<span class="number">1</span>  类型  约束(可选)， </span><br><span class="line">字段名<span class="number">2</span>  类型 约束(可选)，</span><br><span class="line">...</span><br><span class="line">字段名n 类型 约束(可选)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><strong>插入记录</strong><ul>
@@ -1400,8 +1520,8 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 <li>升序<code>asc</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Order</span> <span class="keyword">by</span> 排序字段 <span class="keyword">asc</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><strong>不选择重复行</strong><br><code>Distinct</code><br>说明：重复的结果只显示<code>1</code>次</li>
-<li><strong>筛选条件</strong><br><code>where</code><ul>
+<li><strong>不选择重复行</strong><br> <code>Distinct</code><br>说明：重复的结果只显示<code>1</code>次</li>
+<li><strong>筛选条件</strong><br>  <code>where</code><ul>
 <li>命令格式：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>,....</span><br><span class="line"><span class="keyword">from</span> 表名</span><br><span class="line"><span class="keyword">where</span> 筛选条件;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
@@ -1415,158 +1535,364 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 <h2 id="SQL操作符"><a href="#SQL操作符" class="headerlink" title="SQL操作符"></a>SQL操作符</h2></li>
 </ul>
 </li>
-<li><strong>算数操作符</strong><br>种类：+  -  *  /<br>功能：number类型的列，可使用算数操作符进行运算</li>
-<li><p><strong>比较操作符</strong><br>功能: 对两个表达式的值进行比较</p>
-<p>| 种类                 | 说明                                                     |<br>| :——:                 | :——:                                                 |<br>| =                     |      等于                                                |<br>| !=                     |      不等于                                                |<br>| &gt;                     |      大于                                                |<br>| &lt;                     |      小于                                                |<br>| &gt;=                     |      大于等于                                                |<br>| &lt;=                     |      小于等于                                                |<br>| IN(值1,值2,…)     | 与列表中的值匹配                                         |<br>| LIKE                 | 字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符     |<br>| IS NULL             | 判断字段值为空                                         |</p>
-</li>
-<li><p><strong>逻辑运算符</strong></p>
-<p>| 运算符     | 用法                         |<br>| :——:     | :——:                     |<br>| AND     | Where 条件A  and 条件B     |<br>| OR         | Where 条件A  or 条件B         |<br>| NOT     | Where not 条件             |</p>
-</li>
-<li><p><strong>集合运算符</strong></p>
-<p>| 运算符         | 用法         |<br>| :——:         | :——:     |<br>| Union         | 联合         |<br>| Union All     | 联合所有     |<br>| Intersect     | 交集         |<br>| Minus         | 减集         |</p>
-</li>
-<li><strong>Minus 差集</strong><br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表     <span class="comment">--结果A</span></span><br><span class="line">minus</span><br><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表  	<span class="comment">--结果B</span></span><br></pre></td></tr></table></figure>
-说明：<code>A与B的交集</code><br><br>举例：employee表中存放了在职和已退休员工的工号(empno)，retireEmp 存放了已退休员工的工号(rempno)。<br><br>要求：仅查询在职员工的工号<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> empno <span class="keyword">FROM</span> emp  </span><br><span class="line">MINUS</span><br><span class="line"><span class="keyword">SELECT</span> rempno <span class="keyword">FROM</span> retireEmp;</span><br></pre></td></tr></table></figure></li>
-<li><strong>字符串连接符</strong><br>说明：用于将两个字符串合并成一个新字符串<br><code>命令格式：</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">列A <span class="operator">||</span> 列B</span><br></pre></td></tr></table></figure>
-</li>
+<li><strong>算数操作符</strong><br>  种类：+  -  *  &#x2F;<br>  功能：number类型的列，可使用算数操作符进行运算</li>
+<li><strong>比较操作符</strong><br>  功能: 对两个表达式的值进行比较</li>
 </ul>
-<h1 id="练习习题"><a href="#练习习题" class="headerlink" title="练习习题"></a>练习习题</h1><h2 id="题1-确定合适的类型"><a href="#题1-确定合适的类型" class="headerlink" title="题1 确定合适的类型"></a>题1 确定合适的类型</h2><div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">属性名</th>
-<th style="text-align:center">特征</th>
-<th style="text-align:center">类型（宽度）</th>
+<th align="center">种类</th>
+<th align="center">说明</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">员工编号</td>
-<td style="text-align:center">4位数字。如1111</td>
-<td style="text-align:center"><code>NUMBER(4)</code></td>
+<tbody><tr>
+<td align="center">&#x3D;</td>
+<td align="center">等于</td>
 </tr>
 <tr>
-<td style="text-align:center">员工姓名1</td>
-<td style="text-align:center">英文字母，不超过10个字母。<br>要尽量高的存储空间利用率</td>
-<td style="text-align:center"><code>VARCHAR2(10)</code></td>
+<td align="center">!&#x3D;</td>
+<td align="center">不等于</td>
 </tr>
 <tr>
-<td style="text-align:center">员工姓名2</td>
-<td style="text-align:center">汉字，不超过10个汉字<br>要尽量高的存储空间利用率</td>
-<td style="text-align:center"><code>NVARCHAR2(10)</code></td>
+<td align="center">&gt;</td>
+<td align="center">大于</td>
 </tr>
 <tr>
-<td style="text-align:center">岗位1</td>
-<td style="text-align:center">英文字母，不超过10个字母</td>
-<td style="text-align:center"><code>VARCHAR2(10)</code></td>
+<td align="center">&lt;</td>
+<td align="center">小于</td>
 </tr>
 <tr>
-<td style="text-align:center">岗位2</td>
-<td style="text-align:center">汉字，不超过10个汉字</td>
-<td style="text-align:center"><code>NVARCHAR2(10)</code></td>
+<td align="center">&gt;&#x3D;</td>
+<td align="center">大于等于</td>
 </tr>
 <tr>
-<td style="text-align:center">上级经理编号</td>
-<td style="text-align:center">4位数字</td>
-<td style="text-align:center"><code>NUMBER(4)</code></td>
+<td align="center">&lt;&#x3D;</td>
+<td align="center">小于等于</td>
 </tr>
 <tr>
-<td style="text-align:center">入职日期</td>
-<td style="text-align:center">年-月-日</td>
-<td style="text-align:center"><code>DATE</code></td>
+<td align="center">IN(值1,值2,…)</td>
+<td align="center">与列表中的值匹配</td>
 </tr>
 <tr>
-<td style="text-align:center">薪水</td>
-<td style="text-align:center">数字，最大5位数</td>
-<td style="text-align:center"><code>NUMBE(5)</code></td>
+<td align="center">LIKE</td>
+<td align="center">字符匹配模式。匹配符 %：任意个字符。 匹配符 ?: 一个字符</td>
 </tr>
 <tr>
-<td style="text-align:center">岗位津贴</td>
-<td style="text-align:center">数字，最大5位数</td>
-<td style="text-align:center"><code>NUMBER(5)</code></td>
+<td align="center">IS NULL</td>
+<td align="center">判断字段值为空</td>
 </tr>
-<tr>
-<td style="text-align:center">所属部门编号</td>
-<td style="text-align:center">2位数字。如01</td>
-<td style="text-align:center"><code>NUMBER(2)</code></td>
-</tr>
-<tr>
-<td style="text-align:center">证件照</td>
-<td style="text-align:center">图片</td>
-<td style="text-align:center"><code>BLOB</code></td>
-</tr>
-<tr>
-<td style="text-align:center">自我介绍</td>
-<td style="text-align:center">视频</td>
-<td style="text-align:center"><code>BLOB</code></td>
-</tr>
-<tr>
-<td style="text-align:center">简历</td>
-<td style="text-align:center">可能超过2000汉字</td>
-<td style="text-align:center"><code>CLOB(2000)</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="题2-约束的种类"><a href="#题2-约束的种类" class="headerlink" title="题2 约束的种类"></a>题2 约束的种类</h2><div class="table-container">
+</tbody></table>
+<ul>
+<li><strong>逻辑运算符</strong></li>
+</ul>
 <table>
 <thead>
 <tr>
-<th style="text-align:center">约束</th>
-<th style="text-align:center">关键字</th>
+<th align="center">运算符</th>
+<th align="center">用法</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">主键约束</td>
-<td style="text-align:center"><code>primary key</code></td>
+<tbody><tr>
+<td align="center">AND</td>
+<td align="center">Where 条件A  and 条件B</td>
 </tr>
 <tr>
-<td style="text-align:center">外键约束</td>
-<td style="text-align:center"><code>foreign key</code></td>
+<td align="center">OR</td>
+<td align="center">Where 条件A  or 条件B</td>
 </tr>
 <tr>
-<td style="text-align:center">非空约束</td>
-<td style="text-align:center"><code>not null</code></td>
+<td align="center">NOT</td>
+<td align="center">Where not 条件</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>集合运算符</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Union</td>
+<td align="center">联合</td>
 </tr>
 <tr>
-<td style="text-align:center">唯一值约束</td>
-<td style="text-align:center"><code>unique</code></td>
+<td align="center">Union All</td>
+<td align="center">联合所有</td>
 </tr>
 <tr>
-<td style="text-align:center">默认约束</td>
-<td style="text-align:center"><code>default  ‘默认值’</code></td>
+<td align="center">Intersect</td>
+<td align="center">交集</td>
 </tr>
 <tr>
-<td style="text-align:center">Check约束</td>
-<td style="text-align:center"><code>举例：check(gender=&#39;男&#39; or gender=&#39;女&#39;);</code></td>
+<td align="center">Minus</td>
+<td align="center">减集</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
+<ul>
+<li><strong>Minus 差集</strong><br>  <code>命令格式：</code>  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表     <span class="comment">--结果A</span></span><br><span class="line">minus</span><br><span class="line"><span class="keyword">select</span> .. <span class="keyword">from</span> 表  	<span class="comment">--结果B</span></span><br></pre></td></tr></table></figure>
+  说明：<code>A与B的交集</code><br><br>  举例：employee表中存放了在职和已退休员工的工号(empno)，retireEmp 存放了已退休员工的工号(rempno)。<br><br>要求：仅查询在职员工的工号<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> empno <span class="keyword">FROM</span> emp  </span><br><span class="line">MINUS</span><br><span class="line"><span class="keyword">SELECT</span> rempno <span class="keyword">FROM</span> retireEmp;</span><br></pre></td></tr></table></figure></li>
+<li><strong>字符串连接符</strong><br>  说明：用于将两个字符串合并成一个新字符串<br>  <code>命令格式：</code>  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">列A <span class="operator">||</span> 列B</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="练习习题"><a href="#练习习题" class="headerlink" title="练习习题"></a>练习习题</h1><h2 id="题1-确定合适的类型"><a href="#题1-确定合适的类型" class="headerlink" title="题1 确定合适的类型"></a>题1 确定合适的类型</h2><table>
+<thead>
+<tr>
+<th align="center">属性名</th>
+<th align="center">特征</th>
+<th align="center">类型（宽度）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">员工编号</td>
+<td align="center">4位数字。如1111</td>
+<td align="center"><code>NUMBER(4)</code></td>
+</tr>
+<tr>
+<td align="center">员工姓名1</td>
+<td align="center">英文字母，不超过10个字母。<br>要尽量高的存储空间利用率</td>
+<td align="center"><code>VARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td align="center">员工姓名2</td>
+<td align="center">汉字，不超过10个汉字<br>要尽量高的存储空间利用率</td>
+<td align="center"><code>NVARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td align="center">岗位1</td>
+<td align="center">英文字母，不超过10个字母</td>
+<td align="center"><code>VARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td align="center">岗位2</td>
+<td align="center">汉字，不超过10个汉字</td>
+<td align="center"><code>NVARCHAR2(10)</code></td>
+</tr>
+<tr>
+<td align="center">上级经理编号</td>
+<td align="center">4位数字</td>
+<td align="center"><code>NUMBER(4)</code></td>
+</tr>
+<tr>
+<td align="center">入职日期</td>
+<td align="center">年-月-日</td>
+<td align="center"><code>DATE</code></td>
+</tr>
+<tr>
+<td align="center">薪水</td>
+<td align="center">数字，最大5位数</td>
+<td align="center"><code>NUMBE(5)</code></td>
+</tr>
+<tr>
+<td align="center">岗位津贴</td>
+<td align="center">数字，最大5位数</td>
+<td align="center"><code>NUMBER(5)</code></td>
+</tr>
+<tr>
+<td align="center">所属部门编号</td>
+<td align="center">2位数字。如01</td>
+<td align="center"><code>NUMBER(2)</code></td>
+</tr>
+<tr>
+<td align="center">证件照</td>
+<td align="center">图片</td>
+<td align="center"><code>BLOB</code></td>
+</tr>
+<tr>
+<td align="center">自我介绍</td>
+<td align="center">视频</td>
+<td align="center"><code>BLOB</code></td>
+</tr>
+<tr>
+<td align="center">简历</td>
+<td align="center">可能超过2000汉字</td>
+<td align="center"><code>CLOB(2000)</code></td>
+</tr>
+</tbody></table>
+<h2 id="题2-约束的种类"><a href="#题2-约束的种类" class="headerlink" title="题2 约束的种类"></a>题2 约束的种类</h2><table>
+<thead>
+<tr>
+<th align="center">约束</th>
+<th align="center">关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">主键约束</td>
+<td align="center"><code>primary key</code></td>
+</tr>
+<tr>
+<td align="center">外键约束</td>
+<td align="center"><code>foreign key</code></td>
+</tr>
+<tr>
+<td align="center">非空约束</td>
+<td align="center"><code>not null</code></td>
+</tr>
+<tr>
+<td align="center">唯一值约束</td>
+<td align="center"><code>unique</code></td>
+</tr>
+<tr>
+<td align="center">默认约束</td>
+<td align="center"><code>default  ‘默认值’</code></td>
+</tr>
+<tr>
+<td align="center">Check约束</td>
+<td align="center"><code>举例：check(gender=&#39;男&#39; or gender=&#39;女&#39;);</code></td>
+</tr>
+</tbody></table>
 <h2 id="题3-创建部门表、约束"><a href="#题3-创建部门表、约束" class="headerlink" title="题3 创建部门表、约束"></a>题3 创建部门表、约束</h2><ul>
-<li><p><strong>（1）创建部门表,表名为dept</strong></p>
-<p>|属性说明    |属性    |类型（宽度）    |约束                |<br>|:——:    |:——:    |:——:            |:——:                |<br>|部门编号    |deptno    |number(2)        |主键                |<br>|部门名称    |dname    |varchar2(14)    |非空、唯一            |<br>|部门地址    |loc    |VARCHAR2(13)    |默认值 ‘company’    |<br><strong>代码：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept</span><br><span class="line">(deptno number(<span class="number">2</span>) <span class="keyword">primary</span> key,</span><br><span class="line">dname varchar2(<span class="number">14</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">unique</span>,</span><br><span class="line">loc varchar2(<span class="number">13</span>) <span class="keyword">default</span><span class="string">&#x27;company&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<li><strong>（1）创建部门表,表名为dept</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">属性说明</th>
+<th align="center">属性</th>
+<th align="center">类型（宽度）</th>
+<th align="center">约束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">部门编号</td>
+<td align="center">deptno</td>
+<td align="center">number(2)</td>
+<td align="center">主键</td>
+</tr>
+<tr>
+<td align="center">部门名称</td>
+<td align="center">dname</td>
+<td align="center">varchar2(14)</td>
+<td align="center">非空、唯一</td>
+</tr>
+<tr>
+<td align="center">部门地址</td>
+<td align="center">loc</td>
+<td align="center">VARCHAR2(13)</td>
+<td align="center">默认值 ‘company’</td>
+</tr>
+<tr>
+<td align="center"><strong>代码：</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept</span><br><span class="line">(deptno number(<span class="number">2</span>) <span class="keyword">primary</span> key,</span><br><span class="line">dname varchar2(<span class="number">14</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">unique</span>,</span><br><span class="line">loc varchar2(<span class="number">13</span>) <span class="keyword">default</span><span class="string">&#x27;company&#x27;</span>);</span><br></pre></td></tr></table></figure></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
 <ul>
 <li><strong>（2）将以下数据插入到dept中</strong></li>
 </ul>
-<p>|属性说明    |属性        |类型（宽度）    |约束                                    |<br>|:——:    |:——:        |:——:            |:——:                                    |<br>|员工编号    |eno        |number(4)        |主键约束                                |<br>|员工姓名    |ename        |varchar2(10)    |非空                                    |<br>|岗位        |job        |VARCHAR2(9)    |                                        |<br>|领导编号    |mgr        |number(4)        |                                        |<br>|入职日期    |Hiredate    |date            |                                        |<br>|薪资        |sal        |number(7,2)    |                                        |<br>|福利        |Comm        |number(7,2)    |                                        |<br>|所属部门号    |deptno        |number(2)        |外键，参照部门表的部门号<br>dept(deptno)    |<br><strong>代码：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;Accounting&#x27;</span>,<span class="string">&#x27;New York&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">20</span>,<span class="string">&#x27;Research&#x27;</span>,<span class="string">&#x27;Dallas&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">30</span>,<span class="string">&#x27;Sales&#x27;</span>,<span class="string">&#x27;Chicago&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">40</span>,<span class="string">&#x27;Operations&#x27;</span>,<span class="string">&#x27;Boston&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="题4-使用rownum实现分页查询"><a href="#题4-使用rownum实现分页查询" class="headerlink" title="题4 使用rownum实现分页查询"></a>题4 使用rownum实现分页查询</h2></li>
-<li><strong>（1）查询employee表中按sal字段 降序排列后的 第5到第9条记录</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span><span class="number">5</span> <span class="keyword">and</span> rn<span class="operator">&lt;=</span><span class="number">9</span>;</span><br></pre></td></tr></table></figure></li>
-<li><strong>（2）查询employee表中按ename字段升序排列后的 第1到第3条记录</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> ename <span class="keyword">asc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span><span class="number">1</span> <span class="keyword">and</span> rn<span class="operator">&lt;=</span><span class="number">3</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="题5-筛选、排序、选择不重复行"><a href="#题5-筛选、排序、选择不重复行" class="headerlink" title="题5 筛选、排序、选择不重复行"></a>题5 筛选、排序、选择不重复行</h2></li>
-<li><strong>（1）选出所有岗位为CLERK的记录的ename属性,sal属性, 按sal降序排序</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,sal <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job<span class="operator">=</span><span class="string">&#x27;CLERK&#x27;</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure></li>
-<li><strong>（2）选择出employee表中的所有岗位（job），每种岗位只显示1次</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> job <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
-<h2 id="题6-SQL操作符"><a href="#题6-SQL操作符" class="headerlink" title="题6 SQL操作符"></a>题6 SQL操作符</h2></li>
-<li><strong>（1）查询employee表中姓名以字母A开头的员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;A%&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
-<li><strong>（2）查询employee表中ename长度为5个字符的所有记录</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;_____&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
-<li><strong>（3）查询employee表中comm字段为空的员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> comm <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure></li>
-<li><strong>（4）查询岗位(job) 为 CLERK、MANAGER、SALSMAN之一的所有员工</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">in</span>(<span class="string">&#x27;CLERK&#x27;</span>,<span class="string">&#x27;MANAGER&#x27;</span>,<span class="string">&#x27;SALESMAN&#x27;</span>);</span><br></pre></td></tr></table></figure></li>
-<li><strong>（5）将employee表的job列和ename列进行拼接，显示 出 job列 <em> 姓名列， 新列显示成 “岗位</em>姓名”</strong><br><strong>代码：</strong><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job <span class="operator">||</span> <span class="string">&#x27;_&#x27;</span> <span class="operator">||</span> ename 岗位_姓名 <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
-</li>
+<table>
+<thead>
+<tr>
+<th align="center">属性说明</th>
+<th align="center">属性</th>
+<th align="center">类型（宽度）</th>
+<th align="center">约束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">员工编号</td>
+<td align="center">eno</td>
+<td align="center">number(4)</td>
+<td align="center">主键约束</td>
+</tr>
+<tr>
+<td align="center">员工姓名</td>
+<td align="center">ename</td>
+<td align="center">varchar2(10)</td>
+<td align="center">非空</td>
+</tr>
+<tr>
+<td align="center">岗位</td>
+<td align="center">job</td>
+<td align="center">VARCHAR2(9)</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">领导编号</td>
+<td align="center">mgr</td>
+<td align="center">number(4)</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">入职日期</td>
+<td align="center">Hiredate</td>
+<td align="center">date</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">薪资</td>
+<td align="center">sal</td>
+<td align="center">number(7,2)</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">福利</td>
+<td align="center">Comm</td>
+<td align="center">number(7,2)</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">所属部门号</td>
+<td align="center">deptno</td>
+<td align="center">number(2)</td>
+<td align="center">外键，参照部门表的部门号<br>dept(deptno)</td>
+</tr>
+<tr>
+<td align="center"><strong>代码：</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;Accounting&#x27;</span>,<span class="string">&#x27;New York&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">20</span>,<span class="string">&#x27;Research&#x27;</span>,<span class="string">&#x27;Dallas&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">30</span>,<span class="string">&#x27;Sales&#x27;</span>,<span class="string">&#x27;Chicago&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="number">40</span>,<span class="string">&#x27;Operations&#x27;</span>,<span class="string">&#x27;Boston&#x27;</span>);</span><br></pre></td></tr></table></figure></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="题4-使用rownum实现分页查询"><a href="#题4-使用rownum实现分页查询" class="headerlink" title="题4 使用rownum实现分页查询"></a>题4 使用rownum实现分页查询</h2><ul>
+<li><strong>（1）查询employee表中按sal字段 降序排列后的 第5到第9条记录</strong></li>
 </ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span><span class="number">5</span> <span class="keyword">and</span> rn<span class="operator">&lt;=</span><span class="number">9</span>;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（2）查询employee表中按ename字段升序排列后的 第1到第3条记录</strong> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> e.<span class="operator">*</span>, rownum rn <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee <span class="keyword">order</span> <span class="keyword">by</span> ename <span class="keyword">asc</span>) e)</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&gt;=</span><span class="number">1</span> <span class="keyword">and</span> rn<span class="operator">&lt;=</span><span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="题5-筛选、排序、选择不重复行"><a href="#题5-筛选、排序、选择不重复行" class="headerlink" title="题5 筛选、排序、选择不重复行"></a>题5 筛选、排序、选择不重复行</h2></li>
+<li><strong>（1）选出所有岗位为CLERK的记录的ename属性,sal属性, 按sal降序排序</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,sal <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job<span class="operator">=</span><span class="string">&#x27;CLERK&#x27;</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> sal <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（2）选择出employee表中的所有岗位（job），每种岗位只显示1次</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> job <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure></p>
+<h2 id="题6-SQL操作符"><a href="#题6-SQL操作符" class="headerlink" title="题6 SQL操作符"></a>题6 SQL操作符</h2><ul>
+<li><strong>（1）查询employee表中姓名以字母A开头的员工</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;A%&#x27;</span>;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（2）查询employee表中ename长度为5个字符的所有记录</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">&#x27;_____&#x27;</span>;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（3）查询employee表中comm字段为空的员工</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> comm <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（4）查询岗位(job) 为 CLERK、MANAGER、SALSMAN之一的所有员工</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Select</span> <span class="operator">*</span> <span class="keyword">from</span> employee</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">in</span>(<span class="string">&#x27;CLERK&#x27;</span>,<span class="string">&#x27;MANAGER&#x27;</span>,<span class="string">&#x27;SALESMAN&#x27;</span>);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>（5）将employee表的job列和ename列进行拼接，显示 出 job列 _ 姓名列， 新列显示成 “岗位_姓名”</strong></li>
+</ul>
+<p> <strong>代码：</strong><br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job <span class="operator">||</span> <span class="string">&#x27;_&#x27;</span> <span class="operator">||</span> ename 岗位_姓名 <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -1714,7 +2040,7 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">50k</span>
+    <span title="Symbols count total">51k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>

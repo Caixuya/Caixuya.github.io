@@ -247,7 +247,7 @@
 
   <url>
     <loc>http://www.caixuya.top/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -256,78 +256,78 @@
 
   
   <url>
-    <loc>http://www.caixuya.top/categories/python/</loc>
-    <lastmod>2022-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://www.caixuya.top/categories/Oracle/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/github/</loc>
-    <lastmod>2022-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.caixuya.top/categories/hexo/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <loc>http://www.caixuya.top/categories/python/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/mysql/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <loc>http://www.caixuya.top/categories/github/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/SSH-struts2/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <loc>http://www.caixuya.top/categories/hexo/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/categories/markdown/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <loc>http://www.caixuya.top/categories/SSH-struts2/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.caixuya.top/categories/linux/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <loc>http://www.caixuya.top/categories/mysql/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://www.caixuya.top/categories/daily/</loc>
-    <lastmod>2022-05-06</lastmod>
+    <lastmod>2022-05-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/categories/linux/</loc>
+    <lastmod>2022-05-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2022-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
