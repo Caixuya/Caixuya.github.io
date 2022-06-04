@@ -1,3 +1,4 @@
+http://www.caixuya.top/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/
 http://www.caixuya.top/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/
 http://www.caixuya.top/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/
 http://www.caixuya.top/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/
@@ -26,14 +27,14 @@ http://www.caixuya.top/calendar/
 http://www.caixuya.top/travelling/
 http://www.caixuya.top/404
 http://www.caixuya.top/
-http://www.caixuya.top/categories/python/
 http://www.caixuya.top/categories/Oracle/
+http://www.caixuya.top/categories/python/
+http://www.caixuya.top/categories/hexo/
 http://www.caixuya.top/categories/github/
 http://www.caixuya.top/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
-http://www.caixuya.top/categories/hexo/
 http://www.caixuya.top/categories/markdown/
 http://www.caixuya.top/categories/mysql/
 http://www.caixuya.top/categories/SSH-struts2/
-http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/
 http://www.caixuya.top/categories/daily/
+http://www.caixuya.top/categories/%E6%B5%8B%E8%AF%95/
 http://www.caixuya.top/categories/linux/

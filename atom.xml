@@ -6,7 +6,7 @@
   <link href="http://www.caixuya.top/atom.xml" rel="self"/>
   
   <link href="http://www.caixuya.top/"/>
-  <updated>2022-05-06T15:26:48.583Z</updated>
+  <updated>2022-06-04T07:34:50.174Z</updated>
   <id>http://www.caixuya.top/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hexo的cname记录怎么永远设置</title>
+    <link href="http://www.caixuya.top/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/"/>
+    <id>http://www.caixuya.top/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/</id>
+    <published>2022-06-04T07:32:09.000Z</published>
+    <updated>2022-06-04T07:34:50.174Z</updated>
+    
+    <content type="html"><![CDATA[<p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;先按照其他博客的方法设置github的page和域名解析&lt;br&gt;&lt;br&gt;然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，&lt;br&gt;&lt;br&gt;&lt;code&gt;npm install hexo-generator-cname --save&lt;</summary>
+      
+    
+    
+    
+    <category term="hexo" scheme="http://www.caixuya.top/categories/hexo/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>匿名函数lambda</title>
@@ -444,28 +466,6 @@
     
     
     <category term="hexo" scheme="http://www.caixuya.top/categories/hexo/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
-    <link href="http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/"/>
-    <id>http://www.caixuya.top/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</id>
-    <published>2020-04-09T12:59:02.000Z</published>
-    <updated>2022-04-14T15:41:53.314Z</updated>
-    
-    <content type="html"><![CDATA[<p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim&#x2F;vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p><h3 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h3><ul><li>找到hosts文件，路径如下:c:\windows\system32\drivers\etc<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/hosts%E4%BD%8D%E7%BD%AE.PNG"></li><li>因为hosts文件是系统文件，不可以直接修改，windows和linux都是一样的，都要先设置权限，另外如果widows系统目录不是C盘，也应注意把上面的路径中的C:改成系统所在的盘符,原因刚刚也解释啦，hosts是系统文件</li><li>找到hosts文件后先设置权限，或者直接复制粘贴到桌面，等修改好后替换掉原来的hosts文件，这里附上前者的（设置权限）教程</li><li>找到hosts文件后，右键选择“属性”</li></ul><p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/hosts%E5%B1%9E%E6%80%A7.png"></p><ul><li>点击“安全”，给用户赋予完全控制权限，我这里是给users赋予完全控制权，</li></ul><p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E5%AE%8C%E5%85%A8%E6%8E%A7%E5%88%B6.png"></p><h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><ul><li>赋权后就可以修改文件了，点开并编辑hosts文件，在hosts文件最底部添加以下内容，ctrl+s保存，回到浏览器刷新一下页面，就可以看到原本不能显示的图片又刷刷刷回来啦</li></ul><blockquote><p>#GitHub Start<br>192.30.253.112 github.com<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p></blockquote><ul><li><p>以上内容的IP地址并不是绝对的，也不是所有用户都一样的，如果复制粘贴上面的内容还是不行的话，就试一下下面这个方法<br></p><h3 id="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"><a href="#修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页" class="headerlink" title="修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页"></a>修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</h3></li><li><p>复制粘贴上面的内容还是看不到图片或者本来可以打开github.com的，但是后来突然有一天网页能上网却无法打开github.com的时候就用下面这种方法<br></p></li><li><p>将上面内容第一行的IP地址换掉，具体方法如下<br></p></li><li><p>打开<code>https://www.ipaddress.com/</code>,或者直接点击这里跳转<a href="https://www.ipaddress.com/">跳转</a><br></p></li><li><p>在查询窗口输入github.com<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/githubcomchaxun.png"><br></p></li><li><p>然后找到<code>IP Address</code>后面的IP地址，用这个IP地址换掉上面第一行的IP地址<code>192.30.253.112 github.com</code><br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/githubcom.png"><br></p></li><li><p>示例如下：<br></p><blockquote><p>#GitHub Start<br>140.82.113.4 github.com #这是替换后的IP地址，这个IP地址就是查询出来的那个IP Address后面的IP地址<br>192.30.253.119 gist.github.com<br>151.101.184.133 assets-cdn.github.com<br>151.101.184.133 raw.githubusercontent.com<br>151.101.184.133 gist.githubusercontent.com<br>151.101.184.133 cloud.githubusercontent.com<br>151.101.184.133 camo.githubusercontent.com<br>151.101.184.133 avatars0.githubusercontent.com<br>151.101.184.133 avatars1.githubusercontent.com<br>151.101.184.133 avatars2.githubusercontent.com<br>151.101.184.133 avatars3.githubusercontent.com<br>151.101.184.133 avatars4.githubusercontent.com<br>151.101.184.133 avatars5.githubusercontent.com<br>151.101.184.133 avatars6.githubusercontent.com<br>151.101.184.133 avatars7.githubusercontent.com<br>151.101.184.133 avatars8.githubusercontent.com</p></blockquote></li><li><p>这样就可以啦</p></li></ul><h3 id="linux端"><a href="#linux端" class="headerlink" title="linux端"></a>linux端</h3><ul><li>找到hosts文件，路径如下<code>/etc/hosts</code>，如果你的hosts不在这里，那么输入这条命令查询<code>whereis hosts</code>，要找的是hosts文件，其他hosts.*** 的不是我们要找的文件</li><li>ctrl+alt+t调出终端</li><li>输入以下代码给hosts文件赋权<blockquote><p>sudo chmod 777 &#x2F;etc&#x2F;hosts</p></blockquote></li></ul><p>敲完命令后没有报错就是成功的，像这样<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/777hosts.png"></p><ul><li>用gedit或者vim&#x2F;vi修改文件<h3 id="用gedit修改文件"><a href="#用gedit修改文件" class="headerlink" title="用gedit修改文件"></a>用gedit修改文件</h3></li><li>gedit安装，在终端输入以下命令进行安装<h3 id="ubuntu，deeping系列的linux系统安装命令"><a href="#ubuntu，deeping系列的linux系统安装命令" class="headerlink" title="ubuntu，deeping系列的linux系统安装命令"></a>ubuntu，deeping系列的linux系统安装命令</h3><blockquote><p>sudo apt-get install gedit<br></p></blockquote></li></ul><h3 id="centos系列的安装命令"><a href="#centos系列的安装命令" class="headerlink" title="centos系列的安装命令"></a>centos系列的安装命令</h3><blockquote><p>sudo yum install gedit</p></blockquote><p>视自身情况选其中一个</p><ul><li>安装完成后使用gedit编辑文件的命令如下：<blockquote><p>gedit &#x2F;etc&#x2F;hosts</p></blockquote></li></ul><p>输入命令会打开这样一个编辑窗口<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20200410112718.png"></p><ul><li>直接复制粘贴上面的内容（右边目录点击“修改内容”即可跳转），添加的内容是一样的，在此就不赘述啦，然后ctrl+s保存，点击右上角红色小叉叉直接退出即可，退出后会返回终端，没有报错即修改成功，就像最后面的那张图那样（右边目录点击“大功告成”即可跳转）<h3 id="用vim-x2F-vi修改文件"><a href="#用vim-x2F-vi修改文件" class="headerlink" title="用vim&#x2F;vi修改文件"></a>用vim&#x2F;vi修改文件</h3></li><li>vim的安装（如果系统没有vim）(linux系统自带vi)</li><li>ubuntu和deeping安装和gedit的没啥区别，直接把上面安装代码中的gedit改成vim即可</li><li>centos系列的安装有一点点不同，需要输入以下命令：<blockquote><p>sudo yum -y install vim</p></blockquote></li><li>安装完成后使用vim&#x2F;vi编辑文件的命令如下：<blockquote><p>vi &#x2F;etc&#x2F;hosts<br><br>vim &#x2F;etc&#x2F;hosts<br></p></blockquote></li></ul><p>两个命令二选一，都可以，打开界面如下：</p><p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/vi%E6%89%93%E5%BC%80%E7%95%8C%E9%9D%A2.png"></p><ul><li><p>打开界面后输入键盘”i”键</p><blockquote><p>i</p></blockquote></li><li><p>拉到终端最底端，左下角会有”插入“两个字，这样就是进入插入模式了，然后在最末尾处把上面的内容（右边目录点击“修改内容”即可跳转）添加进去<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/i%E9%94%AE%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F.png"></p></li><li><p>添加完后按“esc”键退出编辑模式，再键入”:wq“</p><blockquote><p>:wq</p></blockquote></li><li><p>键入时左下角会出现你键入的命令，然后回车即可<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/wq.png"></p></li><li><p>(注意冒号也要键入，键入英文模式下的冒号），这是保存并退出的命令</p><h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3></li><li><p>像下图这样没有出现报错就是大功告成啦<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E4%BF%9D%E5%AD%98%E5%B9%B6%E9%80%80%E5%87%BA%E6%88%90%E5%8A%9F.png"></p></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[目录]&lt;br&gt;&lt;a href=&quot;#windows%E7%AB%AF&quot;&gt;windows端&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9&quot;&gt;修改内容&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#%E4%BF%AE%E6%94</summary>
-      
-    
-    
-    
-    <category term="github" scheme="http://www.caixuya.top/categories/github/"/>
     
     
   </entry>
