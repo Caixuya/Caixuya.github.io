@@ -19,13 +19,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解决liux系统只读文件系统，linux系统磁盘上锁问题">
-<meta property="og:url" content="http://www.caixuya.top/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
+<meta property="og:url" content="http://caixuya.github.io/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
 <meta property="og:site_name" content="tia的学习笔记">
 <meta property="og:description" content="装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当">
 <meta property="og:locale" content="en_US">
@@ -34,7 +34,7 @@
 <meta property="article:author" content="caixuya">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://www.caixuya.top/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="http://caixuya.github.io/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
@@ -215,7 +215,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -332,7 +332,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="http://www.caixuya.top/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/" title="解决liux系统只读文件系统，linux系统磁盘上锁问题">http://www.caixuya.top/2020/05/01/解决liux系统只读文件系统，linux系统磁盘上锁问题/</a>
+    <a href="http://caixuya.github.io/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/" title="解决liux系统只读文件系统，linux系统磁盘上锁问题">http://caixuya.github.io/2020/05/01/解决liux系统只读文件系统，linux系统磁盘上锁问题/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -484,7 +484,7 @@
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="http://www.caixuya.top/" title="http:&#x2F;&#x2F;www.caixuya.top">首页</a>
+          <a href="http://www.caixuya.top/" title="http:&#x2F;&#x2F;www.caixuya.top" rel="noopener" target="_blank">首页</a>
         </li>
     </ul>
   </div>
