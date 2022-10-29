@@ -105,20 +105,6 @@
       </categories>
   </entry>
   <entry>
-    <title>cpu</title>
-    <url>/2022/04/09/cpu%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>.sh文件如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pid=$1</span><br><span class="line">cat /proc/stat | grep cpu[^0-9]</span><br><span class="line">cat /proc/$&#123;pid&#125;/stat</span><br><span class="line">dumpsys meminfo $&#123;pid&#125; | grep TOTAL:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim&#x2F;vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p>
@@ -228,6 +214,20 @@
       </categories>
   </entry>
   <entry>
+    <title>cpu</title>
+    <url>/2022/04/09/cpu%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>.sh文件如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pid=$1</span><br><span class="line">cat /proc/stat | grep cpu[^0-9]</span><br><span class="line">cat /proc/$&#123;pid&#125;/stat</span><br><span class="line">dumpsys meminfo $&#123;pid&#125; | grep TOTAL:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>hexo的cname记录怎么永远设置</title>
     <url>/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/</url>
     <content><![CDATA[<p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>
@@ -245,105 +245,6 @@
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">	margin: 0px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul &#123;</span><br><span class="line">	position:absolute;<span class="comment">&lt;!--我的理解是让ul整块的位置和页面保持相对固定的位置，当</span></span><br><span class="line"><span class="comment">	你调节上面标题的div的大小的时候，不会影响到ul的位置，所以我所有的用的都是absolute --&gt;</span></span><br><span class="line">	list-style: none;<span class="comment">&lt;!--这是为了去除ul前面的小黑点的 --&gt;</span></span><br><span class="line">	top:-10px;<span class="comment">&lt;!--调整ul这个整体到网页顶部的距离--&gt;</span></span><br><span class="line">	left:-8px;<span class="comment">&lt;!--调整ul这个整体到网页左边的距离--&gt;</span></span><br><span class="line">	text-align:center;<span class="comment">&lt;!--让ul里面的文字居中显示，不然默认左对齐，像这样</span></span><br><span class="line"><span class="comment">	 记账             记账</span></span><br><span class="line"><span class="comment">	修改账本          修改账本 </span></span><br><span class="line"><span class="comment">	 查询             查询</span></span><br><span class="line"><span class="comment">	--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.biaoti &#123;</span><br><span class="line">	text-align: center;<span class="comment">&lt;!--标题居中 --&gt;</span></span><br><span class="line">	font-weight: bold;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	text-shadow:5px 5px 5px lightgrey<span class="comment">&lt;!--字体阴影,三个值分别是x,y轴,阴影颜色 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a &#123;</span><br><span class="line">	text-decoration: none;<span class="comment">&lt;!--去除a标签链接下面的横线 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:link &#123;</span><br><span class="line">	color: #636363<span class="comment">&lt;!--代表当一段文本为链接时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:visited &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!--代表这段文本被点击之后的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:hover &#123;</span><br><span class="line">	color: #c0c0c0;<span class="comment">&lt;!--代表鼠标指针放在这个链接上时的属性 --&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a:active &#123;</span><br><span class="line">	color: #808080<span class="comment">&lt;!-- 代表鼠标按下时一瞬间的属性--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">img&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	right:35px;<span class="comment">&lt;!--图片向右移动的距离--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.form &#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">	height: 110px;</span><br><span class="line">	margin: 0px;</span><br><span class="line">	top:50px;</span><br><span class="line">	display: none; <span class="comment">&lt;!-- form表单里面的东西被隐藏，而且不占据空间--&gt;</span></span><br><span class="line">&#125;</span><br><span class="line">.logo&#123;</span><br><span class="line">	position:absolute;</span><br><span class="line">	width: 120px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.logo:hover .form &#123;</span><br><span class="line">	display: block;<span class="comment">&lt;!--当鼠标移到logo所在部分时隐藏部分出现，实现当鼠标移动到图片时出现下拉菜单 --&gt;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>前端页面</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法</title>
-    <url>/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p>[目录]<br><a href="#%E9%A6%96%E5%85%88%E6%B3%A8%E5%86%8Cgithub%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%9A%84%E4%BB%93%E5%BA%93">首先注册github新建一个空的仓库</a><br><a href="#%E6%90%AD%E5%BB%BA%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">搭建前的准备工作</a><br><a href="#%E5%AE%89%E8%A3%85git">安装git</a><br><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%AC%E5%9C%B0git%E4%BB%93%E5%BA%93">初始化本地git仓库</a><br><a href="#%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BAhexo">开始搭建hexo</a><br><a href="#%E6%B7%BB%E5%8A%A0github%E7%9A%84ssh">添加github的ssh</a><br><a href="#%E4%BF%AE%E6%94%B9hexo%E6%A0%B9%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">修改hexo根目录配置文件</a><br><a href="#%E9%83%A8%E7%BD%B2%E5%88%B0github">部署到github</a><br><a href="#%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8">端口占用</a><br><a href="#%E8%B4%AD%E4%B9%B0%E5%9F%9F%E5%90%8D">购买域名</a><br><a href="#%E5%86%8D%E6%AC%A1%E4%BF%AE%E6%94%B9blog%E6%A0%B9%E7%9B%AE%E5%BD%95%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">再次修改blog根目录的配置文件</a><br><a href="#github%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D">github设置域名</a><br><a href="#%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE%E6%B0%B8%E4%B9%85">域名配置永久</a><br><a href="#%E5%AE%8C%E7%BB%93%E6%92%92%E8%8A%B1">完结撒花</a></p>
-<p>我们直接开始教程吧<br></p>
-<h3 id="首先注册github新建一个空的仓库"><a href="#首先注册github新建一个空的仓库" class="headerlink" title="首先注册github新建一个空的仓库"></a>首先注册github新建一个空的仓库</h3><ol>
-<li><p>在浏览器地址栏输入这个链接，或者<a href="https://github.com/">点击这里跳转</a>，注册github账户前先看完第二条</p>
-<blockquote>
-<p><code>github.com</code></p>
-</blockquote>
-</li>
-<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Anli</code>,部署到github后，博客地址就是这个：<code>anli.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
-</li>
-<li><p>跳转链接以后，点击右边的‘sign up’进行注册，填写你的github用户名(请看第二条)，绑定的邮箱，还有设定你的密码</p>
-</li>
-<li><p>点击‘sign in’登录，登录成功后点击左边的‘new’新建一个仓库<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/new.png"><br></p>
-</li>
-<li><p>如下所示，如果你的用户名是<code>Anan</code>，那么需要填的是<code>Anan.github.io</code>，最后的这个后缀必须是.io<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/newname.png"></p>
-</li>
-<li><p>最后点击最下面的<code>Create repository</code>，创建成功，这个时候里面是空的，先不用管它。</p>
-<h3 id="搭建前的准备工作"><a href="#搭建前的准备工作" class="headerlink" title="搭建前的准备工作"></a>搭建前的准备工作</h3></li>
-<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可，大部分命令直接换是可以的，如果不行，就自行百度吧<br><br>windows端的安装百度查找<br></p>
-<blockquote>
-<p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
-</blockquote>
-</li>
-<li><p>安装npm<br><br>windows端的安装百度查找<br></p>
-<blockquote>
-<p><code>sudo yum install npm</code></p>
-</blockquote>
-</li>
-<li><p>检查安装情况：分别输入以下命令，如果出现版本号则表示安装成功<br></p>
-<blockquote>
-<p><code>node -v</code><br><code>npm -v</code></p>
-</blockquote>
-</li>
-<li><p>用npm安装，命令如下：<br><br>windows端要用cmd的管理员安装，linux系统直接安装</p>
-<blockquote>
-<p><code>npm install -g hexo-cli</code></p>
-</blockquote>
-</li>
-</ol>
-<p>如果安装出错，尝试用这条命令解决</p>
-<blockquote>
-<p><code>npm config set strict-ssl false</code><br>输入上面命令后，再次输入安装命令<br><code>npm install -g hexo-cli</code></p>
-</blockquote>
-<p>如果还不行，请在评论区告诉我，O(∩_∩)O谢谢</p>
-<p>检查是否安装成功</p>
-<blockquote>
-<p>hexo -v</p>
-</blockquote>
-<p>出现版本号表示安装成功</p>
-<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><blockquote>
-<p><code>yum -y install git</code></p>
-</blockquote>
-<p>检查是否安装成功</p>
-<blockquote>
-<p><code>git --version</code></p>
-</blockquote>
-<p>出现版本号即安装成功</p>
-<h3 id="初始化本地git仓库"><a href="#初始化本地git仓库" class="headerlink" title="初始化本地git仓库"></a>初始化本地git仓库</h3><blockquote>
-<p>设置Git的user name<br><code>git config --global user.name &quot;双引号里面改成你注册好的github用户名&quot;</code><br>设置git的邮箱<br><code>git config --global user.email &quot;双引号里面改成你注册好的github邮箱&quot;</code></p>
-</blockquote>
-<h3 id="开始搭建hexo"><a href="#开始搭建hexo" class="headerlink" title="开始搭建hexo"></a>开始搭建hexo</h3><ol start="7">
-<li>创建一个文件夹用来放你的博客文件<blockquote>
-<p><code>mkdir blog</code></p>
-</blockquote>
-</li>
-</ol>
-<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名，也可以带上地址，具体百度搜索linux如何创建文件夹<br>8. 进入到刚刚创建的文件夹中</p>
-<blockquote>
-<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code></p>
-</blockquote>
-<p>这个时候可能会发生错误<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/hexo%20init.png"><br><br>这是因为node版本太低导致的，这个时候我们用这两个命令来更新到最新版<br></p>
-<blockquote>
-<p>先输入这条命令安装n软件<br><code>npm install n -g</code><br>n软件是node专门的软件，所以可以用n软件更新升级到最新的稳定版，命令如下<br><code>n stable</code><br>然后再输入hexo的初始化命令<br><code>hexo init</code></p>
-</blockquote>
-<p>（另外，hexo的初始化必须是在空文件夹中进行，如果初始化中发生错误时，首先检查一下你放博客的那个文件夹是不是空文件夹，查看是否有隐藏文件，如果有的话，得先把隐藏文件移出去，初始化完成后再移回来）<br>10. 初始化完成后就可以生成项目了，输入命令：<code>hexo g</code><br>11. 生成项目以后开始启动项目：<code>hexo s</code><br>12. 根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功，退出的话在终端同时按住<code>ctrl+c</code>或者<code>shift+ctrl+c</code>即可</p>
-<h5 id="添加github的ssh"><a href="#添加github的ssh" class="headerlink" title="添加github的ssh"></a>添加github的ssh</h5><ol start="14">
-<li>部署后不着急，我们先添加一下github的ssh<br>在主机根目录下，输入这条命令<code>ssh-keygen -t rsa -b 4096 -C&quot;******@qq.com&quot;</code>，其中<code>******@qq.com</code>填入你注册github的邮箱账号<br><br>然后会出现这行：<code>Enter file in which to save the key (/home/tia/.ssh/id_rsa): </code>，这时候直接回车，那么后面的这个路径<code>(/home/tia/.ssh/id_rsa)</code>就是你的ssh的存放路径<br><br>之后会提示输入密码，要记住这个密码，输入密码后会有一个图案出现，看到这个奇怪的图案就证明成功啦，这个时候我们切换到.ssh目录下<code>cd /home/tia/.ssh</code><br><br>然后<code>ls</code>查看一下目录下的所有文件，找到id_rsa.pub文件，用<code>vi id_rsa.pub</code>打开文件，复制里面的所有内容<br><br>登录github官网，找到最右边的四边形图案，点击展开下拉菜单，点击settings<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/settings.png"><br><br>在左边的菜单栏中找到ssh<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/ssh.png"><br><br>打开的页面中，将复制的内容粘贴到key里面，title自己写，写啥都行，然后点击<code>Add SSH Key</code><br><br>最后测试是否成功，打开终端，输入<code>ssh -T git@github.com</code>，之后等一小会儿会出现很多英文单词，如果找到‘successfully’，那就安装成功啦<h6 id="修改hexo根目录配置文件"><a href="#修改hexo根目录配置文件" class="headerlink" title="修改hexo根目录配置文件"></a>修改hexo根目录配置文件</h6></li>
-<li>打开终端，<code>cd blog</code>切换到博客的根目录，安装插件<br><code>npm install hexo-deployer-git --save</code></li>
-<li>ls查看博客根目录下的所有文件，找到<code>_config.yml</code>这个文件，输入命令<code>vi _config.yml</code>编辑文件，把以下内容复制粘贴到文件的底部<br><figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> git </span><br><span class="line"><span class="symbol">  repo:</span> </span><br><span class="line"><span class="symbol">      github:</span> https:<span class="comment">//github.com/你的github用户名/你的github用户名.github.io.git</span></span><br><span class="line"><span class="symbol">      coding:</span> git@e.coding.net:你的coding用户名/你的coding用户名/你的coding用户名.git,master</span><br><span class="line"><span class="symbol">  branch:</span> master</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>github是国外的，coding是国内的，如果用github太慢，可以考虑加一个coding，国内线路走coding，国外线路走github，配置方法和github的大致一样，就不多说了。<br>这里要注意，deploy前面没有缩进;type,repo,branch前面的缩进是两个空格;github,coding前面的缩进是六个空格;所有的冒号后面都有一个空格的缩进，这是makedown语言的格式，冒号后面没有空格，则设置不成功。务必严格缩进格式，不然会报错。</p>
-<p>我之前看到有的教程说这个<br></p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">repo: </span><br><span class="line">    github: https:<span class="regexp">//gi</span>thub.com<span class="regexp">/你的github用户名/</span>你的github用户名.github.io.git</span><br></pre></td></tr></table></figure>
-<p>已经无法使用了，我的还可以，如果你们的hexo版本号和我的不同，有可能也用不了这个了，那就把<code>https://github.com/你的github用户名/你的github用户名.io.git</code>换成<code>git@github.com:你的github用户名/你的github用户名.github.io.git</code></p>
-<h6 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h6><p>输入命令<code>hexo d</code>，就成功部署到github啦，打开浏览器，在地址栏输入<code>你的github用户名.github.io</code>就可以访问啦，如果以上步骤都成功了没有报错，可是就是无法进入博客，那可能是端口占用的问题，如果没有的话直接跳过这一步</p>
-<h6 id="端口占用"><a href="#端口占用" class="headerlink" title="端口占用"></a>端口占用</h6><p>hexo默认的端口是4000，不确定是否被占用的情况下，打开终端输入<code>yum install lsof</code>安装lsof，其他系统的安装命令自查，然后输入命令<code>lsof -i:4000</code>查看<br>如果被占用，终端会展示端口的信息，找到端口对应的PID，kill掉即可，命令如下<code>kill -9 PID</code>，假如端口对应的PID是7109，那么命令就是<code>kill -9 7109</code></p>
-<h3 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h3><p>首先购买域名，我是在腾讯云买的，地址是<code>https://cloud.tencent.com/</code>，<a href="https://cloud.tencent.com/">点击这里跳转</a>，在搜索框搜索域名注册，点击域名注册购买域名，完成实名认证，修改域名所有者，这些需要等审核通过，我们可以一边等一边继续教程内容<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C.png"><br><br>买完域名以后到<a href="https://cloud.tencent.com/">腾讯云首页</a>，找到最右边的”控制台”<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%8E%A7%E5%88%B6%E5%8F%B0.png"><br><br>点进去以后搜索域名管理<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E5%9F%9F%E5%90%8D%E7%AE%A1%E7%90%86.png"><br><br>点击红圈所示部分，进入页面后点击“解析”<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D.png"><br><br>点击“添加记录”添加域名解析，这里只需要添加两个即可，一个www的，一个@的，具体参数设置如下:<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/www%E5%92%8C%40.png"><br><br>其中记录值写的是当初你填在下图的地址（似乎不区分大小写，可以尝试一下，我当时在这里填的是Caixuya.github.io，而记录值写的是caixuya.github.io）<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/newname.png"></p>
-<h3 id="再次修改blog根目录的配置文件"><a href="#再次修改blog根目录的配置文件" class="headerlink" title="再次修改blog根目录的配置文件"></a>再次修改blog根目录的配置文件</h3><p><code>cd blog</code>切换到你的博客根目录，<code>ls</code>查找<code>_config.yml</code>,之前配置过这个文件，然后<code>vi _config.yml</code>编辑这个文件，找到<code>url:</code>，删除url后面的东西，（如果没有的话就不用删，有的话就删掉）填上你自己的域名地址，假如你买的域名是<code>anan.top</code>，然后在前面加上<code>http://</code>，就像这样<code>http://www.anan.top</code>，下面的那个root的话一般是<code>root:/</code>，但是如果你的地址是<code>http://yoursite.com/child</code>这样的话，那么你的root就应该写成<code>root:/child/</code></p>
-<h3 id="github设置域名"><a href="#github设置域名" class="headerlink" title="github设置域名"></a>github设置域名</h3><p>打开之前创建好的那个仓库，找到里面的settings<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E4%BB%93%E5%BA%93%E7%9A%84settings.png"><br><br>打开以后往下拉找到这个<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D.png"><br><br>在custom domain中填入你的域名，不加http的，例如购买的域名是<code>anan.top</code>，那么这里填的就是<code>www.anan.top</code>，然后点击“save”保存，如果设置成功的话，会出现上面这张图里蓝色的github pages下面那行<code>&quot;Your site is published at https://www.***.top&quot;</code>，后面的这个链接就是你的博客地址了，点击链接即可访问你的博客<br><br>这个时候你会发现，你创建的那个github仓库里面多出了一个CNAME文件，就是这个，请注意这个文件，因为它是一个重量级嘉宾。<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/CNAME.png"><br></p>
-<h4 id="域名配置永久"><a href="#域名配置永久" class="headerlink" title="域名配置永久"></a>域名配置永久</h4><p>这里设置好域名以后是可以直接访问了，但是有一个问题，那就是每次写完博客重新部署的时候，就又得再设一次域名，虽然过程不复杂，但确实很不方便。其实这涉及hexo的一个特性，每次执行hexo clean以后都会清空缓存和已生成的静态文件，这个时候你刚配置好的CNAME文件就被清理掉了，而这个CNAME文件里恰好放的是你刚刚配置好的域名，这不就等于没有配置吗？解决办法就是：在配置好域名后，把整个项目克隆下来，首先找到你的项目（实在找不到就去你的github首页，你的项目名字是:你的用户名.github.io，也就是你之前创建的那个仓库），找到后点击绿色的小按钮，像这样<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E9%A1%B9%E7%9B%AE%E5%85%8B%E9%9A%86.png"><br><br>下载完成后，解压，然后找到CNAME文件，复制粘贴到你博客根目录下的source文件夹里面<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/sourceCNAME.png"><br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/source.png"><br><br>最后附上CNAME这个文件里面到底有啥内容<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/CNAME%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9.png"><br></p>
-<h3 id="完结撒花"><a href="#完结撒花" class="headerlink" title="完结撒花"></a>完结撒花</h3><p><strong>The End</strong></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
       </categories>
   </entry>
   <entry>
@@ -383,7 +284,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#x65;&#115;&#x74;&#x2e;&#116;&#101;&#x73;&#116;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;">&#116;&#x65;&#115;&#x74;&#x2e;&#116;&#101;&#x73;&#116;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;</a>  <a href="mailto:&#119;&#x77;&#119;&#64;&#118;&#x69;&#x70;&#x2e;&#113;&#x71;&#46;&#x63;&#x6f;&#109;">&#119;&#x77;&#119;&#64;&#118;&#x69;&#x70;&#x2e;&#113;&#x71;&#46;&#x63;&#x6f;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#101;&#x73;&#x74;&#x2e;&#116;&#101;&#115;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;">&#x74;&#101;&#x73;&#x74;&#x2e;&#116;&#101;&#115;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a>  <a href="mailto:&#119;&#119;&#x77;&#x40;&#118;&#105;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#x6d;">&#119;&#119;&#x77;&#x40;&#118;&#105;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#x6d;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -607,6 +508,105 @@
 <h3 id="End"><a href="#End" class="headerlink" title="End"></a>End</h3>]]></content>
       <categories>
         <category>markdown</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>linux和windows端搭建hexo博客，部署到github，配置域名一条龙教程，附上端口占用解决方法</title>
+    <url>/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p>[目录]<br><a href="#%E9%A6%96%E5%85%88%E6%B3%A8%E5%86%8Cgithub%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%9A%84%E4%BB%93%E5%BA%93">首先注册github新建一个空的仓库</a><br><a href="#%E6%90%AD%E5%BB%BA%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">搭建前的准备工作</a><br><a href="#%E5%AE%89%E8%A3%85git">安装git</a><br><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%AC%E5%9C%B0git%E4%BB%93%E5%BA%93">初始化本地git仓库</a><br><a href="#%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BAhexo">开始搭建hexo</a><br><a href="#%E6%B7%BB%E5%8A%A0github%E7%9A%84ssh">添加github的ssh</a><br><a href="#%E4%BF%AE%E6%94%B9hexo%E6%A0%B9%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">修改hexo根目录配置文件</a><br><a href="#%E9%83%A8%E7%BD%B2%E5%88%B0github">部署到github</a><br><a href="#%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8">端口占用</a><br><a href="#%E8%B4%AD%E4%B9%B0%E5%9F%9F%E5%90%8D">购买域名</a><br><a href="#%E5%86%8D%E6%AC%A1%E4%BF%AE%E6%94%B9blog%E6%A0%B9%E7%9B%AE%E5%BD%95%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">再次修改blog根目录的配置文件</a><br><a href="#github%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D">github设置域名</a><br><a href="#%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE%E6%B0%B8%E4%B9%85">域名配置永久</a><br><a href="#%E5%AE%8C%E7%BB%93%E6%92%92%E8%8A%B1">完结撒花</a></p>
+<p>我们直接开始教程吧<br></p>
+<h3 id="首先注册github新建一个空的仓库"><a href="#首先注册github新建一个空的仓库" class="headerlink" title="首先注册github新建一个空的仓库"></a>首先注册github新建一个空的仓库</h3><ol>
+<li><p>在浏览器地址栏输入这个链接，或者<a href="https://github.com/">点击这里跳转</a>，注册github账户前先看完第二条</p>
+<blockquote>
+<p><code>github.com</code></p>
+</blockquote>
+</li>
+<li><p>如果不想买域名的话，博客搭建好以后直接部署到github就行，这里要注意，部署到github的地址名字要和你的github的用户名一致，例如：github的用户名为<code>Anli</code>,部署到github后，博客地址就是这个：<code>anli.github.io</code>，所以github的用户名要慎重再慎重，我之前在这里踩了坑，弄了好久才弄好</p>
+</li>
+<li><p>跳转链接以后，点击右边的‘sign up’进行注册，填写你的github用户名(请看第二条)，绑定的邮箱，还有设定你的密码</p>
+</li>
+<li><p>点击‘sign in’登录，登录成功后点击左边的‘new’新建一个仓库<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/new.png"><br></p>
+</li>
+<li><p>如下所示，如果你的用户名是<code>Anan</code>，那么需要填的是<code>Anan.github.io</code>，最后的这个后缀必须是.io<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/newname.png"></p>
+</li>
+<li><p>最后点击最下面的<code>Create repository</code>，创建成功，这个时候里面是空的，先不用管它。</p>
+<h3 id="搭建前的准备工作"><a href="#搭建前的准备工作" class="headerlink" title="搭建前的准备工作"></a>搭建前的准备工作</h3></li>
+<li><p>安装nodejs<br><br>前面的是centos系列的安装命令，后面的是ubuntu和deeping系列的安装命令，后面就只展示centos的啦，ubuntu和deeping的只需要把yum变成apt-get即可，大部分命令直接换是可以的，如果不行，就自行百度吧<br><br>windows端的安装百度查找<br></p>
+<blockquote>
+<p><code>sudo yum install nodejs</code>或者<code>sudo apt-get install nodejs</code></p>
+</blockquote>
+</li>
+<li><p>安装npm<br><br>windows端的安装百度查找<br></p>
+<blockquote>
+<p><code>sudo yum install npm</code></p>
+</blockquote>
+</li>
+<li><p>检查安装情况：分别输入以下命令，如果出现版本号则表示安装成功<br></p>
+<blockquote>
+<p><code>node -v</code><br><code>npm -v</code></p>
+</blockquote>
+</li>
+<li><p>用npm安装，命令如下：<br><br>windows端要用cmd的管理员安装，linux系统直接安装</p>
+<blockquote>
+<p><code>npm install -g hexo-cli</code></p>
+</blockquote>
+</li>
+</ol>
+<p>如果安装出错，尝试用这条命令解决</p>
+<blockquote>
+<p><code>npm config set strict-ssl false</code><br>输入上面命令后，再次输入安装命令<br><code>npm install -g hexo-cli</code></p>
+</blockquote>
+<p>如果还不行，请在评论区告诉我，O(∩_∩)O谢谢</p>
+<p>检查是否安装成功</p>
+<blockquote>
+<p>hexo -v</p>
+</blockquote>
+<p>出现版本号表示安装成功</p>
+<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><blockquote>
+<p><code>yum -y install git</code></p>
+</blockquote>
+<p>检查是否安装成功</p>
+<blockquote>
+<p><code>git --version</code></p>
+</blockquote>
+<p>出现版本号即安装成功</p>
+<h3 id="初始化本地git仓库"><a href="#初始化本地git仓库" class="headerlink" title="初始化本地git仓库"></a>初始化本地git仓库</h3><blockquote>
+<p>设置Git的user name<br><code>git config --global user.name &quot;双引号里面改成你注册好的github用户名&quot;</code><br>设置git的邮箱<br><code>git config --global user.email &quot;双引号里面改成你注册好的github邮箱&quot;</code></p>
+</blockquote>
+<h3 id="开始搭建hexo"><a href="#开始搭建hexo" class="headerlink" title="开始搭建hexo"></a>开始搭建hexo</h3><ol start="7">
+<li>创建一个文件夹用来放你的博客文件<blockquote>
+<p><code>mkdir blog</code></p>
+</blockquote>
+</li>
+</ol>
+<p>mkdir是Linux的创建文件的命令，命令后面跟着的就是文件的名字，名字个人喜欢命名，也可以带上地址，具体百度搜索linux如何创建文件夹<br>8. 进入到刚刚创建的文件夹中</p>
+<blockquote>
+<p><code>cd blog</code><br>9. hexo初始化<br><code>hexo init</code></p>
+</blockquote>
+<p>这个时候可能会发生错误<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/hexo%20init.png"><br><br>这是因为node版本太低导致的，这个时候我们用这两个命令来更新到最新版<br></p>
+<blockquote>
+<p>先输入这条命令安装n软件<br><code>npm install n -g</code><br>n软件是node专门的软件，所以可以用n软件更新升级到最新的稳定版，命令如下<br><code>n stable</code><br>然后再输入hexo的初始化命令<br><code>hexo init</code></p>
+</blockquote>
+<p>（另外，hexo的初始化必须是在空文件夹中进行，如果初始化中发生错误时，首先检查一下你放博客的那个文件夹是不是空文件夹，查看是否有隐藏文件，如果有的话，得先把隐藏文件移出去，初始化完成后再移回来）<br>10. 初始化完成后就可以生成项目了，输入命令：<code>hexo g</code><br>11. 生成项目以后开始启动项目：<code>hexo s</code><br>12. 根据终端给出的链接就可以进入到初始化的hexo啦，至此hexo搭建成功，退出的话在终端同时按住<code>ctrl+c</code>或者<code>shift+ctrl+c</code>即可</p>
+<h5 id="添加github的ssh"><a href="#添加github的ssh" class="headerlink" title="添加github的ssh"></a>添加github的ssh</h5><ol start="14">
+<li>部署后不着急，我们先添加一下github的ssh<br>在主机根目录下，输入这条命令<code>ssh-keygen -t rsa -b 4096 -C&quot;******@qq.com&quot;</code>，其中<code>******@qq.com</code>填入你注册github的邮箱账号<br><br>然后会出现这行：<code>Enter file in which to save the key (/home/tia/.ssh/id_rsa): </code>，这时候直接回车，那么后面的这个路径<code>(/home/tia/.ssh/id_rsa)</code>就是你的ssh的存放路径<br><br>之后会提示输入密码，要记住这个密码，输入密码后会有一个图案出现，看到这个奇怪的图案就证明成功啦，这个时候我们切换到.ssh目录下<code>cd /home/tia/.ssh</code><br><br>然后<code>ls</code>查看一下目录下的所有文件，找到id_rsa.pub文件，用<code>vi id_rsa.pub</code>打开文件，复制里面的所有内容<br><br>登录github官网，找到最右边的四边形图案，点击展开下拉菜单，点击settings<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/settings.png"><br><br>在左边的菜单栏中找到ssh<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/ssh.png"><br><br>打开的页面中，将复制的内容粘贴到key里面，title自己写，写啥都行，然后点击<code>Add SSH Key</code><br><br>最后测试是否成功，打开终端，输入<code>ssh -T git@github.com</code>，之后等一小会儿会出现很多英文单词，如果找到‘successfully’，那就安装成功啦<h6 id="修改hexo根目录配置文件"><a href="#修改hexo根目录配置文件" class="headerlink" title="修改hexo根目录配置文件"></a>修改hexo根目录配置文件</h6></li>
+<li>打开终端，<code>cd blog</code>切换到博客的根目录，安装插件<br><code>npm install hexo-deployer-git --save</code></li>
+<li>ls查看博客根目录下的所有文件，找到<code>_config.yml</code>这个文件，输入命令<code>vi _config.yml</code>编辑文件，把以下内容复制粘贴到文件的底部<br><figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> git </span><br><span class="line"><span class="symbol">  repo:</span> </span><br><span class="line"><span class="symbol">      github:</span> https:<span class="comment">//github.com/你的github用户名/你的github用户名.github.io.git</span></span><br><span class="line"><span class="symbol">      coding:</span> git@e.coding.net:你的coding用户名/你的coding用户名/你的coding用户名.git,master</span><br><span class="line"><span class="symbol">  branch:</span> master</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>github是国外的，coding是国内的，如果用github太慢，可以考虑加一个coding，国内线路走coding，国外线路走github，配置方法和github的大致一样，就不多说了。<br>这里要注意，deploy前面没有缩进;type,repo,branch前面的缩进是两个空格;github,coding前面的缩进是六个空格;所有的冒号后面都有一个空格的缩进，这是makedown语言的格式，冒号后面没有空格，则设置不成功。务必严格缩进格式，不然会报错。</p>
+<p>我之前看到有的教程说这个<br></p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">repo: </span><br><span class="line">    github: https:<span class="regexp">//gi</span>thub.com<span class="regexp">/你的github用户名/</span>你的github用户名.github.io.git</span><br></pre></td></tr></table></figure>
+<p>已经无法使用了，我的还可以，如果你们的hexo版本号和我的不同，有可能也用不了这个了，那就把<code>https://github.com/你的github用户名/你的github用户名.io.git</code>换成<code>git@github.com:你的github用户名/你的github用户名.github.io.git</code></p>
+<h6 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h6><p>输入命令<code>hexo d</code>，就成功部署到github啦，打开浏览器，在地址栏输入<code>你的github用户名.github.io</code>就可以访问啦，如果以上步骤都成功了没有报错，可是就是无法进入博客，那可能是端口占用的问题，如果没有的话直接跳过这一步</p>
+<h6 id="端口占用"><a href="#端口占用" class="headerlink" title="端口占用"></a>端口占用</h6><p>hexo默认的端口是4000，不确定是否被占用的情况下，打开终端输入<code>yum install lsof</code>安装lsof，其他系统的安装命令自查，然后输入命令<code>lsof -i:4000</code>查看<br>如果被占用，终端会展示端口的信息，找到端口对应的PID，kill掉即可，命令如下<code>kill -9 PID</code>，假如端口对应的PID是7109，那么命令就是<code>kill -9 7109</code></p>
+<h3 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h3><p>首先购买域名，我是在腾讯云买的，地址是<code>https://cloud.tencent.com/</code>，<a href="https://cloud.tencent.com/">点击这里跳转</a>，在搜索框搜索域名注册，点击域名注册购买域名，完成实名认证，修改域名所有者，这些需要等审核通过，我们可以一边等一边继续教程内容<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C.png"><br><br>买完域名以后到<a href="https://cloud.tencent.com/">腾讯云首页</a>，找到最右边的”控制台”<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%8E%A7%E5%88%B6%E5%8F%B0.png"><br><br>点进去以后搜索域名管理<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E5%9F%9F%E5%90%8D%E7%AE%A1%E7%90%86.png"><br><br>点击红圈所示部分，进入页面后点击“解析”<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D.png"><br><br>点击“添加记录”添加域名解析，这里只需要添加两个即可，一个www的，一个@的，具体参数设置如下:<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/www%E5%92%8C%40.png"><br><br>其中记录值写的是当初你填在下图的地址（似乎不区分大小写，可以尝试一下，我当时在这里填的是Caixuya.github.io，而记录值写的是caixuya.github.io）<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/newname.png"></p>
+<h3 id="再次修改blog根目录的配置文件"><a href="#再次修改blog根目录的配置文件" class="headerlink" title="再次修改blog根目录的配置文件"></a>再次修改blog根目录的配置文件</h3><p><code>cd blog</code>切换到你的博客根目录，<code>ls</code>查找<code>_config.yml</code>,之前配置过这个文件，然后<code>vi _config.yml</code>编辑这个文件，找到<code>url:</code>，删除url后面的东西，（如果没有的话就不用删，有的话就删掉）填上你自己的域名地址，假如你买的域名是<code>anan.top</code>，然后在前面加上<code>http://</code>，就像这样<code>http://www.anan.top</code>，下面的那个root的话一般是<code>root:/</code>，但是如果你的地址是<code>http://yoursite.com/child</code>这样的话，那么你的root就应该写成<code>root:/child/</code></p>
+<h3 id="github设置域名"><a href="#github设置域名" class="headerlink" title="github设置域名"></a>github设置域名</h3><p>打开之前创建好的那个仓库，找到里面的settings<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E4%BB%93%E5%BA%93%E7%9A%84settings.png"><br><br>打开以后往下拉找到这个<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D.png"><br><br>在custom domain中填入你的域名，不加http的，例如购买的域名是<code>anan.top</code>，那么这里填的就是<code>www.anan.top</code>，然后点击“save”保存，如果设置成功的话，会出现上面这张图里蓝色的github pages下面那行<code>&quot;Your site is published at https://www.***.top&quot;</code>，后面的这个链接就是你的博客地址了，点击链接即可访问你的博客<br><br>这个时候你会发现，你创建的那个github仓库里面多出了一个CNAME文件，就是这个，请注意这个文件，因为它是一个重量级嘉宾。<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/CNAME.png"><br></p>
+<h4 id="域名配置永久"><a href="#域名配置永久" class="headerlink" title="域名配置永久"></a>域名配置永久</h4><p>这里设置好域名以后是可以直接访问了，但是有一个问题，那就是每次写完博客重新部署的时候，就又得再设一次域名，虽然过程不复杂，但确实很不方便。其实这涉及hexo的一个特性，每次执行hexo clean以后都会清空缓存和已生成的静态文件，这个时候你刚配置好的CNAME文件就被清理掉了，而这个CNAME文件里恰好放的是你刚刚配置好的域名，这不就等于没有配置吗？解决办法就是：在配置好域名后，把整个项目克隆下来，首先找到你的项目（实在找不到就去你的github首页，你的项目名字是:你的用户名.github.io，也就是你之前创建的那个仓库），找到后点击绿色的小按钮，像这样<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E9%A1%B9%E7%9B%AE%E5%85%8B%E9%9A%86.png"><br><br>下载完成后，解压，然后找到CNAME文件，复制粘贴到你博客根目录下的source文件夹里面<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/sourceCNAME.png"><br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/source.png"><br><br>最后附上CNAME这个文件里面到底有啥内容<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/CNAME%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9.png"><br></p>
+<h3 id="完结撒花"><a href="#完结撒花" class="headerlink" title="完结撒花"></a>完结撒花</h3><p><strong>The End</strong></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
       </categories>
   </entry>
   <entry>
@@ -1558,15 +1558,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
       </categories>
   </entry>
   <entry>
-    <title>心情记录:今天总算把博客完善了</title>
-    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
-    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
-]]></content>
-      <categories>
-        <category>daily</category>
-      </categories>
-  </entry>
-  <entry>
     <title>将hexo博客部署到手机的nginx服务器中</title>
     <url>/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<p>接第一章—在手机搭建nginx服务器</p>
@@ -1591,6 +1582,15 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 ]]></content>
       <categories>
         <category>nginx</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>心情记录:今天总算把博客完善了</title>
+    <url>/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</url>
+    <content><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
+]]></content>
+      <categories>
+        <category>daily</category>
       </categories>
   </entry>
   <entry>
