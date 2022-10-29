@@ -105,6 +105,20 @@
       </categories>
   </entry>
   <entry>
+    <title>cpu</title>
+    <url>/2022/04/09/cpu%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>.sh文件如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pid=$1</span><br><span class="line">cat /proc/stat | grep cpu[^0-9]</span><br><span class="line">cat /proc/$&#123;pid&#125;/stat</span><br><span class="line">dumpsys meminfo $&#123;pid&#125; | grep TOTAL:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim&#x2F;vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p>
@@ -211,20 +225,6 @@
 ]]></content>
       <categories>
         <category>github</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>cpu</title>
-    <url>/2022/04/09/cpu%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>.sh文件如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pid=$1</span><br><span class="line">cat /proc/stat | grep cpu[^0-9]</span><br><span class="line">cat /proc/$&#123;pid&#125;/stat</span><br><span class="line">dumpsys meminfo $&#123;pid&#125; | grep TOTAL:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>python</category>
       </categories>
   </entry>
   <entry>
@@ -383,7 +383,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#101;&#x73;&#x74;&#x2e;&#x74;&#x65;&#115;&#x74;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#x74;&#101;&#x73;&#x74;&#x2e;&#x74;&#x65;&#115;&#x74;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a>  <a href="mailto:&#x77;&#x77;&#119;&#x40;&#x76;&#105;&#112;&#46;&#x71;&#113;&#46;&#x63;&#111;&#109;">&#x77;&#x77;&#119;&#x40;&#x76;&#105;&#112;&#46;&#x71;&#113;&#46;&#x63;&#111;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#x74;&#x65;&#x73;&#x74;&#46;&#116;&#x65;&#x73;&#x74;&#64;&#x67;&#109;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;">&#x74;&#x65;&#x73;&#x74;&#46;&#116;&#x65;&#x73;&#x74;&#64;&#x67;&#109;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;</a>  <a href="mailto:&#x77;&#x77;&#119;&#64;&#x76;&#105;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#x6d;">&#x77;&#x77;&#119;&#64;&#x76;&#105;&#112;&#x2e;&#113;&#113;&#x2e;&#99;&#111;&#x6d;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -1388,6 +1388,57 @@ if __name__ == &quot;__main__&quot;:
       </categories>
   </entry>
   <entry>
+    <title>在手机搭建nginx服务器</title>
+    <url>/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<p>本篇博文参考网站：<a href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
+<p>起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看<br></p>
+<h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h2><h3 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h3><blockquote>
+<p>发现安装完nginx后，浏览器无法打开<code>127.0.0.1:8080</code> <br></p>
+</blockquote>
+<h3 id="2-检查问题"><a href="#2-检查问题" class="headerlink" title="2.检查问题"></a>2.检查问题<br></h3><blockquote>
+<p>在termux中输入<code>nginx -V</code> ，发现报错：CANNOT LINK EXECUTABLE “nginx”:library “libssl.so.3” not found aborted<br><br>网上查找相关资料，发现没有对应的解决办法<br></p>
+</blockquote>
+<h3 id="3-开始各种尝试"><a href="#3-开始各种尝试" class="headerlink" title="3.开始各种尝试"></a>3.开始各种尝试<br></h3><blockquote>
+<h4 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h4><p>输入<code>termux-setup-storage</code><br></p>
+<h4 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h4><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
+<h4 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h4><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
+</blockquote>
+<h3 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h3><blockquote>
+<p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
+</blockquote>
+<h3 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h3><blockquote>
+<p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
+</blockquote>
+<h3 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h3><blockquote>
+<p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
+</blockquote>
+<h3 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h3><blockquote>
+<p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
+</blockquote>
+<p>搭建nginx服务器完成<br></p>
+<h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a href="https://caixuya.github.io/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">进阶 把博客部署到nginx</a></h2><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br></p>
+<h3 id="10-卸载nginx"><a href="#10-卸载nginx" class="headerlink" title="10.卸载nginx"></a>10.卸载nginx<br></h3><p>参考连接<a href="http://t.zoukankan.com/smlile-you-me-p-11404110.html">Ubuntu16.04使用apt安装完nginx常见问题</a><br></p>
+<blockquote>
+<p>在实行进阶版本的时候，失败了很多次，经历了很多次卸载重新搭建nginx的情况，这里也记录一下卸载的步骤吧<br></p>
+<h4 id="10-1-错误尝试"><a href="#10-1-错误尝试" class="headerlink" title="10.1 错误尝试"></a>10.1 错误尝试<br></h4><p>在输入<code>pkg files nginx</code>这个命令找到所有nginx文件夹的路径后，我尝试使用一个个文件夹删除的办法，但是后来一想，linux有<code>remove</code>命令可以用来卸载，那termix是否也有这类命令呢<br></p>
+<h4 id="10-2-正确尝试"><a href="#10-2-正确尝试" class="headerlink" title="10.2 正确尝试"></a>10.2 正确尝试<br></h4><h5 id="10-2-1-尝试输入卸载命令"><a href="#10-2-1-尝试输入卸载命令" class="headerlink" title="10.2.1 尝试输入卸载命令"></a>10.2.1 尝试输入卸载命令<br></h5><p><code>pkg remove nginx</code>(或者是这条命令：<code>apt remove nginx</code>) ，当它提示yes or not时，我明白我输入的命令是对的<br></p>
+<h5 id="10-2-2-卸载更彻底一些"><a href="#10-2-2-卸载更彻底一些" class="headerlink" title="10.2.2 卸载更彻底一些"></a>10.2.2 卸载更彻底一些<br></h5><p>再执行两个卸载命令：<code>apt autoremove nginx</code><br><code>apt --purge remove nginx</code><br></p>
+<h5 id="10-2-3-报错"><a href="#10-2-3-报错" class="headerlink" title="10.2.3 报错"></a>10.2.3 报错<br></h5><p>此时报错说有一个文件夹因为不是空的所以没有卸载<br></p>
+<h5 id="10-2-4-根据报错内容删除文件夹"><a href="#10-2-4-根据报错内容删除文件夹" class="headerlink" title="10.2.4 根据报错内容删除文件夹"></a>10.2.4 根据报错内容删除文件夹<br></h5><p>使用删除命令<code>rm -rf /data/data/com.termux/files/usr/var/log/nginx</code><br></p>
+<h5 id="10-2-5-验证上一步操作是否解决问题"><a href="#10-2-5-验证上一步操作是否解决问题" class="headerlink" title="10.2.5 验证上一步操作是否解决问题"></a>10.2.5 验证上一步操作是否解决问题<br></h5><p>再次执行导致报错的命令，<code>apt --purge remove nginx</code><br></p>
+</blockquote>
+<p>完成<br></p>
+<h3 id="11-安装nginx"><a href="#11-安装nginx" class="headerlink" title="11. 安装nginx"></a>11. 安装nginx<br></h3><blockquote>
+<p>之所以在文章的最后记录如何安装nginx，是因为这个安装教程网上很多，本来是不想记录下来的，但是因为多次失败导致需要多次安装卸载nginx，所以还是决定写下来方便自己等会直接用<br></p>
+<h4 id="11-1-安装命令"><a href="#11-1-安装命令" class="headerlink" title="11.1 安装命令"></a>11.1 安装命令<br></h4><p>输入命令<code>apt -y install nginx</code><br></p>
+</blockquote>
+<p>完成<br></p>
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+  </entry>
+  <entry>
     <title>多表连接查询、SQL函数、分组聚合</title>
     <url>/2020/11/18/%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2%E3%80%81SQL%E5%87%BD%E6%95%B0%E3%80%81%E5%88%86%E7%BB%84%E8%81%9A%E5%90%88/</url>
     <content><![CDATA[<p>转载自<a href="https://www.xieyihui.top/">友情链接</a></p>
@@ -1507,57 +1558,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
       </categories>
   </entry>
   <entry>
-    <title>在手机搭建nginx服务器</title>
-    <url>/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<p>本篇博文参考网站：<a href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
-<p>起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看<br></p>
-<h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h2><h3 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h3><blockquote>
-<p>发现安装完nginx后，浏览器无法打开<code>127.0.0.1:8080</code> <br></p>
-</blockquote>
-<h3 id="2-检查问题"><a href="#2-检查问题" class="headerlink" title="2.检查问题"></a>2.检查问题<br></h3><blockquote>
-<p>在termux中输入<code>nginx -V</code> ，发现报错：CANNOT LINK EXECUTABLE “nginx”:library “libssl.so.3” not found aborted<br><br>网上查找相关资料，发现没有对应的解决办法<br></p>
-</blockquote>
-<h3 id="3-开始各种尝试"><a href="#3-开始各种尝试" class="headerlink" title="3.开始各种尝试"></a>3.开始各种尝试<br></h3><blockquote>
-<h4 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h4><p>输入<code>termux-setup-storage</code><br></p>
-<h4 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h4><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
-<h4 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h4><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
-</blockquote>
-<h3 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h3><blockquote>
-<p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
-</blockquote>
-<h3 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h3><blockquote>
-<p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
-</blockquote>
-<h3 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h3><blockquote>
-<p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
-</blockquote>
-<h3 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h3><blockquote>
-<p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
-</blockquote>
-<p>搭建nginx服务器完成<br></p>
-<h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a href="https://caixuya.github.io/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">进阶 把博客部署到nginx</a></h2><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br></p>
-<h3 id="10-卸载nginx"><a href="#10-卸载nginx" class="headerlink" title="10.卸载nginx"></a>10.卸载nginx<br></h3><p>参考连接<a href="http://t.zoukankan.com/smlile-you-me-p-11404110.html">Ubuntu16.04使用apt安装完nginx常见问题</a><br></p>
-<blockquote>
-<p>在实行进阶版本的时候，失败了很多次，经历了很多次卸载重新搭建nginx的情况，这里也记录一下卸载的步骤吧<br></p>
-<h4 id="10-1-错误尝试"><a href="#10-1-错误尝试" class="headerlink" title="10.1 错误尝试"></a>10.1 错误尝试<br></h4><p>在输入<code>pkg files nginx</code>这个命令找到所有nginx文件夹的路径后，我尝试使用一个个文件夹删除的办法，但是后来一想，linux有<code>remove</code>命令可以用来卸载，那termix是否也有这类命令呢<br></p>
-<h4 id="10-2-正确尝试"><a href="#10-2-正确尝试" class="headerlink" title="10.2 正确尝试"></a>10.2 正确尝试<br></h4><h5 id="10-2-1-尝试输入卸载命令"><a href="#10-2-1-尝试输入卸载命令" class="headerlink" title="10.2.1 尝试输入卸载命令"></a>10.2.1 尝试输入卸载命令<br></h5><p><code>pkg remove nginx</code>(或者是这条命令：<code>apt remove nginx</code>) ，当它提示yes or not时，我明白我输入的命令是对的<br></p>
-<h5 id="10-2-2-卸载更彻底一些"><a href="#10-2-2-卸载更彻底一些" class="headerlink" title="10.2.2 卸载更彻底一些"></a>10.2.2 卸载更彻底一些<br></h5><p>再执行两个卸载命令：<code>apt autoremove nginx</code><br><code>apt --purge remove nginx</code><br></p>
-<h5 id="10-2-3-报错"><a href="#10-2-3-报错" class="headerlink" title="10.2.3 报错"></a>10.2.3 报错<br></h5><p>此时报错说有一个文件夹因为不是空的所以没有卸载<br></p>
-<h5 id="10-2-4-根据报错内容删除文件夹"><a href="#10-2-4-根据报错内容删除文件夹" class="headerlink" title="10.2.4 根据报错内容删除文件夹"></a>10.2.4 根据报错内容删除文件夹<br></h5><p>使用删除命令<code>rm -rf /data/data/com.termux/files/usr/var/log/nginx</code><br></p>
-<h5 id="10-2-5-验证上一步操作是否解决问题"><a href="#10-2-5-验证上一步操作是否解决问题" class="headerlink" title="10.2.5 验证上一步操作是否解决问题"></a>10.2.5 验证上一步操作是否解决问题<br></h5><p>再次执行导致报错的命令，<code>apt --purge remove nginx</code><br></p>
-</blockquote>
-<p>完成<br></p>
-<h3 id="11-安装nginx"><a href="#11-安装nginx" class="headerlink" title="11. 安装nginx"></a>11. 安装nginx<br></h3><blockquote>
-<p>之所以在文章的最后记录如何安装nginx，是因为这个安装教程网上很多，本来是不想记录下来的，但是因为多次失败导致需要多次安装卸载nginx，所以还是决定写下来方便自己等会直接用<br></p>
-<h4 id="11-1-安装命令"><a href="#11-1-安装命令" class="headerlink" title="11.1 安装命令"></a>11.1 安装命令<br></h4><p>输入命令<code>apt -y install nginx</code><br></p>
-</blockquote>
-<p>完成<br></p>
-]]></content>
-      <categories>
-        <category>nginx</category>
-      </categories>
-  </entry>
-  <entry>
     <title>将hexo博客部署到手机的nginx服务器中</title>
     <url>/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<p>接第一章—在手机搭建nginx服务器</p>
@@ -1660,6 +1660,35 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
       </categories>
   </entry>
   <entry>
+    <title>“返回函数”、“闭包”、“nonlocal”关键字</title>
+    <url>/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">例子的延申：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">g</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">        <span class="keyword">return</span> i * i</span><br><span class="line">    <span class="keyword">return</span> f()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(g(k))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
+<h3 id="“闭包”和“nonlocal”关键词"><a href="#“闭包”和“nonlocal”关键词" class="headerlink" title="“闭包”和“nonlocal”关键词"></a>“闭包”和“nonlocal”关键词</h3><p>闭包：就是能够读取其他函数内部变量的函数，其实就是内层函数引用了外层函数的局部变量，可以理解为“定义在一个函数内部的函数”，本质上，闭包是将函数内部和函数外部连接起来的桥梁。如下所示：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inc</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="comment"># 仅读取x的值:</span></span><br><span class="line">        <span class="keyword">return</span> x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inc()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是：1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x&#x3D;0一样，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>起始点</title>
+    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
+    <content><![CDATA[<blockquote>
+<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>daily</category>
+      </categories>
+  </entry>
+  <entry>
     <title>解决liux系统只读文件系统，linux系统磁盘上锁问题</title>
     <url>/2020/05/01/%E8%A7%A3%E5%86%B3liux%E7%B3%BB%E7%BB%9F%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%8Clinux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E4%B8%8A%E9%94%81%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>装双系统的朋友可能经常会遇到这样的问题，某天打开linux系统的时候发现windows系统的所有磁盘都锁住了，文件移不出来，也没办法创建文件<br><br>之前找资料说重启可以解决，第一次重启的时候并没有解决，然后，我就重启了第二次，emmm，惊讶的发现居然可以了<br><br>而后很久都没有再出现这个问题，正当我觉得那次磁盘被锁只是意外时，某个夜高风黑的晚上，我打开linux系统，发现又锁了，我当时差点就问候我亲爱的电脑了，当然我忍住了<br><br>上网找解决方案的时候，这次终于皇天不负有心人，我找到了解决方案，我得抓紧这颗稻草，于是我连忙写在自己博客，防止链接丢失或者某天这个回答突然不见了<br></p>
@@ -1682,35 +1711,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 ]]></content>
       <categories>
         <category>linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>起始点</title>
-    <url>/2020/04/03/%E8%B5%B7%E5%A7%8B%E7%82%B9/</url>
-    <content><![CDATA[<blockquote>
-<p>今天是2020年4月3号星期五，创建博客，特此留念</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>daily</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>“返回函数”、“闭包”、“nonlocal”关键字</title>
-    <url>/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">例子的延申：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">g</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">        <span class="keyword">return</span> i * i</span><br><span class="line">    <span class="keyword">return</span> f()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(g(k))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
-
-<h3 id="“闭包”和“nonlocal”关键词"><a href="#“闭包”和“nonlocal”关键词" class="headerlink" title="“闭包”和“nonlocal”关键词"></a>“闭包”和“nonlocal”关键词</h3><p>闭包：就是能够读取其他函数内部变量的函数，其实就是内层函数引用了外层函数的局部变量，可以理解为“定义在一个函数内部的函数”，本质上，闭包是将函数内部和函数外部连接起来的桥梁。如下所示：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inc</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="comment"># 仅读取x的值:</span></span><br><span class="line">        <span class="keyword">return</span> x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inc()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是：1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x&#x3D;0一样，如下所示：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>python</category>
       </categories>
   </entry>
   <entry>
@@ -1759,6 +1759,21 @@ if __name__ == &quot;__main__&quot;:
       </categories>
   </entry>
   <entry>
+    <title></title>
+    <url>/about/index.html</url>
+    <content><![CDATA[<p>这里主要是记录自己学习后的总结，是学习笔记，一些自己比较常用的东西也会记录下来</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>更新日历</title>
+    <url>/calendar/index.html</url>
+    <content><![CDATA[<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+    <div class="widget" id="CloudCalendar"></div>
+</div>
+]]></content>
+  </entry>
+  <entry>
     <title>404</title>
     <url>//404.html</url>
     <content><![CDATA[<!DOCTYPE html>
@@ -1772,26 +1787,6 @@ if __name__ == &quot;__main__&quot;:
 		<script type="text/javascript" src="//qzonestyle.gtimg.cn/qzone/hybrid/app/404/search_children.js" charset="utf-8"></script>
 	</body>
 </html>]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/about/index.html</url>
-    <content><![CDATA[<p>这里主要是记录自己学习后的总结，是学习笔记，一些自己比较常用的东西也会记录下来</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>categories</title>
-    <url>/categories/index.html</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>更新日历</title>
-    <url>/calendar/index.html</url>
-    <content><![CDATA[<!-- CloudCalendar -->
-<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
-    <div class="widget" id="CloudCalendar"></div>
-</div>
-]]></content>
   </entry>
   <entry>
     <title></title>
@@ -1911,6 +1906,11 @@ if __name__ == &quot;__main__&quot;:
 
 </body>
 </html>]]></content>
+  </entry>
+  <entry>
+    <title>categories</title>
+    <url>/categories/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
