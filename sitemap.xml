@@ -318,14 +318,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/mysql/</loc>
+    <loc>http://example.com/categories/markdown/</loc>
     <lastmod>2022-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/markdown/</loc>
+    <loc>http://example.com/categories/mysql/</loc>
     <lastmod>2022-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
