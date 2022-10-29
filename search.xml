@@ -119,15 +119,6 @@
       </categories>
   </entry>
   <entry>
-    <title>hexo的cname记录怎么永远设置</title>
-    <url>/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-  </entry>
-  <entry>
     <title>github图片加载不成功,以及电脑能上网却无法登录github首页</title>
     <url>/2020/04/09/github%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8D%E6%88%90%E5%8A%9F,%E4%BB%A5%E5%8F%8A%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95github.com%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>[目录]<br><a href="#windows%E7%AB%AF">windows端</a><br><a href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9">修改内容</a><br><a href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6%E5%90%8E%E4%BE%9D%E7%84%B6%E6%97%A0%E6%B3%95%E7%9C%8B%E5%88%B0%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85%E7%94%B5%E8%84%91%E5%8F%AF%E4%BB%A5%E4%B8%8A%E7%BD%91%E5%8D%B4%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E9%A6%96%E9%A1%B5">修改hosts文件后依然无法看到图片或者电脑可以上网却无法打开github首页</a><br><a href="#linux%E7%AB%AF">linux端</a><br><a href="#%E7%94%A8gedit%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用gedit修改文件</a><br><a href="#ubuntu%EF%BC%8Cdeeping%E7%B3%BB%E5%88%97%E7%9A%84linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">ubuntu，deeping系列安装命令</a><br><a href="#centos%E7%B3%BB%E5%88%97%E7%9A%84%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4">centos系列安装命令</a><br><a href="#%E7%94%A8vimvi%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6">用vim&#x2F;vi修改文件</a><br><a href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90">大功告成</a></p>
@@ -234,6 +225,15 @@
 ]]></content>
       <categories>
         <category>github</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>hexo的cname记录怎么永远设置</title>
+    <url>/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
       </categories>
   </entry>
   <entry>
@@ -383,7 +383,7 @@
 <blockquote>
 <p>引用：如果想要插入空白换行<code>即&lt;br /&gt;标签</code>，在插入处先键入两个以上的空格然后回车即可，<a href="https://www.mdeditor.com/">普通链接</a>。</p>
 </blockquote>
-<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#101;&#x73;&#x74;&#x2e;&#116;&#101;&#115;&#116;&#x40;&#x67;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;">&#116;&#101;&#x73;&#x74;&#x2e;&#116;&#101;&#115;&#116;&#x40;&#x67;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;</a>  <a href="mailto:&#119;&#119;&#x77;&#64;&#x76;&#105;&#x70;&#46;&#113;&#113;&#x2e;&#x63;&#111;&#109;">&#119;&#119;&#x77;&#64;&#x76;&#105;&#x70;&#46;&#113;&#113;&#x2e;&#x63;&#111;&#109;</a></p>
+<h3 id="锚点与链接-Links"><a href="#锚点与链接-Links" class="headerlink" title="锚点与链接 Links"></a>锚点与链接 Links</h3><p><a href="https://www.mdeditor.com/">普通链接</a><br><a href="https://www.mdeditor.com/" title="普通链接带标题">普通链接带标题</a><br>直接链接：<a href="https://www.mdeditor.com/">https://www.mdeditor.com</a><br>[锚点链接][anchor-id]<br>[anchor-id]: <a href="https://www.mdeditor.com/">https://www.mdeditor.com/</a><br><a href="mailto:test.test@gmail.com">mailto:test.test@gmail.com</a><br>GFM a-tail link @pandao<br>邮箱地址自动链接 <a href="mailto:&#116;&#x65;&#115;&#x74;&#x2e;&#x74;&#101;&#115;&#116;&#64;&#x67;&#109;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;">&#116;&#x65;&#115;&#x74;&#x2e;&#x74;&#101;&#115;&#116;&#64;&#x67;&#109;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;</a>  <a href="mailto:&#x77;&#119;&#x77;&#64;&#118;&#105;&#x70;&#x2e;&#113;&#x71;&#46;&#x63;&#x6f;&#109;">&#x77;&#119;&#x77;&#64;&#118;&#105;&#x70;&#x2e;&#113;&#x71;&#46;&#x63;&#x6f;&#109;</a></p>
 <blockquote>
 <p>@pandao</p>
 </blockquote>
@@ -610,17 +610,6 @@
       </categories>
   </entry>
   <entry>
-    <title>navicat导入sql文件失败解决办法</title>
-    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
-    <content><![CDATA[<blockquote>
-<p>navicat导入.sql文件失败的话，先新建一个与所需要导入的数据库的字符集以及排列规则都相同的数据库，如下：<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql2.png"><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql1.png"><br></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-  </entry>
-  <entry>
     <title>mysql ERROR 1045 (28000) Access denied for user &#39;ODBC&#39;@&#39;localhost&#39; (using password NO)</title>
     <url>/2020/05/01/mysql%20ERROR%201045%20(28000)%20Access%20denied%20for%20user%20&#39;ODBC&#39;@&#39;localhost&#39;%20(using%20password%20NO)/</url>
     <content><![CDATA[<p>在cmd中敲入mysql后，出现下面的错误，找了很久没有找到解决方案<br></p>
@@ -632,6 +621,17 @@
 <p><code>CREATE USER &#39;ODBC&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;&#39;;</code><br>然后更新一下权限<br><code>flush privileges;</code></p>
 <p>说到创建用户，版本不同命令是有些微差别的，如果上面这条命令不适用你的mysql，就去找找其他的创建用户的命令，这个问题的解决方案就到这里啦～～<br>附上图片：<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql.png"></p>
 <p>另外附上mysql登录命令：<code>mysql -u root -p;</code><br>关闭命令：<code>service mysqld stop;</code><br>修改密码命令：<code>set password for &#39;root&#39;@&#39;localhost&#39;=password(&#39;991007&#39;);</code><br>赋予所有权限：<code>grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;root&#39;;</code><br>更新权限命令<code>update mysql.user set Grant_priv=&#39;Y&#39;,Super_priv=&#39;Y&#39; where user = &#39;root&#39; and host = &#39;%&#39;;</code></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>navicat导入sql文件失败解决办法</title>
+    <url>/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    <content><![CDATA[<blockquote>
+<p>navicat导入.sql文件失败的话，先新建一个与所需要导入的数据库的字符集以及排列规则都相同的数据库，如下：<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql2.png"><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql1.png"><br></p>
+</blockquote>
 ]]></content>
       <categories>
         <category>mysql</category>
@@ -1594,21 +1594,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
       </categories>
   </entry>
   <entry>
-    <title>测试方法之改表测试</title>
-    <url>/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<p>为什么要改表测试：</p>
-<p>1.检查配置表中的字段是否生效</p>
-<p>2.测试“环境配置”</p>
-<p>举例：抽奖得抽100次以后，也就是第101次数才能抽到，为了测试方便，把100次改成10次</p>
-<p>3.权重测试</p>
-<p>举例：同样是抽奖的，改成10次后，担心改了抽奖次数后，概率变高，所以把概率调成0，变成必须让这个奖励在第11次抽到</p>
-<p>4.容错：配置空白</p>
-]]></content>
-      <categories>
-        <category>测试</category>
-      </categories>
-  </entry>
-  <entry>
     <title>生成器</title>
     <url>/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/</url>
     <content><![CDATA[<h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
@@ -1657,6 +1642,21 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 ]]></content>
       <categories>
         <category>python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>测试方法之改表测试</title>
+    <url>/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<p>为什么要改表测试：</p>
+<p>1.检查配置表中的字段是否生效</p>
+<p>2.测试“环境配置”</p>
+<p>举例：抽奖得抽100次以后，也就是第101次数才能抽到，为了测试方便，把100次改成10次</p>
+<p>3.权重测试</p>
+<p>举例：同样是抽奖的，改成10次后，担心改了抽奖次数后，概率变高，所以把概率调成0，变成必须让这个奖励在第11次抽到</p>
+<p>4.容错：配置空白</p>
+]]></content>
+      <categories>
+        <category>测试</category>
       </categories>
   </entry>
   <entry>
@@ -1774,23 +1774,18 @@ if __name__ == &quot;__main__&quot;:
 </html>]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/about/index.html</url>
-    <content><![CDATA[<p>这里主要是记录自己学习后的总结，是学习笔记，一些自己比较常用的东西也会记录下来</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>categories</title>
-    <url>/categories/index.html</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>更新日历</title>
     <url>/calendar/index.html</url>
     <content><![CDATA[<!-- CloudCalendar -->
 <div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
     <div class="widget" id="CloudCalendar"></div>
 </div>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/about/index.html</url>
+    <content><![CDATA[<p>这里主要是记录自己学习后的总结，是学习笔记，一些自己比较常用的东西也会记录下来</p>
 ]]></content>
   </entry>
   <entry>
@@ -1911,6 +1906,11 @@ if __name__ == &quot;__main__&quot;:
 
 </body>
 </html>]]></content>
+  </entry>
+  <entry>
+    <title>categories</title>
+    <url>/categories/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
