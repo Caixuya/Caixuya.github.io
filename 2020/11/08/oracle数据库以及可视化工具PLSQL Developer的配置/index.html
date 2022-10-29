@@ -1,32 +1,16 @@
 <!DOCTYPE html>
-<html lang="en,zh-CN,default">
+<html>
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.1.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
-  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
-  <script src="/undefined/pace/pace.min.js"></script>
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
-  </script>
-
+  <meta charset="utf-8">
+  
+  
+  <title>oracle数据库的下载以及可视化工具PLSQL Developer的配置 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="数据库：oracle数据库oracle数据库下载地址：oracle提取码：os0i可视化工具：PLSQL Developer可视化工具下载地址：PLSQL Developer提取码：i2ay   oracle官网下载方法访问复制以下链接访问oracle官网oracle.com或点击这里访问 更改语言(各国语言切换)在官网底部找到country&#x2F;region，单击然后找到Asia Paci">
 <meta property="og:type" content="article">
 <meta property="og:title" content="oracle数据库的下载以及可视化工具PLSQL Developer的配置">
 <meta property="og:url" content="http://example.com/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/index.html">
-<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="数据库：oracle数据库oracle数据库下载地址：oracle提取码：os0i可视化工具：PLSQL Developer可视化工具下载地址：PLSQL Developer提取码：i2ay   oracle官网下载方法访问复制以下链接访问oracle官网oracle.com或点击这里访问 更改语言(各国语言切换)在官网底部找到country&#x2F;region，单击然后找到Asia Paci">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_country.png">
@@ -35,255 +19,90 @@
 <meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle%E4%B8%8B%E8%BD%BD.PNG">
 <meta property="article:published_time" content="2020-11-08T10:52:16.000Z">
 <meta property="article:modified_time" content="2022-04-14T15:40:33.967Z">
-<meta property="article:author" content="caixuya">
+<meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/oracle_country.png">
-
-<link rel="canonical" href="http://example.com/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
-
-  <title>oracle数据库的下载以及可视化工具PLSQL Developer的配置 | tia的学习笔记</title>
   
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
 
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
 
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">tia的学习笔记</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-主页">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
-
-  </li>
-        <li class="menu-item menu-item-分类">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-目录">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
-
-  </li>
-        <li class="menu-item menu-item-日程表">
-
-    <a href="/calendar/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
-
-  </li>
-        <li class="menu-item menu-item-站点地图">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
-
-  </li>
-        <li class="menu-item menu-item-关于我">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
-
-  </li>
-        <li class="menu-item menu-item-开往">
-
-    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
-
-  </li>
-        <li class="menu-item menu-item-给我写信">
-
-    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
-
-  </li>
-        <li class="menu-item menu-item-公益404">
-
-    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container"></div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div class="algolia-results">
-  <div id="algolia-stats"></div>
-  <div id="algolia-hits"></div>
-  <div id="algolia-pagination" class="algolia-pagination"></div>
-</div>
-
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
       
     </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-oracle数据库以及可视化工具PLSQL Developer的配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2020-11-08T10:52:16.000Z" itemprop="datePublished">2020-11-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Oracle/">Oracle</a>
   </div>
 
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
+  <div class="article-inner">
     
+    
+      <header class="article-header">
+        
   
+    <h1 class="p-name article-title" itemprop="headline name">
+      oracle数据库的下载以及可视化工具PLSQL Developer的配置
+    </h1>
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          oracle数据库的下载以及可视化工具PLSQL Developer的配置
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-08 18:52:16" itemprop="dateCreated datePublished" datetime="2020-11-08T18:52:16+08:00">2020-11-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-14 23:40:33" itemprop="dateModified" datetime="2022-04-14T23:40:33+08:00">2022-04-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Oracle/" itemprop="url" rel="index"><span itemprop="name">Oracle</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>898</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
         <p>数据库：oracle数据库<br><br>oracle数据库下载地址：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1IWGulfEeP8DYrF6dnOF6BQ">oracle</a><br>提取码：os0i<br>可视化工具：PLSQL Developer<br><br>可视化工具下载地址：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1R71jc8ojjt8cm6nDD3b3mw">PLSQL Developer</a><br><br>提取码：i2ay  <br></p>
 <h1 id="oracle官网下载方法"><a href="#oracle官网下载方法" class="headerlink" title="oracle官网下载方法"></a>oracle官网下载方法</h1><h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p>复制以下链接访问oracle官网<br><br><code>oracle.com</code>或点击<a target="_blank" rel="noopener" href="http://www.oracle.com/">这里</a>访问<br></p>
@@ -293,345 +112,141 @@
 <h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>右键单击电脑，选择<code>属性</code>-<code>高级属性</code>-<code>环境变量</code>-<code>新建</code>，<br><br><code>NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code><br><br><code>TNS_ADMIN = PLSQL解压目录\PLSQL\instantclient_11_2</code><br><br>以上两条分开的，也就是需要新建两条记录，等号前的是变量名，等号后的是变量值<br></p>
 <h2 id="PLSQL-Developer-环境设置"><a href="#PLSQL-Developer-环境设置" class="headerlink" title="PLSQL Developer 环境设置"></a>PLSQL Developer 环境设置</h2><p>不登录情况下进入PLSQL Developer<br>1.位置<br><br><code>工具 -&gt; 首选项 -&gt; 连接</code><br><br>2.设置<br><br><code>Oracle主目录名=Oracle安装目录\product\11.2.0\dbhome_2</code><br><br><code>OCI库=PLSQL解压目录\PLSQL\instantclient_11_2\oci.dll</code><br></p>
 
-    </div>
-
-    
-    
-    
-        <div class="reward-container">
-  <div>点这里请我吃个小蛋糕吧～～</div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
       
-      <div style="display: inline-block;">
-        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" data-id="cl9u2ftj7000lvoq99i4e46g9" data-title="oracle数据库的下载以及可视化工具PLSQL Developer的配置" class="article-share-link">Share</a>
       
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="caixuya Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>Post author:  </strong>caixuya
-  </li>
-  <li class="post-copyright-link">
-    <strong>Post link: </strong>
-    <a href="http://example.com/2020/11/08/oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A5%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7PLSQL%20Developer%E7%9A%84%E9%85%8D%E7%BD%AE/" title="oracle数据库的下载以及可视化工具PLSQL Developer的配置">http://example.com/2020/11/08/oracle数据库以及可视化工具PLSQL Developer的配置/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
-  </li>
-</ul>
-</div>
-
-        
-
-  <div class="followme">
-    <p>Welcome to my other publishing channels</p>
-
-    <div class="social-list">
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
-            <span class="icon">
-              <i class="fab fa-weixin"></i>
-            </span>
-
-            <span class="label">WeChat</span>
-          </a>
-        </div>
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="/atom.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-
-            <span class="label">RSS</span>
-          </a>
-        </div>
-    </div>
-  </div>
-
-
-      <footer class="post-footer">
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" rel="prev" title="navicat导入sql文件失败解决办法">
-      <i class="fa fa-chevron-left"></i> navicat导入sql文件失败解决办法
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/11/16/struts2%E5%85%A5%E9%97%A8/" rel="next" title="struts2入门">
-      struts2入门 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#oracle%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">oracle官网下载方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE"><span class="nav-number">1.1.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E8%AF%AD%E8%A8%80-%E5%90%84%E5%9B%BD%E8%AF%AD%E8%A8%80%E5%88%87%E6%8D%A2"><span class="nav-number">1.2.</span> <span class="nav-text">更改语言(各国语言切换)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oracle%E4%B8%8B%E8%BD%BD%EF%BC%88oracle-11g%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">oracle下载（oracle_11g）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PLSQL%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">PLSQL的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">替换文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PLSQL-Developer-%E7%8E%AF%E5%A2%83%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">PLSQL Developer 环境设置</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="caixuya"
-      src="/images/avatar.gif">
-  <p class="site-author-name" itemprop="name">caixuya</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">25</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-        <span class="site-state-item-count">12</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
-  </div>
-
-<div class="copyright">
-  
-  &copy; 2020 – 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">caixuya</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-    <span title="Symbols count total">54k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="Reading time total">49 mins.</span>
-</div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
+      
+      
     </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/16/struts2%E5%85%A5%E9%97%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          struts2入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">navicat导入sql文件失败解决办法</div>
+    </a>
+  
+</nav>
 
   
-  <script src="/undefined/anime.min.js"></script>
-  <script src="/undefined/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-
-<script src="/js/utils.js"></script>
+</article>
 
 
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-<script src="/js/bookmark.js"></script>
-
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
-
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
-
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Oracle/">Oracle</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SSH-struts2/">SSH_struts2</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/">前端页面</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+    </div>
+  </div>
 
 
   
+    
 
-
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
+    </div>
+  </div>
 
 
   
-<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
-<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
-<script src="/js/algolia-search.js"></script>
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/">测试方法之改表测试</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
   
-
+</aside>
+        
+      </div>
+      <footer id="footer">
   
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
 
     </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

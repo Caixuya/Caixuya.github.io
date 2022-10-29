@@ -1,276 +1,103 @@
 <!DOCTYPE html>
-<html lang="en,zh-CN,default">
+<html>
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.1.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
-  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
-  <script src="/undefined/pace/pace.min.js"></script>
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
-  </script>
-
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
-<meta property="og:title" content="tia的学习笔记">
+<meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="caixuya">
+<meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-
-<link rel="canonical" href="http://example.com/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : true,
-    isPost : false,
-    lang   : 'en'
-  };
-</script>
-
-  <title>tia的学习笔记</title>
   
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">tia的学习笔记</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-主页">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
-
-  </li>
-        <li class="menu-item menu-item-分类">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-目录">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
-
-  </li>
-        <li class="menu-item menu-item-日程表">
-
-    <a href="/calendar/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
-
-  </li>
-        <li class="menu-item menu-item-站点地图">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
-
-  </li>
-        <li class="menu-item menu-item-关于我">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
-
-  </li>
-        <li class="menu-item menu-item-开往">
-
-    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
-
-  </li>
-        <li class="menu-item menu-item-给我写信">
-
-    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
-
-  </li>
-        <li class="menu-item menu-item-公益404">
-
-    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container"></div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div class="algolia-results">
-  <div id="algolia-stats"></div>
-  <div id="algolia-hits"></div>
-  <div id="algolia-pagination" class="algolia-pagination"></div>
-</div>
-
-      
-    </div>
-  </div>
-
-</div>
-    </header>
-
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
 
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
-          <div class="content index posts-expand">
-            
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
       
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
   
+    <article id="post-将hexo博客部署到手机的nginx服务器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2022-10-29T11:36:50.000Z" itemprop="datePublished">2022-10-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nginx/">nginx</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+    </h1>
+  
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">将hexo博客部署到手机的nginx服务器中</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-10-29 19:36:50 / Modified: 19:51:15" itemprop="dateCreated datePublished" datetime="2022-10-29T19:36:50+08:00">2022-10-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>1.7k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>接第一章—在手机搭建nginx服务器</p>
+        <p>接第一章—在手机搭建nginx服务器</p>
 <h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. <a target="_blank" rel="noopener" href="https://caixuya.github.io/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a></h2><h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. 进阶 把博客部署到nginx</h2><h3 id="8-将hexo博客部署到手机的nginx服务器中"><a href="#8-将hexo博客部署到手机的nginx服务器中" class="headerlink" title="8.将hexo博客部署到手机的nginx服务器中"></a>8.将hexo博客部署到手机的nginx服务器中<br></h3><p>如何搭建hexo博客在我的另一篇博文里，附上连接<a target="_blank" rel="noopener" href="https://caixuya.github.io/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">搭建hexo博客</a><br></p>
 <blockquote>
 <h4 id="8-1-安装vim"><a href="#8-1-安装vim" class="headerlink" title="8.1 安装vim"></a>8.1 安装vim<br></h4><p>输入命令<code>pkg install vim</code><br></p>
@@ -292,89 +119,46 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" data-id="cl9u2ftjh0011voq925811id1" data-title="将hexo博客部署到手机的nginx服务器中" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+    <article id="post-在手机搭建nginx服务器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2022-10-28T02:45:36.000Z" itemprop="datePublished">2022-10-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nginx/">nginx</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">在手机搭建nginx服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-10-28 10:45:36" itemprop="dateCreated datePublished" datetime="2022-10-28T10:45:36+08:00">2022-10-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-10-29 19:52:26" itemprop="dateModified" datetime="2022-10-29T19:52:26+08:00">2022-10-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>1.6k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>本篇博文参考网站：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
+        <p>本篇博文参考网站：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
 <p>起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看<br></p>
 <h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h2><h3 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h3><blockquote>
 <p>发现安装完nginx后，浏览器无法打开<code>127.0.0.1:8080</code> <br></p>
@@ -420,244 +204,133 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" data-id="cl9u2ftje000xvoq99hw80zkk" data-title="在手机搭建nginx服务器" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">
+    <article id="post-hexo的cname记录怎么永远设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2022-06-04T07:32:09.000Z" itemprop="datePublished">2022-06-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/" class="post-title-link" itemprop="url">hexo的cname记录怎么永远设置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-06-04 15:32:09 / Modified: 15:34:50" itemprop="dateCreated datePublished" datetime="2022-06-04T15:32:09+08:00">2022-06-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>111</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>
+        <p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/" data-id="cl9u2ftiw0006voq9cysp54dq" data-title="hexo的cname记录怎么永远设置" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">
+    <article id="post-匿名函数lambda" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/" class="article-date">
+  <time class="dt-published" datetime="2022-05-06T15:26:25.000Z" itemprop="datePublished">2022-05-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/" class="post-title-link" itemprop="url">匿名函数lambda</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-05-06 23:26:25 / Modified: 23:26:48" itemprop="dateCreated datePublished" datetime="2022-05-06T23:26:25+08:00">2022-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>891</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">g = <span class="keyword">lambda</span> x: x + <span class="number">1</span></span><br><span class="line"><span class="comment"># 上面这句等价于这句</span></span><br><span class="line"><span class="comment">#def g(x):</span></span><br><span class="line"><span class="comment">#    return x + 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 无参数</span></span><br><span class="line">t = <span class="keyword">lambda</span>: <span class="literal">True</span></span><br><span class="line">wc = <span class="keyword">lambda</span>: <span class="string">&quot;这是一个无参的lambda&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个或多个参数</span></span><br><span class="line">b = <span class="keyword">lambda</span> x: x ** <span class="number">3</span></span><br><span class="line">c = <span class="keyword">lambda</span> x, y=<span class="number">3</span>: x * y</span><br><span class="line">cc = <span class="keyword">lambda</span> name, age: (name, age)</span><br><span class="line">a = <span class="keyword">lambda</span> x, y, z: x + y + z</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不定长参数</span></span><br><span class="line">d = <span class="keyword">lambda</span> *z: <span class="built_in">sum</span>(z) / <span class="built_in">len</span>(z)</span><br><span class="line"><span class="comment"># *z为不定长参数，可以输入多个参数，没有固定长度，可用于求取平均值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 键值对参数</span></span><br><span class="line">e = <span class="keyword">lambda</span> **arg: arg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回多个表达式（需要将表达式用元组或列表的方式返回）</span></span><br><span class="line">dg = <span class="keyword">lambda</span> a, b: (a * b, a + b, a // b, a / b, a % b)</span><br><span class="line"></span><br><span class="line"><span class="comment">#map函数</span></span><br><span class="line">li = <span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(t())</span><br><span class="line">    <span class="built_in">print</span>(wc())</span><br><span class="line">    <span class="built_in">print</span>(g(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(b(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;sum = &#x27;</span>, a(<span class="number">3</span>, <span class="number">6</span>, <span class="number">2</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接在print中用f-string输出，其中:.2f表示显示小数点后两位</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;梯形 = <span class="subst">&#123;(<span class="keyword">lambda</span> tx, tk, h: (tx + tk) * h / <span class="number">2</span>)(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>):<span class="number">.2</span>f&#125;</span>&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接输出</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])))  <span class="comment"># 1</span></span><br><span class="line">    <span class="comment">#也可以在上面定义</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(li))</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(cc(age=<span class="number">25</span>, name=<span class="string">&quot;小明&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(c(<span class="number">8</span>))</span><br><span class="line">    <span class="built_in">print</span>(d(<span class="number">1</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(yellow=<span class="number">1</span>, blue=<span class="number">2</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(a=<span class="number">34</span>, b=<span class="number">56</span>))</span><br><span class="line">    <span class="built_in">print</span>(dg(<span class="number">10</span>, <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">g = <span class="keyword">lambda</span> x: x + <span class="number">1</span></span><br><span class="line"><span class="comment"># 上面这句等价于这句</span></span><br><span class="line"><span class="comment">#def g(x):</span></span><br><span class="line"><span class="comment">#    return x + 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 无参数</span></span><br><span class="line">t = <span class="keyword">lambda</span>: <span class="literal">True</span></span><br><span class="line">wc = <span class="keyword">lambda</span>: <span class="string">&quot;这是一个无参的lambda&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个或多个参数</span></span><br><span class="line">b = <span class="keyword">lambda</span> x: x ** <span class="number">3</span></span><br><span class="line">c = <span class="keyword">lambda</span> x, y=<span class="number">3</span>: x * y</span><br><span class="line">cc = <span class="keyword">lambda</span> name, age: (name, age)</span><br><span class="line">a = <span class="keyword">lambda</span> x, y, z: x + y + z</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不定长参数</span></span><br><span class="line">d = <span class="keyword">lambda</span> *z: <span class="built_in">sum</span>(z) / <span class="built_in">len</span>(z)</span><br><span class="line"><span class="comment"># *z为不定长参数，可以输入多个参数，没有固定长度，可用于求取平均值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 键值对参数</span></span><br><span class="line">e = <span class="keyword">lambda</span> **arg: arg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回多个表达式（需要将表达式用元组或列表的方式返回）</span></span><br><span class="line">dg = <span class="keyword">lambda</span> a, b: (a * b, a + b, a // b, a / b, a % b)</span><br><span class="line"></span><br><span class="line"><span class="comment">#map函数</span></span><br><span class="line">li = <span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(t())</span><br><span class="line">    <span class="built_in">print</span>(wc())</span><br><span class="line">    <span class="built_in">print</span>(g(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(b(<span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;sum = &#x27;</span>, a(<span class="number">3</span>, <span class="number">6</span>, <span class="number">2</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接在print中用f-string输出，其中:.2f表示显示小数点后两位</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;梯形 = <span class="subst">&#123;(<span class="keyword">lambda</span> tx, tk, h: (tx + tk) * h / <span class="number">2</span>)(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>):<span class="number">.2</span>f&#125;</span>&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#可以直接输出</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * x, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])))  <span class="comment"># 1</span></span><br><span class="line">    <span class="comment">#也可以在上面定义</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">list</span>(li))</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(cc(age=<span class="number">25</span>, name=<span class="string">&quot;小明&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(c(<span class="number">8</span>))</span><br><span class="line">    <span class="built_in">print</span>(d(<span class="number">1</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(yellow=<span class="number">1</span>, blue=<span class="number">2</span>))</span><br><span class="line">    <span class="built_in">print</span>(e(a=<span class="number">34</span>, b=<span class="number">56</span>))</span><br><span class="line">    <span class="built_in">print</span>(dg(<span class="number">10</span>, <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
 
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/" data-id="cl9u2ftjd000vvoq9eftda5pr" data-title="匿名函数lambda" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/">
+    <article id="post-测试方法之--改表测试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/" class="article-date">
+  <time class="dt-published" datetime="2022-05-06T15:26:25.000Z" itemprop="datePublished">2022-05-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/">测试方法之改表测试</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">测试方法之改表测试</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-05-06 23:26:25 / Modified: 23:26:27" itemprop="dateCreated datePublished" datetime="2022-05-06T23:26:25+08:00">2022-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">测试</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>151</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>为什么要改表测试：</p>
+        <p>为什么要改表测试：</p>
 <p>1.检查配置表中的字段是否生效</p>
 <p>2.测试“环境配置”</p>
 <p>举例：抽奖得抽100次以后，也就是第101次数才能抽到，为了测试方便，把100次改成10次</p>
@@ -667,83 +340,46 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/" data-id="cl9u2ftjl0015voq943t701yt" data-title="测试方法之改表测试" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/">
+    <article id="post-返回函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2022-05-06T15:26:25.000Z" itemprop="datePublished">2022-05-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/">“返回函数”、“闭包”、“nonlocal”关键字</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">“返回函数”、“闭包”、“nonlocal”关键字</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-05-06 23:26:25 / Modified: 23:26:50" itemprop="dateCreated datePublished" datetime="2022-05-06T23:26:25+08:00">2022-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>723</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+        <h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
 
 
 
@@ -756,102 +392,65 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" data-id="cl9u2ftjp001evoq9ct0wb67y" data-title="“返回函数”、“闭包”、“nonlocal”关键字" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/">
+    <article id="post-列表生成式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" class="article-date">
+  <time class="dt-published" datetime="2022-04-24T17:59:25.000Z" itemprop="datePublished">2022-04-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/">列表生成式</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" class="post-title-link" itemprop="url">列表生成式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-25 01:59:25 / Modified: 01:14:17" itemprop="dateCreated datePublished" datetime="2022-04-25T01:59:25+08:00">2022-04-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>2.8k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>列表中，比较少用的是列表生成式，之前用的一直是比较常规的方式，所以列表生成式这种比较简便的方式在这里做个记录，方便以后自己反复查看</p>
+        <p>列表中，比较少用的是列表生成式，之前用的一直是比较常规的方式，所以列表生成式这种比较简便的方式在这里做个记录，方便以后自己反复查看</p>
 <h4 id="1-使用函数range创建数字列表"><a href="#1-使用函数range创建数字列表" class="headerlink" title="1.使用函数range创建数字列表"></a>1.使用函数range创建数字列表</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list1</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    numbers = []</span><br><span class="line">    numbers = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(numbers)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">list2</span>():</span><br><span class="line">    num = []</span><br><span class="line">    num = <span class="built_in">range</span>(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> num:</span><br><span class="line">        <span class="built_in">print</span>(i, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    list1()</span><br><span class="line">    list2()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight leaf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输出结果为:</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8, 9]      <span class="function"><span class="keyword">#</span><span class="title">list1</span><span class="params">()</span></span>的输出结果</span><br><span class="line">0 1 2 3 4 5 6 7 8 9 			 <span class="function"><span class="keyword">#</span><span class="title">list2</span><span class="params">()</span></span>的输出结果</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输出结果为:</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8, 9]      #list1()的输出结果</span><br><span class="line">0 1 2 3 4 5 6 7 8 9 			 #list2()的输出结果</span><br></pre></td></tr></table></figure>
 
 <p>如果要生成<code>[1x1, 2x2, 3x3, ..., 10x10]</code>这种形式的话，可以用常规的方式：遍历数组中的数，让数组中的数相乘，如下:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        L.append(x * x)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span><br></pre></td></tr></table></figure>
 
 <p>用列表生成式的方法做就是：把要生成的元素（以上面的例子为例：要生成的元素是<code>x * x</code>）放在前面,后面跟<code>for</code>循环，如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
 
 <p>输出结果和上面的常规方法输出的结果一样：</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span><br></pre></td></tr></table></figure>
 
 <h4 id="2-列表生成式-if"><a href="#2-列表生成式-if" class="headerlink" title="2.列表生成式 + if"></a>2.列表生成式 + if</h4><p>跟在<code>for</code>后面的<code>if</code>是一个筛选条件，不能带<code>else</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[4, 16, 36, 64, 100]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[4, 16, 36, 64, 100]</span><br></pre></td></tr></table></figure>
 
 
 
@@ -862,16 +461,16 @@
 <p>如下这条表达式，<code>x if x % 2 == 0</code>，它无法根据<code>x</code>计算出结果，因为缺少<code>else</code>，必须加上<code>else</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_ruguo</span>():</span><br><span class="line">    L = [x <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> -x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _ruguo()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[<span class="string">-1</span>, 2, <span class="string">-3</span>, 4, <span class="string">-5</span>, 6, <span class="string">-7</span>, 8, <span class="string">-9</span>, 10]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[-1, 2, -3, 4, -5, 6, -7, 8, -9, 10]</span><br></pre></td></tr></table></figure>
 
 <p>这个的效果就相当于：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">ru_guo</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            x1 = x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x1 = -x</span><br><span class="line">        L.append(x1)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    ru_guo()</span><br></pre></td></tr></table></figure>
 
 <h4 id="4-两层循环，生成全排列"><a href="#4-两层循环，生成全排列" class="headerlink" title="4.两层循环，生成全排列"></a>4.两层循环，生成全排列</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pai_lie</span>():</span><br><span class="line">    L = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;ABC&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;XYZ&#x27;</span>]</span><br><span class="line">    W = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>]</span><br><span class="line">    <span class="built_in">print</span>(W)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># pai_lie()函数等价于qing_xi()，但是并不是完全等价，pai_lie这个函数输出来以后是一个列表，如下输出结果4.1所示</span></span><br><span class="line"><span class="comment">#而qing_xi函数输出来的是一个一个单独的，如下图输出结果4.2所示</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            <span class="built_in">print</span>(m + n)</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pai_lie()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果<span class="number">4.1</span></span><br><span class="line"><span class="selector-attr">[<span class="string">&#x27;14&#x27;</span>, <span class="string">&#x27;15&#x27;</span>, <span class="string">&#x27;16&#x27;</span>, <span class="string">&#x27;24&#x27;</span>, <span class="string">&#x27;25&#x27;</span>, <span class="string">&#x27;26&#x27;</span>, <span class="string">&#x27;34&#x27;</span>, <span class="string">&#x27;35&#x27;</span>, <span class="string">&#x27;36&#x27;</span>]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果4.1</span><br><span class="line">[&#x27;14&#x27;, &#x27;15&#x27;, &#x27;16&#x27;, &#x27;24&#x27;, &#x27;25&#x27;, &#x27;26&#x27;, &#x27;34&#x27;, &#x27;35&#x27;, &#x27;36&#x27;]</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输出结果4.2</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输出结果4.2</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td></tr></table></figure>
 
 <p>如果想和pai_lie完全一样，还应该定义一个空的列表，将(m+n)放进列表中</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            L.append(m+n)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    qing_xi()</span><br></pre></td></tr></table></figure>
@@ -884,83 +483,46 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" data-id="cl9u2ftjc000tvoq92kgpcmnj" data-title="列表生成式" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/">
+    <article id="post-生成器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2022-04-24T17:59:25.000Z" itemprop="datePublished">2022-04-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/">生成器</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/" class="post-title-link" itemprop="url">生成器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-25 01:59:25 / Modified: 01:14:42" itemprop="dateCreated datePublished" datetime="2022-04-25T01:59:25+08:00">2022-04-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
+        <h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
 <p>如果可以先不创建完整的list，而是先创建一个东西，使得这个东西可以在循环的过程中计算出后面的元素，这样可以节省大量的空间。这个一边循环一边计算的机制，成为生成器：generator</p>
 <h3 id="2-创建generator"><a href="#2-创建generator" class="headerlink" title="2. 创建generator"></a>2. 创建generator</h3><h4 id="lt-1-gt-第一种方法：把列表生成式的-改成"><a href="#lt-1-gt-第一种方法：把列表生成式的-改成" class="headerlink" title="&lt;1&gt; 第一种方法：把列表生成式的[]改成()"></a>&lt;1&gt; 第一种方法：把列表生成式的[]改成()</h4><p>这里可以看到，函数gen_ner只是把gen_list最外层的[]改成了()，结果就是L是一个list，而g是一个generator</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"><span class="comment">#gen_list的输出结果为：</span></span><br><span class="line"><span class="comment">#[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]  </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gen_ner</span>():</span><br><span class="line">    g = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(g)</span><br><span class="line"><span class="comment">#gen_ner()的输出结果为：</span></span><br><span class="line"><span class="comment">#&lt;generator object gen_ner.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002245435B970&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    gen_list()</span><br><span class="line">    gen_ner()</span><br></pre></td></tr></table></figure>
@@ -973,17 +535,17 @@
 <p>1, 1, 2, 3, 5, 8, 13, 21, 34, …</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="built_in">print</span>(b)</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    fib(<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">执行结果是：</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">执行结果是：</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br></pre></td></tr></table></figure>
 
 <p>其中：a, b &#x3D; b, a + b为赋值语句，相当于：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">t</span> = (b, a + b) <span class="comment"># t是一个tuple</span></span><br><span class="line"><span class="attr">a</span> = t[<span class="number">0</span>]</span><br><span class="line"><span class="attr">b</span> = t[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t = (b, a + b) # t是一个tuple</span><br><span class="line">a = t[0]</span><br><span class="line">b = t[1]</span><br></pre></td></tr></table></figure>
 
 <p>但不必显式写出临时变量t就可以赋值，也就是说，<code>a, b = b, a + b</code>这句话的意思是：把a赋值给b，把b赋值给a+b。t只是作为一个中间变量出现，不用中间变量的时候可以直接赋值。</p>
 <p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E7%94%9F%E6%88%90%E5%99%A81.png" alt="image-20220424192351161"></p>
 <h5 id="2-2-斐波拉契数列类似generator"><a href="#2-2-斐波拉契数列类似generator" class="headerlink" title="2.2  斐波拉契数列类似generator"></a>2.2  斐波拉契数列类似generator</h5><p>斐波拉契数列的推算规则，可以从第一个元素开始，推算出后续任意的元素，这种逻辑其实非常类似generator，也就是”2.1 例子（斐波拉契数列）“的函数和generator仅一步之遥。要把<code>fib</code>函数变成generator函数，只需要把<code>print(b)</code>改为<code>yield b</code>就可以了：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="keyword">yield</span> b</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = fib(<span class="number">8</span>)		<span class="comment">#调用generator对象</span></span><br><span class="line">    <span class="built_in">print</span>(f)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">运行的结果是：</span><br><span class="line">&lt;generator object <span class="built_in">fib</span> <span class="built_in">at</span> <span class="number">0x000001EAE925B970</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">运行的结果是：</span><br><span class="line">&lt;generator object fib at 0x000001EAE925B970&gt;</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-generator函数的执行顺序"><a href="#3-generator函数的执行顺序" class="headerlink" title="3. generator函数的执行顺序"></a>3. generator函数的执行顺序</h3><p>普通函数是顺序执行，遇到<code>return</code>语句或者最后一行函数语句就返回。</p>
 <p>generator的函数，在每次调用<code>next()</code>的时候执行，遇到<code>yield</code>语句返回，再次执行时从上次返回的<code>yield</code>语句处继续执行，例子如下：</p>
@@ -998,7 +560,7 @@
 <p>同样的，把函数改成generator函数后，我们基本上从来不会用<code>next()</code>来获取下一个返回值，而是直接使用<code>for</code>循环来迭代：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> odd():</span><br><span class="line">        <span class="built_in">print</span>(n)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">结果是：</span><br><span class="line">step <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">step <span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">step <span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">结果是：</span><br><span class="line">step 1</span><br><span class="line">1</span><br><span class="line">step 2</span><br><span class="line">3</span><br><span class="line">step 3</span><br><span class="line">5</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
 
 <p>但是用<code>for</code>循环调用generator时，发现拿不到generator的<code>return</code>语句的返回值。如果想要拿到返回值，必须捕获<code>StopIteration</code>错误，返回值包含在<code>StopIteration</code>的<code>value</code>中：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    g = odd()</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            x = <span class="built_in">next</span>(g)</span><br><span class="line">            <span class="built_in">print</span>(x)</span><br><span class="line">        <span class="keyword">except</span> StopIteration <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Generator return value:&#x27;</span>, e.value)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
@@ -1006,89 +568,46 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/" data-id="cl9u2ftjm0018voq9434kba7g" data-title="生成器" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/09/cpu%E8%AE%B0%E5%BD%95/">
+    <article id="post-cpu记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/09/cpu%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2022-04-09T11:59:25.000Z" itemprop="datePublished">2022-04-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/09/cpu%E8%AE%B0%E5%BD%95/">cpu</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/09/cpu%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">cpu</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-04-09 19:59:25" itemprop="dateCreated datePublished" datetime="2022-04-09T19:59:25+08:00">2022-04-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-14 23:39:20" itemprop="dateModified" datetime="2022-04-14T23:39:20+08:00">2022-04-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.4k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
+        <p>这是一个用python写的获取单个手机游戏cpu利用率和内存占用的情况，最后用matplotlib绘图工具画曲线图，这里主要记录一下在python中调用.sh文件的一种思路，把.sh文件push到手机（模拟器）中，然后调用adb命令执行.sh文件，具体看push_shell()函数和execute_shell()函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># sys.path.append(os.path.join(os.path.dirname(__file__), &#x27;util&#x27;))</span></span><br><span class="line"><span class="comment"># from util import execute_cmd, time_couter</span></span><br><span class="line">shell_file = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取包名</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">package_name</span>():</span><br><span class="line">    hq_list = []</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell dumpsys window | findstr mCurrentFocus&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = re.split(<span class="string">r&#x27;[, /]&#x27;</span>, huo_qu)</span><br><span class="line">    pack_name = hq_list[<span class="number">4</span>]</span><br><span class="line">    <span class="keyword">return</span> pack_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取进程号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pid</span>():</span><br><span class="line">    cmd = <span class="string">&#x27;adb shell ps | findstr &#x27;</span> + package_name() + <span class="string">&#x27;$&#x27;</span></span><br><span class="line">    huo_qu = os.popen(cmd).read()</span><br><span class="line">    hq_list = huo_qu.split()</span><br><span class="line">    ap_pid = hq_list[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;进程号:&quot;</span> + ap_pid)</span><br><span class="line">    <span class="keyword">return</span> ap_pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把shell文件push到手机</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">push_shell</span>():</span><br><span class="line">    <span class="comment"># main文件在C:/Users/Administrator/PycharmProjects/pythonProject123/pythonProject/main.py中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.dirname,去掉文件名，返回目录;返回的是C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject</span></span><br><span class="line"></span><br><span class="line">    cur_dir = os.path.dirname(__file__)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># os.path.join,追加路径;C:\Users\Administrator\PycharmProjects\pythonProject123\pythonProject\huo_qu.sh</span></span><br><span class="line"></span><br><span class="line">    shell = os.path.join(cur_dir, <span class="string">&quot;huo_qu.sh&quot;</span>)</span><br><span class="line">    cmd = <span class="string">&quot;adb push &quot;</span> + shell + <span class="string">&quot; /sdcard&quot;</span></span><br><span class="line">    subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># execute_cmd(&quot;adb push &quot; + shell + &quot; /sdcard&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行shell文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_shell</span>(<span class="params">ap_pid</span>):</span><br><span class="line">    push_shell()</span><br><span class="line">    res_list = []</span><br><span class="line">    cmd = <span class="string">&quot;adb shell sh /sdcard/huo_qu.sh &quot;</span> + ap_pid</span><br><span class="line">    res_str = subprocess.Popen(cmd, shell=<span class="literal">True</span>, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    result = res_str.stdout.read()</span><br><span class="line">    res_list = result.split()</span><br><span class="line">    <span class="comment"># res_fin = int(res_list[1])</span></span><br><span class="line">    <span class="comment"># print(res_list)</span></span><br><span class="line">    <span class="keyword">return</span> res_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_list</span>(<span class="params">res</span>):</span><br><span class="line">    cpu_add = <span class="number">0</span></span><br><span class="line">    singer_add = <span class="number">0</span></span><br><span class="line">    cpu_all = res[<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    cpu_singer = res[<span class="number">24</span>:<span class="number">28</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        cpu_add = <span class="built_in">int</span>(cpu_all[i]) + cpu_add</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        singer_add = <span class="built_in">int</span>(cpu_singer[p]) + singer_add</span><br><span class="line">    <span class="keyword">return</span> cpu_add, singer_add</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">app_pss</span>(<span class="params">res</span>):</span><br><span class="line">    pss_all = <span class="built_in">int</span>(res[-<span class="number">5</span>])</span><br><span class="line">    <span class="keyword">return</span> pss_all</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>():</span><br><span class="line">    <span class="comment"># 这里是分割数据到数组，然后绘图的过程</span></span><br><span class="line">    cpu_all = []</span><br><span class="line">    cpu_singer = []</span><br><span class="line">    cpu_all_add_cha = []</span><br><span class="line">    cpu_singer_add_cha = []</span><br><span class="line">    pss_add_list = []</span><br><span class="line">    cpu = []</span><br><span class="line">    i_list = []</span><br><span class="line">    cpu_all_fin = <span class="number">0</span></span><br><span class="line">    cpu_singer_fin = <span class="number">0</span></span><br><span class="line">    cpu_chu = <span class="number">0</span></span><br><span class="line">    pid = app_pid()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建figure画布对象</span></span><br><span class="line">    figure = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        res = execute_shell(pid)</span><br><span class="line">        pss = app_pss(res)</span><br><span class="line">        cpu_all.append(cpu_list(res)[<span class="number">0</span>])</span><br><span class="line">        cpu_singer.append(cpu_list(res)[<span class="number">1</span>])</span><br><span class="line">        pss_add_list.append(pss)</span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            cpu_all_fin = <span class="number">0</span></span><br><span class="line">            cpu_singer_fin = <span class="number">0</span></span><br><span class="line">            cpu_chu = <span class="number">0</span></span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="number">1</span>:</span><br><span class="line">            cpu_all_fin = cpu_all[i] - cpu_all[i - <span class="number">1</span>]</span><br><span class="line">            cpu_singer_fin = cpu_singer[i] - cpu_singer[i - <span class="number">1</span>]</span><br><span class="line">            cpu_all_add_cha.append(cpu_all_fin)</span><br><span class="line">            cpu_singer_add_cha.append(cpu_singer_fin)</span><br><span class="line">            cpu_chu = cpu_singer_add_cha[i] / cpu_all_add_cha[i]</span><br><span class="line">            cpu.append(cpu_chu)</span><br><span class="line">        i_list.append(i)</span><br><span class="line">        <span class="built_in">print</span>(pss_add_list)</span><br><span class="line">        <span class="built_in">print</span>(cpu)</span><br><span class="line">    <span class="built_in">print</span>(pss_add_list)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 画图</span></span><br><span class="line"></span><br><span class="line">    x = i_list</span><br><span class="line">    y = cpu</span><br><span class="line">    y1 = pss_add_list</span><br><span class="line"></span><br><span class="line">    ax1 = figure.add_subplot(<span class="number">221</span>)</span><br><span class="line">    ax2 = figure.add_subplot(<span class="number">223</span>)</span><br><span class="line"></span><br><span class="line">    ax1.plot(x, y)</span><br><span class="line">    ax2.plot(x, y1)</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>.sh文件如下：</p>
@@ -1097,89 +616,46 @@
 
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/09/cpu%E8%AE%B0%E5%BD%95/" data-id="cl9u2ftj3000evoq9egv4842i" data-title="cpu" class="article-share-link">Share</a>
       
+      
+      
+    </footer>
+  </div>
   
+</article>
+
+
+
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/09/python/">
+    <article id="post-python" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/09/python/" class="article-date">
+  <time class="dt-published" datetime="2022-04-09T11:59:25.000Z" itemprop="datePublished">2022-04-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/09/python/">函数的调用</a>
+    </h1>
+  
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/09/python/" class="post-title-link" itemprop="url">函数的调用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-04-09 19:59:25" itemprop="dateCreated datePublished" datetime="2022-04-09T19:59:25+08:00">2022-04-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-25 01:13:06" itemprop="dateModified" datetime="2022-04-25T01:13:06+08:00">2022-04-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.7k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
       </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="e-content article-entry" itemprop="articleBody">
       
-          <p>本文是学习总结，学习网站是廖雪峰网站，连接在这：<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/" title="廖雪峰的官方网站">https://www.liaoxuefeng.com/</a><br></p>
+        <p>本文是学习总结，学习网站是廖雪峰网站，连接在这：<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/" title="廖雪峰的官方网站">https://www.liaoxuefeng.com/</a><br></p>
 <h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用<br></h2><h3 id="一：函数的调用"><a href="#一：函数的调用" class="headerlink" title="一：函数的调用"></a>一：函数的调用<br></h3><h6 id="lt-1-gt-普通函数调用"><a href="#lt-1-gt-普通函数调用" class="headerlink" title="&lt;1&gt;普通函数调用"></a>&lt;1&gt;普通函数调用<br></h6><pre><code>def enroll(name, gender):
     print(&#39;name:&#39;, name)
     print(&#39;gender:&#39;, gender)
@@ -1401,267 +877,127 @@ if __name__ == &quot;__main__&quot;:
 <h6 id="lt-4-gt"><a href="#lt-4-gt" class="headerlink" title="&lt;4&gt;"></a>&lt;4&gt;<br></h6>
       
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="caixuya"
-      src="/images/avatar.gif">
-  <p class="site-author-name" itemprop="name">caixuya</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">25</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-        <span class="site-state-item-count">12</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
-  </div>
-
-<div class="copyright">
-  
-  &copy; 2020 – 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">caixuya</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-    <span title="Symbols count total">54k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="Reading time total">49 mins.</span>
-</div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/09/python/" data-id="cl9u2ftj7000mvoq91t5q0m3j" data-title="函数的调用" class="article-share-link">Share</a>
+      
+      
+      
     </footer>
   </div>
-
   
-  <script src="/undefined/anime.min.js"></script>
-  <script src="/undefined/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-
-<script src="/js/utils.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-<script src="/js/bookmark.js"></script>
-
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
-
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
+</article>
 
 
 
   
 
 
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Oracle/">Oracle</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SSH-struts2/">SSH_struts2</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/">前端页面</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+    </div>
+  </div>
 
 
   
-<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
-<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
-<script src="/js/algolia-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
-  
+    
 
   
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/">测试方法之改表测试</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
 
     </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
