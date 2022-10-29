@@ -22,19 +22,19 @@
     var CONFIG = {"hostname":"www.caixuya.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"IWMEW5PNAJ","apiKey":"01441ad599a57880a346dcaed7fe1fc4","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="返回函数123456789例子：def count():    fs &#x3D; []def f(i):    return i * ifor g in range(1, 4):    fs.append(f(g))return fs 1234567891011例子的延申：def count():    fs &#x3D; []def g(i):    def f():        return i * i">
+  <meta name="description" content="本篇博文参考网站：https:&#x2F;&#x2F;www.bilibili.com&#x2F;read&#x2F;cv13930032 起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看 一. 在手机搭建nginx服务器1.按照教程走 发现安装完nginx后，浏览器无法打开127.0.0.1:8080   2.检查问">
 <meta property="og:type" content="article">
-<meta property="og:title" content="“返回函数”、“闭包”、“nonlocal”关键字">
-<meta property="og:url" content="http://www.caixuya.top/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/">
+<meta property="og:title" content="在手机搭建nginx服务器">
+<meta property="og:url" content="http://www.caixuya.top/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 <meta property="og:site_name" content="tia的学习笔记">
-<meta property="og:description" content="返回函数123456789例子：def count():    fs &#x3D; []def f(i):    return i * ifor g in range(1, 4):    fs.append(f(g))return fs 1234567891011例子的延申：def count():    fs &#x3D; []def g(i):    def f():        return i * i">
+<meta property="og:description" content="本篇博文参考网站：https:&#x2F;&#x2F;www.bilibili.com&#x2F;read&#x2F;cv13930032 起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看 一. 在手机搭建nginx服务器1.按照教程走 发现安装完nginx后，浏览器无法打开127.0.0.1:8080   2.检查问">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-05-06T15:26:25.000Z">
-<meta property="article:modified_time" content="2022-05-06T15:26:50.060Z">
+<meta property="article:published_time" content="2022-10-28T02:45:36.000Z">
+<meta property="article:modified_time" content="2022-10-29T11:36:32.883Z">
 <meta property="article:author" content="caixuya">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://www.caixuya.top/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/">
+<link rel="canonical" href="http://www.caixuya.top/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>“返回函数”、“闭包”、“nonlocal”关键字 | tia的学习笔记</title>
+  <title>在手机搭建nginx服务器 | tia的学习笔记</title>
   
 
 
@@ -215,7 +215,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="http://www.caixuya.top/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -228,7 +228,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          “返回函数”、“闭包”、“nonlocal”关键字
+          在手机搭建nginx服务器
         </h1>
 
         <div class="post-meta">
@@ -237,17 +237,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-05-06 23:26:25 / Modified: 23:26:50" itemprop="dateCreated datePublished" datetime="2022-05-06T23:26:25+08:00">2022-05-06</time>
+              <time title="Created: 2022-10-28 10:45:36" itemprop="dateCreated datePublished" datetime="2022-10-28T10:45:36+08:00">2022-10-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-10-29 19:36:32" itemprop="dateModified" datetime="2022-10-29T19:36:32+08:00">2022-10-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
                 </span>
             </span>
 
@@ -256,13 +262,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>718</span>
+              <span>1.7k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -274,12 +280,42 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">例子的延申：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">g</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">        <span class="keyword">return</span> i * i</span><br><span class="line">    <span class="keyword">return</span> f()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(g(k))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
-<h3 id="“闭包”和“nonlocal”关键词"><a href="#“闭包”和“nonlocal”关键词" class="headerlink" title="“闭包”和“nonlocal”关键词"></a>“闭包”和“nonlocal”关键词</h3><p>闭包：就是能够读取其他函数内部变量的函数，其实就是内层函数引用了外层函数的局部变量，可以理解为“定义在一个函数内部的函数”，本质上，闭包是将函数内部和函数外部连接起来的桥梁。如下所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inc</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="comment"># 仅读取x的值:</span></span><br><span class="line">        <span class="keyword">return</span> x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inc()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是：1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x=0一样，如下所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>
+        <p>本篇博文参考网站：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
+<p>起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看<br></p>
+<h1 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h1><h2 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h2><blockquote>
+<p>发现安装完nginx后，浏览器无法打开<code>127.0.0.1:8080</code> <br></p>
+</blockquote>
+<h2 id="2-检查问题"><a href="#2-检查问题" class="headerlink" title="2.检查问题"></a>2.检查问题<br></h2><blockquote>
+<p>在termux中输入<code>nginx -V</code> ，发现报错：CANNOT LINK EXECUTABLE “nginx”:library “libssl.so.3” not found aborted<br><br>网上查找相关资料，发现没有对应的解决办法<br></p>
+</blockquote>
+<h2 id="3-开始各种尝试"><a href="#3-开始各种尝试" class="headerlink" title="3.开始各种尝试"></a>3.开始各种尝试<br></h2><blockquote>
+<h3 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h3><p>输入<code>termux-setup-storage</code><br></p>
+<h3 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h3><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
+<h3 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h3><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
+<h2 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h2><p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
+<h2 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h2><p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
+<h2 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h2><p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
+<h2 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h2><p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
+</blockquote>
+<p>搭建nginx服务器完成<br></p>
+<h1 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a href="www.baidu.com">进阶 把博客部署到nginx</a></h1><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br><br><a href="www.baidu.com">把hexo博客部署到手机的nginx服务器中</a></p>
+<h2 id="10-卸载nginx"><a href="#10-卸载nginx" class="headerlink" title="10.卸载nginx"></a>10.卸载nginx<br></h2><p>参考连接<a target="_blank" rel="noopener" href="http://t.zoukankan.com/smlile-you-me-p-11404110.html">Ubuntu16.04使用apt安装完nginx常见问题</a><br></p>
+<blockquote>
+<p>在实行进阶版本的时候，失败了很多次，经历了很多次卸载重新搭建nginx的情况，这里也记录一下卸载的步骤吧<br></p>
+<h3 id="10-1-错误尝试"><a href="#10-1-错误尝试" class="headerlink" title="10.1 错误尝试"></a>10.1 错误尝试<br></h3><p>在输入<code>pkg files nginx</code>这个命令找到所有nginx文件夹的路径后，我尝试使用一个个文件夹删除的办法，但是后来一想，linux有<code>remove</code>命令可以用来卸载，那termix是否也有这类命令呢<br></p>
+<h3 id="10-2-正确尝试"><a href="#10-2-正确尝试" class="headerlink" title="10.2 正确尝试"></a>10.2 正确尝试<br></h3><h4 id="10-2-1-尝试输入卸载命令"><a href="#10-2-1-尝试输入卸载命令" class="headerlink" title="10.2.1 尝试输入卸载命令"></a>10.2.1 尝试输入卸载命令<br></h4><p><code>pkg remove nginx</code>(或者是这条命令：<code>apt remove nginx</code>) ，当它提示yes or not时，我明白我输入的命令是对的<br></p>
+<h4 id="10-2-2-卸载更彻底一些"><a href="#10-2-2-卸载更彻底一些" class="headerlink" title="10.2.2 卸载更彻底一些"></a>10.2.2 卸载更彻底一些<br></h4><p>再执行两个卸载命令：<code>apt autoremove nginx</code><br><code>apt --purge remove nginx</code><br></p>
+<h4 id="10-2-3-报错"><a href="#10-2-3-报错" class="headerlink" title="10.2.3 报错"></a>10.2.3 报错<br></h4><p>此时报错说有一个文件夹因为不是空的所以没有卸载<br></p>
+<h4 id="10-2-4-根据报错内容删除文件夹"><a href="#10-2-4-根据报错内容删除文件夹" class="headerlink" title="10.2.4 根据报错内容删除文件夹"></a>10.2.4 根据报错内容删除文件夹<br></h4><p>使用删除命令<code>rm -rf /data/data/com.termux/files/usr/var/log/nginx</code><br></p>
+<h4 id="10-2-5-验证上一步操作是否解决问题"><a href="#10-2-5-验证上一步操作是否解决问题" class="headerlink" title="10.2.5 验证上一步操作是否解决问题"></a>10.2.5 验证上一步操作是否解决问题<br></h4><p>再次执行导致报错的命令，<code>apt --purge remove nginx</code><br></p>
+</blockquote>
+<p>完成<br></p>
+<h2 id="11-安装nginx"><a href="#11-安装nginx" class="headerlink" title="11. 安装nginx"></a>11. 安装nginx<br></h2><blockquote>
+<p>之所以在文章的最后记录如何安装nginx，是因为这个安装教程网上很多，本来是不想记录下来的，但是因为多次失败导致需要多次安装卸载nginx，所以还是决定写下来方便自己等会直接用<br></p>
+<h3 id="11-1-安装命令"><a href="#11-1-安装命令" class="headerlink" title="11.1 安装命令"></a>11.1 安装命令<br></h3><p>输入命令<code>apt -y install nginx</code><br></p>
+</blockquote>
+<p>完成<br></p>
+
     </div>
 
     
@@ -314,7 +350,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="http://www.caixuya.top/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" title="“返回函数”、“闭包”、“nonlocal”关键字">http://www.caixuya.top/2022/05/06/返回函数/</a>
+    <a href="http://www.caixuya.top/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="在手机搭建nginx服务器">http://www.caixuya.top/2022/10/28/在手机搭建nginx服务器/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -360,12 +396,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" rel="prev" title="列表生成式">
-      <i class="fa fa-chevron-left"></i> 列表生成式
+    <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/" rel="prev" title="hexo的cname记录怎么永远设置">
+      <i class="fa fa-chevron-left"></i> hexo的cname记录怎么永远设置
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/" rel="next" title="测试方法之改表测试">
-      测试方法之改表测试 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="将hexo博客部署到手机的nginx服务器中">
+      将hexo博客部署到手机的nginx服务器中 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -425,7 +461,27 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">返回函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E9%97%AD%E5%8C%85%E2%80%9D%E5%92%8C%E2%80%9Cnonlocal%E2%80%9D%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">“闭包”和“nonlocal”关键词</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">一. 在手机搭建nginx服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%8C%89%E7%85%A7%E6%95%99%E7%A8%8B%E8%B5%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.按照教程走
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">2.检查问题
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%BC%80%E5%A7%8B%E5%90%84%E7%A7%8D%E5%B0%9D%E8%AF%95"><span class="nav-number">1.3.</span> <span class="nav-text">3.开始各种尝试
+</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%A6%96%E5%85%88%E8%8E%B7%E5%8F%96%E5%AD%98%E5%82%A8%E6%9D%83%E9%99%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 首先获取存储权限
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%84%B6%E5%90%8E%E6%8D%A2%E6%BA%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 然后换源
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%9B%B4%E6%96%B0%E5%8C%85"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 更新包
+</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">4.解决问题
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%96%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%A5%E8%B8%B5%E8%80%8C%E8%87%B3"><span class="nav-number">1.5.</span> <span class="nav-text">5.新的问题接踵而至
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%9F%A5%E7%9C%8Bip"><span class="nav-number">1.6.</span> <span class="nav-text">6.查看ip
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%88%90%E5%8A%9F%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.7.</span> <span class="nav-text">7.成功搭建nginx服务器
+</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E8%BF%9B%E9%98%B6-%E6%8A%8A%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0nginx"><span class="nav-number">2.</span> <span class="nav-text">二. 进阶 把博客部署到nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%8D%B8%E8%BD%BDnginx"><span class="nav-number">2.1.</span> <span class="nav-text">10.卸载nginx
+</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E9%94%99%E8%AF%AF%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">10.1 错误尝试
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%AD%A3%E7%A1%AE%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">10.2 正确尝试
+</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-1-%E5%B0%9D%E8%AF%95%E8%BE%93%E5%85%A5%E5%8D%B8%E8%BD%BD%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">10.2.1 尝试输入卸载命令
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-2-%E5%8D%B8%E8%BD%BD%E6%9B%B4%E5%BD%BB%E5%BA%95%E4%B8%80%E4%BA%9B"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">10.2.2 卸载更彻底一些
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-3-%E6%8A%A5%E9%94%99"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">10.2.3 报错
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-4-%E6%A0%B9%E6%8D%AE%E6%8A%A5%E9%94%99%E5%86%85%E5%AE%B9%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">10.2.4 根据报错内容删除文件夹
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-5-%E9%AA%8C%E8%AF%81%E4%B8%8A%E4%B8%80%E6%AD%A5%E6%93%8D%E4%BD%9C%E6%98%AF%E5%90%A6%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.5.</span> <span class="nav-text">10.2.5 验证上一步操作是否解决问题
+</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E5%AE%89%E8%A3%85nginx"><span class="nav-number">2.2.</span> <span class="nav-text">11. 安装nginx
+</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.1.</span> <span class="nav-text">11.1 安装命令
+</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
