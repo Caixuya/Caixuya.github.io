@@ -30,7 +30,7 @@
 <meta property="og:description" content="本篇博文参考网站：https:&#x2F;&#x2F;www.bilibili.com&#x2F;read&#x2F;cv13930032 起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看 一. 在手机搭建nginx服务器1.按照教程走 发现安装完nginx后，浏览器无法打开127.0.0.1:8080   2.检查问">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-10-28T02:45:36.000Z">
-<meta property="article:modified_time" content="2022-10-29T11:36:32.883Z">
+<meta property="article:modified_time" content="2022-10-29T11:52:26.434Z">
 <meta property="article:author" content="caixuya">
 <meta name="twitter:card" content="summary">
 
@@ -245,7 +245,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-10-29 19:36:32" itemprop="dateModified" datetime="2022-10-29T19:36:32+08:00">2022-10-29</time>
+                <time title="Modified: 2022-10-29 19:52:26" itemprop="dateModified" datetime="2022-10-29T19:52:26+08:00">2022-10-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,13 +262,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>1.7k</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>2 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -282,37 +282,45 @@
       
         <p>本篇博文参考网站：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv13930032">https://www.bilibili.com/read/cv13930032</a><br></p>
 <p>起因：某一天刷抖音的时候看到可以在手机上搭建nginx服务器，觉得很好玩，就在网上搜了教程试了一下，遇到了一些坑，这里记录一下自己的解决思路和解决方法，方便自己日后查看<br></p>
-<h1 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h1><h2 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h2><blockquote>
+<h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. 在手机搭建nginx服务器</h2><h3 id="1-按照教程走"><a href="#1-按照教程走" class="headerlink" title="1.按照教程走"></a>1.按照教程走<br></h3><blockquote>
 <p>发现安装完nginx后，浏览器无法打开<code>127.0.0.1:8080</code> <br></p>
 </blockquote>
-<h2 id="2-检查问题"><a href="#2-检查问题" class="headerlink" title="2.检查问题"></a>2.检查问题<br></h2><blockquote>
+<h3 id="2-检查问题"><a href="#2-检查问题" class="headerlink" title="2.检查问题"></a>2.检查问题<br></h3><blockquote>
 <p>在termux中输入<code>nginx -V</code> ，发现报错：CANNOT LINK EXECUTABLE “nginx”:library “libssl.so.3” not found aborted<br><br>网上查找相关资料，发现没有对应的解决办法<br></p>
 </blockquote>
-<h2 id="3-开始各种尝试"><a href="#3-开始各种尝试" class="headerlink" title="3.开始各种尝试"></a>3.开始各种尝试<br></h2><blockquote>
-<h3 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h3><p>输入<code>termux-setup-storage</code><br></p>
-<h3 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h3><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
-<h3 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h3><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
-<h2 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h2><p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
-<h2 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h2><p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
-<h2 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h2><p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
-<h2 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h2><p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
+<h3 id="3-开始各种尝试"><a href="#3-开始各种尝试" class="headerlink" title="3.开始各种尝试"></a>3.开始各种尝试<br></h3><blockquote>
+<h4 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h4><p>输入<code>termux-setup-storage</code><br></p>
+<h4 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h4><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
+<h4 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h4><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
+</blockquote>
+<h3 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h3><blockquote>
+<p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
+</blockquote>
+<h3 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h3><blockquote>
+<p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
+</blockquote>
+<h3 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h3><blockquote>
+<p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
+</blockquote>
+<h3 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h3><blockquote>
+<p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
 </blockquote>
 <p>搭建nginx服务器完成<br></p>
-<h1 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a href="www.baidu.com">进阶 把博客部署到nginx</a></h1><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br><br><a href="www.baidu.com">把hexo博客部署到手机的nginx服务器中</a></p>
-<h2 id="10-卸载nginx"><a href="#10-卸载nginx" class="headerlink" title="10.卸载nginx"></a>10.卸载nginx<br></h2><p>参考连接<a target="_blank" rel="noopener" href="http://t.zoukankan.com/smlile-you-me-p-11404110.html">Ubuntu16.04使用apt安装完nginx常见问题</a><br></p>
+<h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a target="_blank" rel="noopener" href="https://caixuya.github.io/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">进阶 把博客部署到nginx</a></h2><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br></p>
+<h3 id="10-卸载nginx"><a href="#10-卸载nginx" class="headerlink" title="10.卸载nginx"></a>10.卸载nginx<br></h3><p>参考连接<a target="_blank" rel="noopener" href="http://t.zoukankan.com/smlile-you-me-p-11404110.html">Ubuntu16.04使用apt安装完nginx常见问题</a><br></p>
 <blockquote>
 <p>在实行进阶版本的时候，失败了很多次，经历了很多次卸载重新搭建nginx的情况，这里也记录一下卸载的步骤吧<br></p>
-<h3 id="10-1-错误尝试"><a href="#10-1-错误尝试" class="headerlink" title="10.1 错误尝试"></a>10.1 错误尝试<br></h3><p>在输入<code>pkg files nginx</code>这个命令找到所有nginx文件夹的路径后，我尝试使用一个个文件夹删除的办法，但是后来一想，linux有<code>remove</code>命令可以用来卸载，那termix是否也有这类命令呢<br></p>
-<h3 id="10-2-正确尝试"><a href="#10-2-正确尝试" class="headerlink" title="10.2 正确尝试"></a>10.2 正确尝试<br></h3><h4 id="10-2-1-尝试输入卸载命令"><a href="#10-2-1-尝试输入卸载命令" class="headerlink" title="10.2.1 尝试输入卸载命令"></a>10.2.1 尝试输入卸载命令<br></h4><p><code>pkg remove nginx</code>(或者是这条命令：<code>apt remove nginx</code>) ，当它提示yes or not时，我明白我输入的命令是对的<br></p>
-<h4 id="10-2-2-卸载更彻底一些"><a href="#10-2-2-卸载更彻底一些" class="headerlink" title="10.2.2 卸载更彻底一些"></a>10.2.2 卸载更彻底一些<br></h4><p>再执行两个卸载命令：<code>apt autoremove nginx</code><br><code>apt --purge remove nginx</code><br></p>
-<h4 id="10-2-3-报错"><a href="#10-2-3-报错" class="headerlink" title="10.2.3 报错"></a>10.2.3 报错<br></h4><p>此时报错说有一个文件夹因为不是空的所以没有卸载<br></p>
-<h4 id="10-2-4-根据报错内容删除文件夹"><a href="#10-2-4-根据报错内容删除文件夹" class="headerlink" title="10.2.4 根据报错内容删除文件夹"></a>10.2.4 根据报错内容删除文件夹<br></h4><p>使用删除命令<code>rm -rf /data/data/com.termux/files/usr/var/log/nginx</code><br></p>
-<h4 id="10-2-5-验证上一步操作是否解决问题"><a href="#10-2-5-验证上一步操作是否解决问题" class="headerlink" title="10.2.5 验证上一步操作是否解决问题"></a>10.2.5 验证上一步操作是否解决问题<br></h4><p>再次执行导致报错的命令，<code>apt --purge remove nginx</code><br></p>
+<h4 id="10-1-错误尝试"><a href="#10-1-错误尝试" class="headerlink" title="10.1 错误尝试"></a>10.1 错误尝试<br></h4><p>在输入<code>pkg files nginx</code>这个命令找到所有nginx文件夹的路径后，我尝试使用一个个文件夹删除的办法，但是后来一想，linux有<code>remove</code>命令可以用来卸载，那termix是否也有这类命令呢<br></p>
+<h4 id="10-2-正确尝试"><a href="#10-2-正确尝试" class="headerlink" title="10.2 正确尝试"></a>10.2 正确尝试<br></h4><h5 id="10-2-1-尝试输入卸载命令"><a href="#10-2-1-尝试输入卸载命令" class="headerlink" title="10.2.1 尝试输入卸载命令"></a>10.2.1 尝试输入卸载命令<br></h5><p><code>pkg remove nginx</code>(或者是这条命令：<code>apt remove nginx</code>) ，当它提示yes or not时，我明白我输入的命令是对的<br></p>
+<h5 id="10-2-2-卸载更彻底一些"><a href="#10-2-2-卸载更彻底一些" class="headerlink" title="10.2.2 卸载更彻底一些"></a>10.2.2 卸载更彻底一些<br></h5><p>再执行两个卸载命令：<code>apt autoremove nginx</code><br><code>apt --purge remove nginx</code><br></p>
+<h5 id="10-2-3-报错"><a href="#10-2-3-报错" class="headerlink" title="10.2.3 报错"></a>10.2.3 报错<br></h5><p>此时报错说有一个文件夹因为不是空的所以没有卸载<br></p>
+<h5 id="10-2-4-根据报错内容删除文件夹"><a href="#10-2-4-根据报错内容删除文件夹" class="headerlink" title="10.2.4 根据报错内容删除文件夹"></a>10.2.4 根据报错内容删除文件夹<br></h5><p>使用删除命令<code>rm -rf /data/data/com.termux/files/usr/var/log/nginx</code><br></p>
+<h5 id="10-2-5-验证上一步操作是否解决问题"><a href="#10-2-5-验证上一步操作是否解决问题" class="headerlink" title="10.2.5 验证上一步操作是否解决问题"></a>10.2.5 验证上一步操作是否解决问题<br></h5><p>再次执行导致报错的命令，<code>apt --purge remove nginx</code><br></p>
 </blockquote>
 <p>完成<br></p>
-<h2 id="11-安装nginx"><a href="#11-安装nginx" class="headerlink" title="11. 安装nginx"></a>11. 安装nginx<br></h2><blockquote>
+<h3 id="11-安装nginx"><a href="#11-安装nginx" class="headerlink" title="11. 安装nginx"></a>11. 安装nginx<br></h3><blockquote>
 <p>之所以在文章的最后记录如何安装nginx，是因为这个安装教程网上很多，本来是不想记录下来的，但是因为多次失败导致需要多次安装卸载nginx，所以还是决定写下来方便自己等会直接用<br></p>
-<h3 id="11-1-安装命令"><a href="#11-1-安装命令" class="headerlink" title="11.1 安装命令"></a>11.1 安装命令<br></h3><p>输入命令<code>apt -y install nginx</code><br></p>
+<h4 id="11-1-安装命令"><a href="#11-1-安装命令" class="headerlink" title="11.1 安装命令"></a>11.1 安装命令<br></h4><p>输入命令<code>apt -y install nginx</code><br></p>
 </blockquote>
 <p>完成<br></p>
 
@@ -461,26 +469,26 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">一. 在手机搭建nginx服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%8C%89%E7%85%A7%E6%95%99%E7%A8%8B%E8%B5%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.按照教程走
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">2.检查问题
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%BC%80%E5%A7%8B%E5%90%84%E7%A7%8D%E5%B0%9D%E8%AF%95"><span class="nav-number">1.3.</span> <span class="nav-text">3.开始各种尝试
-</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%A6%96%E5%85%88%E8%8E%B7%E5%8F%96%E5%AD%98%E5%82%A8%E6%9D%83%E9%99%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 首先获取存储权限
-</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%84%B6%E5%90%8E%E6%8D%A2%E6%BA%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 然后换源
-</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%9B%B4%E6%96%B0%E5%8C%85"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 更新包
-</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">4.解决问题
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%96%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%A5%E8%B8%B5%E8%80%8C%E8%87%B3"><span class="nav-number">1.5.</span> <span class="nav-text">5.新的问题接踵而至
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%9F%A5%E7%9C%8Bip"><span class="nav-number">1.6.</span> <span class="nav-text">6.查看ip
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%88%90%E5%8A%9F%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.7.</span> <span class="nav-text">7.成功搭建nginx服务器
-</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E8%BF%9B%E9%98%B6-%E6%8A%8A%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0nginx"><span class="nav-number">2.</span> <span class="nav-text">二. 进阶 把博客部署到nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%8D%B8%E8%BD%BDnginx"><span class="nav-number">2.1.</span> <span class="nav-text">10.卸载nginx
-</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E9%94%99%E8%AF%AF%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">10.1 错误尝试
-</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%AD%A3%E7%A1%AE%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">10.2 正确尝试
-</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-1-%E5%B0%9D%E8%AF%95%E8%BE%93%E5%85%A5%E5%8D%B8%E8%BD%BD%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">10.2.1 尝试输入卸载命令
-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-2-%E5%8D%B8%E8%BD%BD%E6%9B%B4%E5%BD%BB%E5%BA%95%E4%B8%80%E4%BA%9B"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">10.2.2 卸载更彻底一些
-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-3-%E6%8A%A5%E9%94%99"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">10.2.3 报错
-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-4-%E6%A0%B9%E6%8D%AE%E6%8A%A5%E9%94%99%E5%86%85%E5%AE%B9%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">10.2.4 根据报错内容删除文件夹
-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-5-%E9%AA%8C%E8%AF%81%E4%B8%8A%E4%B8%80%E6%AD%A5%E6%93%8D%E4%BD%9C%E6%98%AF%E5%90%A6%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.5.</span> <span class="nav-text">10.2.5 验证上一步操作是否解决问题
-</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E5%AE%89%E8%A3%85nginx"><span class="nav-number">2.2.</span> <span class="nav-text">11. 安装nginx
-</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.1.</span> <span class="nav-text">11.1 安装命令
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">一. 在手机搭建nginx服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8C%89%E7%85%A7%E6%95%99%E7%A8%8B%E8%B5%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.按照教程走
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">2.检查问题
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%BC%80%E5%A7%8B%E5%90%84%E7%A7%8D%E5%B0%9D%E8%AF%95"><span class="nav-number">1.3.</span> <span class="nav-text">3.开始各种尝试
+</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E9%A6%96%E5%85%88%E8%8E%B7%E5%8F%96%E5%AD%98%E5%82%A8%E6%9D%83%E9%99%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 首先获取存储权限
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E7%84%B6%E5%90%8E%E6%8D%A2%E6%BA%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 然后换源
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-%E6%9B%B4%E6%96%B0%E5%8C%85"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 更新包
+</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">4.解决问题
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%96%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%A5%E8%B8%B5%E8%80%8C%E8%87%B3"><span class="nav-number">1.5.</span> <span class="nav-text">5.新的问题接踵而至
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%9F%A5%E7%9C%8Bip"><span class="nav-number">1.6.</span> <span class="nav-text">6.查看ip
+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%88%90%E5%8A%9F%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.7.</span> <span class="nav-text">7.成功搭建nginx服务器
+</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E8%BF%9B%E9%98%B6-%E6%8A%8A%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0nginx"><span class="nav-number">2.</span> <span class="nav-text">二. 进阶 把博客部署到nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%8D%B8%E8%BD%BDnginx"><span class="nav-number">2.1.</span> <span class="nav-text">10.卸载nginx
+</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-1-%E9%94%99%E8%AF%AF%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">10.1 错误尝试
+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-%E6%AD%A3%E7%A1%AE%E5%B0%9D%E8%AF%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">10.2 正确尝试
+</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-1-%E5%B0%9D%E8%AF%95%E8%BE%93%E5%85%A5%E5%8D%B8%E8%BD%BD%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">10.2.1 尝试输入卸载命令
+</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-2-%E5%8D%B8%E8%BD%BD%E6%9B%B4%E5%BD%BB%E5%BA%95%E4%B8%80%E4%BA%9B"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">10.2.2 卸载更彻底一些
+</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-3-%E6%8A%A5%E9%94%99"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">10.2.3 报错
+</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-4-%E6%A0%B9%E6%8D%AE%E6%8A%A5%E9%94%99%E5%86%85%E5%AE%B9%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">10.2.4 根据报错内容删除文件夹
+</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-5-%E9%AA%8C%E8%AF%81%E4%B8%8A%E4%B8%80%E6%AD%A5%E6%93%8D%E4%BD%9C%E6%98%AF%E5%90%A6%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.5.</span> <span class="nav-text">10.2.5 验证上一步操作是否解决问题
+</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E5%AE%89%E8%A3%85nginx"><span class="nav-number">2.2.</span> <span class="nav-text">11. 安装nginx
+</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#11-1-%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.1.</span> <span class="nav-text">11.1 安装命令
 </span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
