@@ -30,10 +30,10 @@ http://example.com/travelling/index.html
 http://example.com/404.html
 http://example.com/
 http://example.com/categories/Oracle/
-http://example.com/categories/python/
 http://example.com/categories/github/
-http://example.com/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
+http://example.com/categories/python/
 http://example.com/categories/hexo/
+http://example.com/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
 http://example.com/categories/markdown/
 http://example.com/categories/mysql/
 http://example.com/categories/SSH-struts2/
