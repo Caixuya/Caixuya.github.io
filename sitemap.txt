@@ -30,9 +30,9 @@ http://caixuya.github.io/travelling/index.html
 http://caixuya.github.io/404.html
 http://caixuya.github.io/
 http://caixuya.github.io/categories/Oracle/
-http://caixuya.github.io/categories/hexo/
-http://caixuya.github.io/categories/github/
 http://caixuya.github.io/categories/python/
+http://caixuya.github.io/categories/github/
+http://caixuya.github.io/categories/hexo/
 http://caixuya.github.io/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
 http://caixuya.github.io/categories/markdown/
 http://caixuya.github.io/categories/mysql/

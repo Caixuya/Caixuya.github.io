@@ -292,10 +292,18 @@
 <h4 id="3-1-首先获取存储权限"><a href="#3-1-首先获取存储权限" class="headerlink" title="3.1 首先获取存储权限"></a>3.1 首先获取存储权限<br></h4><p>输入<code>termux-setup-storage</code><br></p>
 <h4 id="3-2-然后换源"><a href="#3-2-然后换源" class="headerlink" title="3.2 然后换源"></a>3.2 然后换源<br></h4><p>输入<code>termux-change-repo</code><br><br>步骤是：输入命令后，按空格键（蓝牙键盘）选择需要更换的仓库，按回车键确定；然后按空格键选择需要更换的源，按回车键确定。<br></p>
 <h4 id="3-3-更新包"><a href="#3-3-更新包" class="headerlink" title="3.3 更新包"></a>3.3 更新包<br></h4><p>先输入<code>apt update</code>，然后输入<code>apt upgrade</code><br></p>
-<h3 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h3><p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
-<h3 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h3><p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
-<h3 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h3><p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
-<h3 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h3><p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
+</blockquote>
+<h3 id="4-解决问题"><a href="#4-解决问题" class="headerlink" title="4.解决问题"></a>4.解决问题<br></h3><blockquote>
+<p>做完以上尝试后，再次执行<code>nginx -V</code>，发现报错不见了，并且正确显示了版本号，至此问题解决<br></p>
+</blockquote>
+<h3 id="5-新的问题接踵而至"><a href="#5-新的问题接踵而至" class="headerlink" title="5.新的问题接踵而至"></a>5.新的问题接踵而至<br></h3><blockquote>
+<p>当我兴冲冲地区浏览器输入地址<code>127.0.0.1:8080</code>时，发现还是无法打开该页面，我突然想到刚才资料说不用手动去开启，因为一般安装完都会自动开启的，但是抱着试一下的心态，还是尝试输入<code>nginx</code>这条开启nginx的命令，输入后发现问题解决，nice~<br></p>
+</blockquote>
+<h3 id="6-查看ip"><a href="#6-查看ip" class="headerlink" title="6.查看ip"></a>6.查看ip<br></h3><blockquote>
+<p>我这里是做服务器的这台手机连接另一部手机开的热点，连上热点后，做服务器的这台手机输入命令查看ip,命令是：<code>ifconfig</code><br></p>
+</blockquote>
+<h3 id="7-成功搭建nginx服务器"><a href="#7-成功搭建nginx服务器" class="headerlink" title="7.成功搭建nginx服务器"></a>7.成功搭建nginx服务器<br></h3><blockquote>
+<p>在做服务器的这台手机的浏览器中输入ip:8080，即<code>192.168.92.62:8080</code>，成功跳转到nginx界面<br></p>
 </blockquote>
 <p>搭建nginx服务器完成<br></p>
 <h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. <a href="https://caixuya.github.io/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">进阶 把博客部署到nginx</a></h2><p>做完这一切，突然有一个想法，之前把自己的博客部署到买的服务器上面，经常要花钱，后来就放弃了，只部署到github上面。<br><br>突然想到现在既然已经部署了一个nginx服务器了，要不就顺带把博客部署到服务器上面吧，说干就干，开始找教程。<br><br>但是经过多次尝试还是失败了，没找到原因，磕磕绊绊地弄了一天，决定还是用最原始的办法，把hexo博客目录下的整个public复制到nginx主目录下去，再次进行尝试。<br></p>
