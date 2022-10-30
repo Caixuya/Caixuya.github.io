@@ -304,14 +304,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
+    <loc>http://example.com/categories/hexo/</loc>
     <lastmod>2022-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/hexo/</loc>
+    <loc>http://example.com/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
     <lastmod>2022-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -325,6 +325,13 @@
   </url>
   
   <url>
+    <loc>http://example.com/categories/mysql/</loc>
+    <lastmod>2022-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/categories/SSH-struts2/</loc>
     <lastmod>2022-10-30</lastmod>
     <changefreq>weekly</changefreq>
@@ -332,7 +339,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/mysql/</loc>
+    <loc>http://example.com/categories/nginx/</loc>
     <lastmod>2022-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -354,13 +361,6 @@
   
   <url>
     <loc>http://example.com/categories/linux/</loc>
-    <lastmod>2022-10-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/categories/nginx/</loc>
     <lastmod>2022-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
