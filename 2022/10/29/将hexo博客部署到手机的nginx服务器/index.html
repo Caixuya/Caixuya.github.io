@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>将hexo博客部署到手机的nginx服务器中 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="接第一章—在手机搭建nginx服务器 一. 在手机搭建nginx服务器二. 进阶 把博客部署到nginx8.将hexo博客部署到手机的nginx服务器中如何搭建hexo博客在我的另一篇博文里，附上连接搭建hexo博客  8.1 安装vim输入命令pkg install vim 8.2 把hexo的项目传到手机中具体步骤是先压缩hexo项目（或者直接压缩hexo项目下的public文件夹）然后用蓝牙">
+<meta property="og:type" content="article">
+<meta property="og:title" content="将hexo博客部署到手机的nginx服务器中">
+<meta property="og:url" content="http://example.com/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="接第一章—在手机搭建nginx服务器 一. 在手机搭建nginx服务器二. 进阶 把博客部署到nginx8.将hexo博客部署到手机的nginx服务器中如何搭建hexo博客在我的另一篇博文里，附上连接搭建hexo博客  8.1 安装vim输入命令pkg install vim 8.2 把hexo的项目传到手机中具体步骤是先压缩hexo项目（或者直接压缩hexo项目下的public文件夹）然后用蓝牙">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-10-29T11:36:50.000Z">
+<meta property="article:modified_time" content="2022-10-29T11:51:15.908Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-将hexo博客部署到手机的nginx服务器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2022-10-29T11:36:50.000Z" itemprop="datePublished">2022-10-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nginx/">nginx</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      将hexo博客部署到手机的nginx服务器中
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>接第一章—在手机搭建nginx服务器</p>
+<h2 id="一-在手机搭建nginx服务器"><a href="#一-在手机搭建nginx服务器" class="headerlink" title="一. 在手机搭建nginx服务器"></a>一. <a target="_blank" rel="noopener" href="https://caixuya.github.io/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a></h2><h2 id="二-进阶-把博客部署到nginx"><a href="#二-进阶-把博客部署到nginx" class="headerlink" title="二. 进阶 把博客部署到nginx"></a>二. 进阶 把博客部署到nginx</h2><h3 id="8-将hexo博客部署到手机的nginx服务器中"><a href="#8-将hexo博客部署到手机的nginx服务器中" class="headerlink" title="8.将hexo博客部署到手机的nginx服务器中"></a>8.将hexo博客部署到手机的nginx服务器中<br></h3><p>如何搭建hexo博客在我的另一篇博文里，附上连接<a target="_blank" rel="noopener" href="https://caixuya.github.io/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">搭建hexo博客</a><br></p>
+<blockquote>
+<h4 id="8-1-安装vim"><a href="#8-1-安装vim" class="headerlink" title="8.1 安装vim"></a>8.1 安装vim<br></h4><p>输入命令<code>pkg install vim</code><br></p>
+<h4 id="8-2-把hexo的项目传到手机中"><a href="#8-2-把hexo的项目传到手机中" class="headerlink" title="8.2 把hexo的项目传到手机中"></a>8.2 把hexo的项目传到手机中<br></h4><p>具体步骤是先压缩hexo项目（或者直接压缩hexo项目下的public文件夹）然后用蓝牙传到手机（我的手机太旧了没办法用usb连接电脑直接拉，如果有usb连接电脑直接拉的话会简单一点）<br><br>然后找到传过来的压缩文件，用命令解压缩，解压缩网上有教程，我这里就不赘述了<br></p>
+<h4 id="8-3-找到hexo所在的位置"><a href="#8-3-找到hexo所在的位置" class="headerlink" title="8.3 找到hexo所在的位置"></a>8.3 找到hexo所在的位置<br></h4><p>这里找了一下地址是：<code>/storage/shared/Download/Bluetooth/hexo</code><br></p>
+<h4 id="8-4-找到nginx-conf"><a href="#8-4-找到nginx-conf" class="headerlink" title="8.4 找到nginx.conf"></a>8.4 找到nginx.conf<br></h4><p>如果直接用<code>apt -y install nginx</code>这条命令安装nginx的话，配置文件大概率是在<code>/data/data/com.termux/files/usr/etc/nginx/nginx.conf</code><br></p>
+<h4 id="8-5-找到nginx主目录"><a href="#8-5-找到nginx主目录" class="headerlink" title="8.5 找到nginx主目录"></a>8.5 找到nginx主目录<br></h4><h5 id="8-5-1-输入命令查看路径"><a href="#8-5-1-输入命令查看路径" class="headerlink" title="8.5.1 输入命令查看路径"></a>8.5.1 输入命令查看路径<br></h5><p><code>pkg files nginx</code><br></p>
+<h5 id="8-5-2-找主目录的原因："><a href="#8-5-2-找主目录的原因：" class="headerlink" title="8.5.2 找主目录的原因："></a>8.5.2 找主目录的原因：<br></h5><p>为什么要找这个nginx主目录呢，因为需要把hexo的public文件夹全部复制到nginx主目录下，也就是和nginx的html文件夹同级目录下，然后把nginx.conf的路径由html改成public就可以啦，原理就是把原本nginx的html文件夹换成我想让它显示的html文件夹<br></p>
+<h5 id="8-5-3-找到nginx主目录"><a href="#8-5-3-找到nginx主目录" class="headerlink" title="8.5.3 找到nginx主目录"></a>8.5.3 找到nginx主目录<br></h5><p>如果直接用<code>apt -y install nginx</code>这条命令安装nginx的话，主目录大概率是在<code>/data/data/com.termux/files/usr/share/nginx</code><br><br>如果不确定的话，可以cd到这个路径下，命令是：<code>cd /data/data/com.termux/files/usr/share/nginx</code>，使用<code>ls</code>命令查看一下，此时发现会有一个html文件夹<br><br><code>cd</code>到html文件夹中<code>cd html</code>，然后用<code>ls</code>命令继续查看，发现里面有两个文件，分别是<code>50x.html</code>和<code>index.html</code>，这样就可以确定刚才找到的主目录路径没有错了<br></p>
+<h4 id="8-6-复制"><a href="#8-6-复制" class="headerlink" title="8.6 复制"></a>8.6 复制<br></h4><p>将public文件夹整个复制到nginx主目录下：<code>cp -r /storage/shared/Download/Bluetooth/hexo/public /data/data/com.termux/files/usr/share/nginx</code><br></p>
+<h4 id="8-7-改配置文件"><a href="#8-7-改配置文件" class="headerlink" title="8.7 改配置文件"></a>8.7 改配置文件<br></h4><h5 id="8-7-1-打开配置文件"><a href="#8-7-1-打开配置文件" class="headerlink" title="8.7.1 打开配置文件"></a>8.7.1 打开配置文件<br></h5><p>这里用到的路径是步骤8.4中找到的路径，使用命令<code>vim /data/data/com.termux/files/usr/etc/nginx/nginx.conf</code><br></p>
+<h5 id="8-7-2-修改配置文件的路径"><a href="#8-7-2-修改配置文件的路径" class="headerlink" title="8.7.2 修改配置文件的路径"></a>8.7.2 修改配置文件的路径<br></h5><p>打开配置文件后，找到server，在server的大括号里找到location，在location中找到root,这个时候看到root后面的路径是&#x2F;data&#x2F;data&#x2F;com.termux&#x2F;files&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html，把最后面的html改成public，其他不要动，注意不要把最后面的分号删掉了<br></p>
+<h5 id="8-7-3-保存修改"><a href="#8-7-3-保存修改" class="headerlink" title="8.7.3 保存修改"></a>8.7.3 保存修改</h5><p>按下键盘的&#96;&#96;esc<code>键，或者点击手机的</code>esc<code>按钮，然后输入命令</code>:wq&#96;保存并退出</p>
+<h5 id="8-8-重启nginx"><a href="#8-8-重启nginx" class="headerlink" title="8.8 重启nginx"></a>8.8 重启nginx</h5><p>nginx -s reload</p>
+<h5 id="8-9-成功"><a href="#8-9-成功" class="headerlink" title="8.9 成功"></a>8.9 成功</h5><p>手机在浏览器输入地址：<code>192.168.92.62:8080</code>成功跳转到博客中</p>
+<h5 id="我悟了"><a href="#我悟了" class="headerlink" title="我悟了"></a>我悟了</h5><p>这个时候我知道为什么我之前失败那么多次了，每一次连接手机wifi的时候ip地址默认是动态的，所以我输入之前的获取的ip地址是没有用的，也是犯了一个很基础的错误吧，一个乌龙搞了这么久，拿时间买了一个教训，干巴爹<br></p>
+<h5 id="9-设置固定ip"><a href="#9-设置固定ip" class="headerlink" title="9. 设置固定ip"></a>9. 设置固定ip</h5><p>连接wifi的手机设置固定IP的方法：打开设置，进入WLAN，长按连接的WIFI，进入修改网络，进入IP，勾选静态，修改IP地址后，保存即可。参考连接：<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/72ee561a463248a06138dfa6.html">手机热点怎么设置固定ip</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" data-id="cl9v7arc60015csq9fq6qfasm" data-title="将hexo博客部署到手机的nginx服务器中" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/10/30/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">在手机搭建nginx服务器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Oracle/">Oracle</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SSH-struts2/">SSH_struts2</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/">前端页面</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/30/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

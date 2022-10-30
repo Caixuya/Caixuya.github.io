@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>“返回函数”、“闭包”、“nonlocal”关键字 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="返回函数123456789例子：def count():    fs &#x3D; []def f(i):    return i * ifor g in range(1, 4):    fs.append(f(g))return fs    1234567891011例子的延申：def count():    fs &#x3D; []def g(i):    def f():        return i * i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“返回函数”、“闭包”、“nonlocal”关键字">
+<meta property="og:url" content="http://example.com/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="返回函数123456789例子：def count():    fs &#x3D; []def f(i):    return i * ifor g in range(1, 4):    fs.append(f(g))return fs    1234567891011例子的延申：def count():    fs &#x3D; []def g(i):    def f():        return i * i">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-06T15:26:25.000Z">
+<meta property="article:modified_time" content="2022-05-06T15:26:50.060Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-返回函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2022-05-06T15:26:25.000Z" itemprop="datePublished">2022-05-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      “返回函数”、“闭包”、“nonlocal”关键字
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">return</span> i * i</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> g <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(f(g))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">例子的延申：</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>():</span><br><span class="line">    fs = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">g</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">        <span class="keyword">return</span> i * i</span><br><span class="line">    <span class="keyword">return</span> f()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    fs.append(g(k))</span><br><span class="line"><span class="keyword">return</span> fs</span><br></pre></td></tr></table></figure>
+
+<h3 id="“闭包”和“nonlocal”关键词"><a href="#“闭包”和“nonlocal”关键词" class="headerlink" title="“闭包”和“nonlocal”关键词"></a>“闭包”和“nonlocal”关键词</h3><p>闭包：就是能够读取其他函数内部变量的函数，其实就是内层函数引用了外层函数的局部变量，可以理解为“定义在一个函数内部的函数”，本质上，闭包是将函数内部和函数外部连接起来的桥梁。如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inc</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="comment"># 仅读取x的值:</span></span><br><span class="line">        <span class="keyword">return</span> x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inc()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是：1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果只是读外层变量的值，我们会发现返回的闭包函数调用一切正常，但是，如果对外层变量赋值，由于Python解释器会把<code>x</code>当作函数<code>fn()</code>的局部变量，它会报错，这个时候，用nonlocal关键词定义一下内部函数的x，即初始化内部的x，就像外层函数给x定义，赋初始值x&#x3D;0一样，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">inch</span>():</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fn</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> x</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = inch()</span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:1</span></span><br><span class="line">    <span class="built_in">print</span>(f())  <span class="comment"># 打印出来的结果是:2</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/06/%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0/" data-id="cl9v7arcd001kcsq9h86zge4w" data-title="“返回函数”、“闭包”、“nonlocal”关键字" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/05/06/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E4%B9%8B--%E6%94%B9%E8%A1%A8%E6%B5%8B%E8%AF%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          测试方法之改表测试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">列表生成式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Oracle/">Oracle</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SSH-struts2/">SSH_struts2</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/">前端页面</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/30/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

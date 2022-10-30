@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>递归函数--递归、尾递归 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="递归函数–递归，尾递归函数在内部可以调用其他函数，也可以自己调用自己，自己调用自己的函数叫递归函数。 例子一：如： python def fact(n):     if n&#x3D;&#x3D;1:         return 1		      #n * fact(n-1)中，当n&#x3D;1时(n-1)&#x3D;0，为了避免n&#x3D;1时出错，直接让n&#x3D;1时返回1     return n * fact(n-1)  假设这里n&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="递归函数--递归、尾递归">
+<meta property="og:url" content="http://example.com/2022/04/09/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="递归函数–递归，尾递归函数在内部可以调用其他函数，也可以自己调用自己，自己调用自己的函数叫递归函数。 例子一：如： python def fact(n):     if n&#x3D;&#x3D;1:         return 1		      #n * fact(n-1)中，当n&#x3D;1时(n-1)&#x3D;0，为了避免n&#x3D;1时出错，直接让n&#x3D;1时返回1     return n * fact(n-1)  假设这里n&amp;#x">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-04-09T11:59:25.000Z">
+<meta property="article:modified_time" content="2022-04-14T15:39:29.861Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-递归函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/09/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2022-04-09T11:59:25.000Z" itemprop="datePublished">2022-04-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      递归函数--递归、尾递归
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="递归函数–递归，尾递归"><a href="#递归函数–递归，尾递归" class="headerlink" title="递归函数–递归，尾递归"></a>递归函数–递归，尾递归</h3><p>函数在内部可以调用其他函数，也可以自己调用自己，自己调用自己的函数叫递归函数。<br></p>
+<p>例子一：<br><br>如：<br></p>
+<pre><code>python
+def fact(n):
+    if n==1:
+        return 1		
+     #n * fact(n-1)中，当n=1时(n-1)=0，为了避免n=1时出错，直接让n=1时返回1
+    return n * fact(n-1)
+</code></pre>
+<p>假设这里n&#x3D;5,即 def fact(5)：<br></p>
+<p>这个函数的执行过程是：先调用fact函数的返回值：n * fact(n-1)<br></p>
+<p>fact(5) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt; 5 * fact(5 - 1) &#x3D;&#x3D;&gt; 5 * fact(4)<br></p>
+<p>这里fact（4）再次调用fact函数，即将算式中的fact(4)替换成返回值<br></p>
+<p>fact(4) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * fact(4 - 1)) &#x3D;&#x3D;&gt; 5 * (4 * fact(3))<br></p>
+<p>以此类推，直到算式中没有fact()函数<br></p>
+<p>fact(3) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * fact(3-1))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * fact(2)))<br></p>
+<p>fact(2) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * fact(2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * fact(1))))<br></p>
+<p>fact(1) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * (2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * fact(1))))<br></p>
+<p>n &#x3D; 1的是时，return 1 ，所以最终是：5 * (4 * fact(3 * fact(2 * 1)))<br></p>
+<p>因此fact(1) &#x3D;&#x3D;&gt;n * fact(n-1)，&#x3D;&#x3D;&gt;5 * (4 * (3 * (2 * (2-1)))) &#x3D;&#x3D;&gt; 5 * (4 * (3 * (2 * 1)))<br></p>
+<p>即 5 * 4 * 3 * 2 * 1 &#x3D; 5!&#x3D;120<br></p>
+<p>例子二：<br><br>尾递归<br></p>
+<pre><code>def fact(n):
+    print(fact_iter(n, 1))
+    return fact_iter(n, 1)
+
+
+def fact_iter(num, product):
+    if num == 1:
+        return product				
+    #在这里打印可以看到递归（循环）的次数
+    return fact_iter(num - 1, num * product)
+
+
+if __name__ == &quot;__main__&quot;:
+    fact(3)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/09/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" data-id="cl9v7arcd001mcsq97tvsfy8f" data-title="递归函数--递归、尾递归" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/04/09/python/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          函数的调用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/18/%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2%E3%80%81SQL%E5%87%BD%E6%95%B0%E3%80%81%E5%88%86%E7%BB%84%E8%81%9A%E5%90%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">多表连接查询、SQL函数、分组聚合</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Oracle/">Oracle</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SSH-struts2/">SSH_struts2</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/">前端页面</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/30/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/%E5%B0%86hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E6%89%8B%E6%9C%BA%E7%9A%84nginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">将hexo博客部署到手机的nginx服务器中</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/28/%E5%9C%A8%E6%89%8B%E6%9C%BA%E6%90%AD%E5%BB%BAnginx%E6%9C%8D%E5%8A%A1%E5%99%A8/">在手机搭建nginx服务器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/">hexo的cname记录怎么永远设置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/05/06/%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda/">匿名函数lambda</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
