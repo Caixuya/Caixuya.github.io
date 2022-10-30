@@ -67,14 +67,14 @@
     <link href="http://caixuya.github.io/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/"/>
     <id>http://caixuya.github.io/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/</id>
     <published>2022-06-04T07:32:09.000Z</published>
-    <updated>2022-06-04T07:34:50.174Z</updated>
+    <updated>2022-10-30T17:23:26.105Z</updated>
     
-    <content type="html"><![CDATA[<p>先按照其他博客的方法设置github的page和域名解析<br><br>然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code></p>]]></content>
+    <content type="html"><![CDATA[<p>前提：已经设置好github的page和弄好域名解析<br><br>具体教程：<a href="https://caixuya.github.io/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0github%EF%BC%8C%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E4%B8%80%E6%9D%A1%E9%BE%99%E6%95%99%E7%A8%8B%EF%BC%8C%E9%99%84%E4%B8%8A%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">搭建hexo博客</a><br><br>然后是这两步<br><br>1.在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，<br><br><code>npm install hexo-generator-cname --save</code><br>2.在hexo博客主目录的_config.yml文件中最末尾新开一行，添加这句代码<br><br><code>Plugins: hexo-generator-cname</code></p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;先按照其他博客的方法设置github的page和域名解析&lt;br&gt;&lt;br&gt;然后在blog目录下敲下面这条命令，每一次在生成blog的时候，都会生成一个cname的文件，&lt;br&gt;&lt;br&gt;&lt;code&gt;npm install hexo-generator-cname --save&lt;</summary>
+    <summary type="html">&lt;p&gt;前提：已经设置好github的page和弄好域名解析&lt;br&gt;&lt;br&gt;具体教程：&lt;a href=&quot;https://caixuya.github.io/2020/04/10/linux%E5%92%8Cwindows%E7%AB%AF%E6%90%AD%E5%BB%BAhexo</summary>
       
     
     
