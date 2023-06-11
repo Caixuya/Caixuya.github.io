@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://caixuya.github.io/2023/06/12/%E6%90%AD%E5%BB%BAopenvpn/</loc>
+    
+    <lastmod>2023-06-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://caixuya.github.io/2022/12/28/%E6%89%B9%E5%A4%84%E7%90%86%E5%B0%8F%E5%B7%A5%E5%85%B7/</loc>
     
     <lastmod>2022-12-28</lastmod>
@@ -283,7 +292,7 @@
 
   <url>
     <loc>http://caixuya.github.io/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -293,91 +302,98 @@
   
   <url>
     <loc>http://caixuya.github.io/categories/python/</loc>
-    <lastmod>2022-12-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/Oracle/</loc>
-    <lastmod>2022-12-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/github/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/hexo/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/Oracle/</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/github/</loc>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/markdown/</loc>
-    <lastmod>2022-12-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/mysql/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/SSH-struts2/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/nginx/</loc>
-    <lastmod>2022-12-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/daily/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <loc>http://caixuya.github.io/categories/mysql/</loc>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/bat/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <loc>http://caixuya.github.io/categories/daily/</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/AI/</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/nginx/</loc>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/linux/</loc>
-    <lastmod>2022-12-28</lastmod>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
