@@ -301,7 +301,14 @@
 
   
   <url>
-    <loc>http://caixuya.github.io/categories/python/</loc>
+    <loc>http://caixuya.github.io/categories/Oracle/</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/categories/github/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -315,14 +322,7 @@
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/Oracle/</loc>
-    <lastmod>2023-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/github/</loc>
+    <loc>http://caixuya.github.io/categories/python/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -343,6 +343,13 @@
   </url>
   
   <url>
+    <loc>http://caixuya.github.io/categories/mysql/</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://caixuya.github.io/categories/SSH-struts2/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
@@ -350,7 +357,7 @@
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/mysql/</loc>
+    <loc>http://caixuya.github.io/categories/nginx/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -378,7 +385,7 @@
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/nginx/</loc>
+    <loc>http://caixuya.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -386,13 +393,6 @@
   
   <url>
     <loc>http://caixuya.github.io/categories/linux/</loc>
-    <lastmod>2023-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://caixuya.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
     <lastmod>2023-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
