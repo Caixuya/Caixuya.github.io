@@ -6,7 +6,7 @@
   <link href="http://caixuya.github.io/atom.xml" rel="self"/>
   
   <link href="http://caixuya.github.io/"/>
-  <updated>2023-06-11T17:47:34.000Z</updated>
+  <updated>2024-05-02T07:41:00.819Z</updated>
   <id>http://caixuya.github.io/</id>
   
   <author>
@@ -15,6 +15,39 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://caixuya.github.io/2024/05/14/win10%20%E5%AE%B6%E5%BA%AD%E7%89%88win7%20%E5%AE%89%E8%A3%85DockerToolbox%20%E7%99%BB%E5%BD%95%E5%85%AC%E5%8F%B8docker%E7%9A%84%E6%97%B6%E5%80%99%E6%8A%A5%E9%94%99%EF%BC%9AError%20response%20from%20daemon%20Get%20h/"/>
+    <id>http://caixuya.github.io/2024/05/14/win10%20%E5%AE%B6%E5%BA%AD%E7%89%88win7%20%E5%AE%89%E8%A3%85DockerToolbox%20%E7%99%BB%E5%BD%95%E5%85%AC%E5%8F%B8docker%E7%9A%84%E6%97%B6%E5%80%99%E6%8A%A5%E9%94%99%EF%BC%9AError%20response%20from%20daemon%20Get%20h/</id>
+    <published>2024-05-14T13:56:11.320Z</published>
+    <updated>2024-05-02T07:41:00.819Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="win10-家庭版-x2F-win7-安装DockerToolbox-登录公司docker的时候报错：Error-response-from-daemon-Get-https-docker-sb-sinobest-cn-v2-x509-certificate-signed-by-unknown-authority"><a href="#win10-家庭版-x2F-win7-安装DockerToolbox-登录公司docker的时候报错：Error-response-from-daemon-Get-https-docker-sb-sinobest-cn-v2-x509-certificate-signed-by-unknown-authority" class="headerlink" title="win10 家庭版&#x2F;win7 安装DockerToolbox 登录公司docker的时候报错：Error response from daemon: Get https://docker.sb.sinobest.cn/v2/: x509: certificate signed by unknown authority"></a>win10 家庭版&#x2F;win7 安装DockerToolbox 登录公司docker的时候报错：Error response from daemon: Get <a href="https://docker.sb.sinobest.cn/v2/">https://docker.sb.sinobest.cn/v2/</a>: x509: certificate signed by unknown authority<br></h4><p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/certificate_signed_by_unknown_authority.png" alt="certificate_signed_by_unknown_authority"><br>解决方法：<br>首先，确保证书已经正确导入到window系统中；<br>其次确保window系统的hosts文件正确添加了地址；<br>以上两个都没有问题后还是报错，则执行以下三步操作：</p><p>步骤一：</p><p>cmd命令行敲以下命令：</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh default</span><br><span class="line">sudo mkdir -p <span class="regexp">/etc/</span>docker<span class="regexp">/certs.d/</span>https:<span class="regexp">//</span>docker.sb.sinobest.cn/</span><br><span class="line">sudo cp <span class="regexp">/home/</span>docker<span class="regexp">/docker.sb.sinobest.cn.crt /</span>etc<span class="regexp">/docker/</span>certs.d<span class="regexp">/https:/</span><span class="regexp">/docker.sb.sinobest.cn/</span>ca.crt</span><br><span class="line"><span class="keyword">exit</span></span><br></pre></td></tr></table></figure><p>步骤二：</p><p>用xshell的ssh链接docker容器的地址：192.168.99.100，<br>账号：docker<br>密码：tcuser<br>进入容器后，在命令行中输入： </p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi <span class="regexp">/var/</span>lib<span class="regexp">/boot2docker/</span>profile</span><br></pre></td></tr></table></figure><p>在EXTRA_ARGS&#x3D;’’里面添加这两行内容：</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--registry-mirror https:<span class="regexp">//</span>docker.sb.sinobest.cn</span><br><span class="line">--insecure-registry https:<span class="regexp">//</span>docker.sb.sinobest.cn</span><br></pre></td></tr></table></figure><p>添加完成后是这样：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">EXTRA_ARGS</span>=<span class="string">&#x27;</span></span><br><span class="line"><span class="string">--label provider=virtualbox</span></span><br><span class="line"><span class="string">--registry-mirror https://9c4umok5.mirror.aliyuncs.com</span></span><br><span class="line"><span class="string">--registry-mirror https://docker.sb.sinobest.cn</span></span><br><span class="line"><span class="string">--insecure-registry https://docker.sb.sinobest.cn</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line"><span class="attr">CACERT</span>=/var/lib/boot2docker/ca.pem</span><br><span class="line"><span class="attr">DOCKER_HOST</span>=<span class="string">&#x27;-H tcp://0.0.0.0:2376&#x27;</span></span><br><span class="line"><span class="attr">DOCKER_STORAGE</span>=aufs</span><br><span class="line"><span class="attr">DOCKER_TLS</span>=auto</span><br><span class="line"><span class="attr">SERVERKEY</span>=/var/lib/boot2docker/server-key.pem</span><br><span class="line"><span class="attr">SERVERCERT</span>=/var/lib/boot2docker/server.pem</span><br></pre></td></tr></table></figure><p>步骤三：<br>cmd命令行敲以下命令：</p><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker-machine restart</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h4 id=&quot;win10-家庭版-x2F-win7-安装DockerToolbox-登录公司docker的时候报错：Error-response-from-daemon-Get-https-docker-sb-sinobest-cn-v2-x509-certificate-si</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="http://caixuya.github.io/2024/05/14/win10%E6%9B%B4%E6%94%B9npm%E4%B8%8B%E8%BD%BD%E8%B7%AF%E5%BE%84/"/>
+    <id>http://caixuya.github.io/2024/05/14/win10%E6%9B%B4%E6%94%B9npm%E4%B8%8B%E8%BD%BD%E8%B7%AF%E5%BE%84/</id>
+    <published>2024-05-14T13:56:11.307Z</published>
+    <updated>2024-05-06T16:42:27.653Z</updated>
+    
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>搭建openvpn</title>
@@ -420,51 +453,6 @@
     
     
     <category term="Oracle" scheme="http://caixuya.github.io/categories/Oracle/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>navicat导入sql文件失败解决办法</title>
-    <link href="http://caixuya.github.io/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
-    <id>http://caixuya.github.io/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</id>
-    <published>2020-06-18T01:09:25.000Z</published>
-    <updated>2022-04-14T15:40:14.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>navicat导入.sql文件失败的话，先新建一个与所需要导入的数据库的字符集以及排列规则都相同的数据库，如下：<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql2.png"><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql1.png"><br></p></blockquote>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;navicat导入.sql文件失败的话，先新建一个与所需要导入的数据库的字符集以及排列规则都相同的数据库，如下：&lt;br&gt;&lt;br&gt;&lt;img src=&quot;https://cxy-1300765640.cos.ap-nanjing.myqcloud.com</summary>
-      
-    
-    
-    
-    <category term="mysql" scheme="http://caixuya.github.io/categories/mysql/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>心情记录:今天总算把博客完善了</title>
-    <link href="http://caixuya.github.io/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/"/>
-    <id>http://caixuya.github.io/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/</id>
-    <published>2020-06-06T16:29:54.000Z</published>
-    <updated>2022-04-09T16:21:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上&lt;br&gt;&lt;br&gt;身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情</summary>
-      
-    
-    
-    
-    <category term="daily" scheme="http://caixuya.github.io/categories/daily/"/>
     
     
   </entry>

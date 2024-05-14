@@ -1,3 +1,5 @@
+http://caixuya.github.io/2024/05/14/win10%E6%9B%B4%E6%94%B9npm%E4%B8%8B%E8%BD%BD%E8%B7%AF%E5%BE%84/
+http://caixuya.github.io/2024/05/14/win10%20%E5%AE%B6%E5%BA%AD%E7%89%88win7%20%E5%AE%89%E8%A3%85DockerToolbox%20%E7%99%BB%E5%BD%95%E5%85%AC%E5%8F%B8docker%E7%9A%84%E6%97%B6%E5%80%99%E6%8A%A5%E9%94%99%EF%BC%9AError%20response%20from%20daemon%20Get%20h/
 http://caixuya.github.io/2023/06/12/%E6%90%AD%E5%BB%BAopenvpn/
 http://caixuya.github.io/2022/12/28/%E6%89%B9%E5%A4%84%E7%90%86%E5%B0%8F%E5%B7%A5%E5%85%B7/
 http://caixuya.github.io/2022/06/04/hexo%E7%9A%84cname%E8%AE%B0%E5%BD%95%E6%80%8E%E4%B9%88%E6%B0%B8%E8%BF%9C%E8%AE%BE%E7%BD%AE/
@@ -34,8 +36,8 @@ http://caixuya.github.io/404.html
 http://caixuya.github.io/
 http://caixuya.github.io/categories/Oracle/
 http://caixuya.github.io/categories/github/
-http://caixuya.github.io/categories/hexo/
 http://caixuya.github.io/categories/python/
+http://caixuya.github.io/categories/hexo/
 http://caixuya.github.io/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/
 http://caixuya.github.io/categories/markdown/
 http://caixuya.github.io/categories/mysql/

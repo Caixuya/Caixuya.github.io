@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://caixuya.github.io/2024/05/14/win10%E6%9B%B4%E6%94%B9npm%E4%B8%8B%E8%BD%BD%E8%B7%AF%E5%BE%84/</loc>
+    
+    <lastmod>2024-05-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2024/05/14/win10%20%E5%AE%B6%E5%BA%AD%E7%89%88win7%20%E5%AE%89%E8%A3%85DockerToolbox%20%E7%99%BB%E5%BD%95%E5%85%AC%E5%8F%B8docker%E7%9A%84%E6%97%B6%E5%80%99%E6%8A%A5%E9%94%99%EF%BC%9AError%20response%20from%20daemon%20Get%20h/</loc>
+    
+    <lastmod>2024-05-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://caixuya.github.io/2023/06/12/%E6%90%AD%E5%BB%BAopenvpn/</loc>
     
     <lastmod>2023-06-11</lastmod>
@@ -324,14 +342,14 @@
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/hexo/</loc>
+    <loc>http://caixuya.github.io/categories/python/</loc>
     <lastmod>2024-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/categories/python/</loc>
+    <loc>http://caixuya.github.io/categories/hexo/</loc>
     <lastmod>2024-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
