@@ -742,7 +742,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-11-19 21:05:02 / Modified: 22:10:14" itemprop="dateCreated datePublished" datetime="2025-11-19T21:05:02+08:00">2025-11-19</time>
+              <time title="Created: 2025-11-19 21:05:02 / Modified: 22:41:59" itemprop="dateCreated datePublished" datetime="2025-11-19T21:05:02+08:00">2025-11-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -964,7 +964,7 @@
 <td><del>（取消勾选）</del></td>
 </tr>
 </tbody></table>
-<h3 id="步骤-4：配置-Response-Interception-Rules"><a href="#步骤-4：配置-Response-Interception-Rules" class="headerlink" title="步骤 4：配置 Response Interception Rules"></a>步骤 4：配置 Response Interception Rules</h3><p>在 <strong>Response interception rules</strong> 部分，类似配置：</p>
+<h3 id="步骤-4：配置Burp-Suite的proxy标签的-Response-Interception-Rules"><a href="#步骤-4：配置Burp-Suite的proxy标签的-Response-Interception-Rules" class="headerlink" title="步骤 4：配置Burp Suite的proxy标签的 Response Interception Rules"></a>步骤 4：配置Burp Suite的proxy标签的 Response Interception Rules</h3><p>在 <strong>Response interception rules</strong> 部分，类似配置：</p>
 <p><strong>必须勾选</strong>：</p>
 <ul>
 <li>✅ <strong>Intercept responses based on the following rules</strong></li>
@@ -978,7 +978,7 @@
 </ul>
 <p><strong>配置完成后proxy配置是这样的:</strong><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy1.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy2.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy3.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy4.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy5.png"></p>
 <h3 id="步骤-5：浏览器配置如下"><a href="#步骤-5：浏览器配置如下" class="headerlink" title="步骤 5：浏览器配置如下:"></a>步骤 5：浏览器配置如下:</h3><p>1.代理端口号需要和proxy配置中的Proxy listeners一致<br><br>2.不代理的地址列表不能有localost或者127.0.0.1<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE.png"></p>
-<h3 id="步骤-6：Proxy标签HTTP-history的filter配置"><a href="#步骤-6：Proxy标签HTTP-history的filter配置" class="headerlink" title="步骤 6：Proxy标签HTTP history的filter配置:"></a>步骤 6：Proxy标签HTTP history的filter配置:</h3><p>1.需要勾选上HTML<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy_http_history.png"></p>
+<h3 id="步骤-6：Burp-Suite的Proxy标签的HTTP-history的filter配置"><a href="#步骤-6：Burp-Suite的Proxy标签的HTTP-history的filter配置" class="headerlink" title="步骤 6：Burp Suite的Proxy标签的HTTP history的filter配置:"></a>步骤 6：Burp Suite的Proxy标签的HTTP history的filter配置:</h3><p>1.需要勾选上HTML<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy_http_history.png"></p>
 <h3 id="步骤-7：保存并测试"><a href="#步骤-7：保存并测试" class="headerlink" title="步骤 7：保存并测试"></a>步骤 7：保存并测试</h3><ol>
 <li>配置完成后，关闭 Settings 窗口</li>
 <li>确保 <strong>Proxy → Intercept</strong> 显示 <strong>“Intercept is on”</strong></li>
@@ -1097,7 +1097,7 @@
 </li>
 </ol>
 <hr>
-<h2 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h2><h3 id="1-同时使用两个方案"><a href="#1-同时使用两个方案" class="headerlink" title="1. 同时使用两个方案"></a>1. 同时使用两个方案</h3><p><strong>推荐组合</strong>：</p>
+<h2 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h2><h3 id="1-同时使用三个方案"><a href="#1-同时使用三个方案" class="headerlink" title="1. 同时使用三个方案"></a>1. 同时使用三个方案</h3><p><strong>推荐组合</strong>：</p>
 <ul>
 <li>✅ Chrome 启动参数（<code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code>）</li>
 <li>✅ Hosts 文件配置（<code>dvwa.local</code>）</li>
