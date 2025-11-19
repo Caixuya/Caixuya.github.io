@@ -205,6 +205,256 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F/" class="post-title-link" itemprop="url">列表生成式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-25 01:59:25 / Modified: 01:14:17" itemprop="dateCreated datePublished" datetime="2022-04-25T01:59:25+08:00">2022-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>列表中，比较少用的是列表生成式，之前用的一直是比较常规的方式，所以列表生成式这种比较简便的方式在这里做个记录，方便以后自己反复查看</p>
+<h4 id="1-使用函数range创建数字列表"><a href="#1-使用函数range创建数字列表" class="headerlink" title="1.使用函数range创建数字列表"></a>1.使用函数range创建数字列表</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list1</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    numbers = []</span><br><span class="line">    numbers = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(numbers)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">list2</span>():</span><br><span class="line">    num = []</span><br><span class="line">    num = <span class="built_in">range</span>(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> num:</span><br><span class="line">        <span class="built_in">print</span>(i, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    list1()</span><br><span class="line">    list2()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight leaf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输出结果为:</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8, 9]      <span class="function"><span class="keyword">#</span><span class="title">list1</span><span class="params">()</span></span>的输出结果</span><br><span class="line">0 1 2 3 4 5 6 7 8 9 			 <span class="function"><span class="keyword">#</span><span class="title">list2</span><span class="params">()</span></span>的输出结果</span><br></pre></td></tr></table></figure>
+
+<p>如果要生成<code>[1x1, 2x2, 3x3, ..., 10x10]</code>这种形式的话，可以用常规的方式：遍历数组中的数，让数组中的数相乘，如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        L.append(x * x)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+
+<p>用列表生成式的方法做就是：把要生成的元素（以上面的例子为例：要生成的元素是<code>x * x</code>）放在前面,后面跟<code>for</code>循环，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():		<span class="comment"># 列表生成式</span></span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
+
+<p>输出结果和上面的常规方法输出的结果一样：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-列表生成式-if"><a href="#2-列表生成式-if" class="headerlink" title="2.列表生成式 + if"></a>2.列表生成式 + if</h4><p>跟在<code>for</code>后面的<code>if</code>是一个筛选条件，不能带<code>else</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_list()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line"><span class="string">[4, 16, 36, 64, 100]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>相当于：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_chen_</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            x_all = x * x</span><br><span class="line">            L.append(x_all)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _chen_()</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-列表生成式-if-…-else"><a href="#3-列表生成式-if-…-else" class="headerlink" title="3.列表生成式 + if ….else"></a>3.列表生成式 + if ….else</h4><p><code>if</code>写在<code>for</code>前面必须加<code>else</code>,因为<code>for</code>前面的部分是一个表达式，它必须根据<code>x</code>计算出一个结果</p>
+<p>如下这条表达式，<code>x if x % 2 == 0</code>，它无法根据<code>x</code>计算出结果，因为缺少<code>else</code>，必须加上<code>else</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_ruguo</span>():</span><br><span class="line">    L = [x <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> -x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _ruguo()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果为：</span><br><span class="line">[<span class="string">-1</span>, 2, <span class="string">-3</span>, 4, <span class="string">-5</span>, 6, <span class="string">-7</span>, 8, <span class="string">-9</span>, 10]</span><br></pre></td></tr></table></figure>
+
+<p>这个的效果就相当于：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">ru_guo</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            x1 = x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x1 = -x</span><br><span class="line">        L.append(x1)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    ru_guo()</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-两层循环，生成全排列"><a href="#4-两层循环，生成全排列" class="headerlink" title="4.两层循环，生成全排列"></a>4.两层循环，生成全排列</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pai_lie</span>():</span><br><span class="line">    L = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;ABC&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;XYZ&#x27;</span>]</span><br><span class="line">    W = [m + n <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span> <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>]</span><br><span class="line">    <span class="built_in">print</span>(W)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># pai_lie()函数等价于qing_xi()，但是并不是完全等价，pai_lie这个函数输出来以后是一个列表，如下输出结果4.1所示</span></span><br><span class="line"><span class="comment">#而qing_xi函数输出来的是一个一个单独的，如下图输出结果4.2所示</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            <span class="built_in">print</span>(m + n)</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pai_lie()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出结果<span class="number">4.1</span></span><br><span class="line"><span class="selector-attr">[<span class="string">&#x27;14&#x27;</span>, <span class="string">&#x27;15&#x27;</span>, <span class="string">&#x27;16&#x27;</span>, <span class="string">&#x27;24&#x27;</span>, <span class="string">&#x27;25&#x27;</span>, <span class="string">&#x27;26&#x27;</span>, <span class="string">&#x27;34&#x27;</span>, <span class="string">&#x27;35&#x27;</span>, <span class="string">&#x27;36&#x27;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输出结果4.2</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td></tr></table></figure>
+
+<p>如果想和pai_lie完全一样，还应该定义一个空的列表，将(m+n)放进列表中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">qing_xi</span>():</span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="string">&#x27;123&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">&#x27;456&#x27;</span>:</span><br><span class="line">            L.append(m+n)</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    qing_xi()</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-例题："><a href="#5-例题：" class="headerlink" title="5.例题："></a>5.例题：</h4><p>题目：有L1列表如下：L1 &#x3D; [‘Hello’, ‘World’, 18, ‘Apple’, None]，列表中有数字有字符（字符有大写有小写）有空值，现要求输出成[‘hello’, ‘world’, ‘apple’]。用<code>lower</code> 函数将将所有字母都转换成小写，用<code>isinstance</code>函数判断一个变量是不是字符串。编写代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_li_ti</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</span><br><span class="line">    L1 = [<span class="string">&#x27;Hello&#x27;</span>, <span class="string">&#x27;World&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;Apple&#x27;</span>, <span class="literal">None</span>]</span><br><span class="line">    L2 = [x.lower() <span class="keyword">for</span> x <span class="keyword">in</span> L1 <span class="keyword">if</span> <span class="built_in">isinstance</span>(x, <span class="built_in">str</span>) <span class="keyword">is</span> <span class="literal">True</span>]</span><br><span class="line">    <span class="built_in">print</span>(L2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    _li_ti()</span><br></pre></td></tr></table></figure>
+
+<p>另一种形式为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_instance</span>():</span><br><span class="line">    L = []</span><br><span class="line">    L1 = [<span class="string">&#x27;Hello&#x27;</span>, <span class="string">&#x27;World&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;Apple&#x27;</span>, <span class="literal">None</span>]</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> L1:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(s, <span class="built_in">str</span>) <span class="keyword">is</span> <span class="literal">True</span>:</span><br><span class="line">            L.append(s.lower())</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    is_instance()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/%E7%94%9F%E6%88%90%E5%99%A8/" class="post-title-link" itemprop="url">生成器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-25 01:59:25 / Modified: 01:14:42" itemprop="dateCreated datePublished" datetime="2022-04-25T01:59:25+08:00">2022-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-什么是generator"><a href="#1-什么是generator" class="headerlink" title="1. 什么是generator"></a>1. 什么是generator</h3><p>列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的，如果创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
+<p>如果可以先不创建完整的list，而是先创建一个东西，使得这个东西可以在循环的过程中计算出后面的元素，这样可以节省大量的空间。这个一边循环一边计算的机制，成为生成器：generator</p>
+<h3 id="2-创建generator"><a href="#2-创建generator" class="headerlink" title="2. 创建generator"></a>2. 创建generator</h3><h4 id="lt-1-gt-第一种方法：把列表生成式的-改成"><a href="#lt-1-gt-第一种方法：把列表生成式的-改成" class="headerlink" title="&lt;1&gt; 第一种方法：把列表生成式的[]改成()"></a>&lt;1&gt; 第一种方法：把列表生成式的[]改成()</h4><p>这里可以看到，函数gen_ner只是把gen_list最外层的[]改成了()，结果就是L是一个list，而g是一个generator</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_list</span>():</span><br><span class="line">    L = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line">    <span class="built_in">print</span>(L)</span><br><span class="line"><span class="comment">#gen_list的输出结果为：</span></span><br><span class="line"><span class="comment">#[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]  </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gen_ner</span>():</span><br><span class="line">    g = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="built_in">print</span>(g)</span><br><span class="line"><span class="comment">#gen_ner()的输出结果为：</span></span><br><span class="line"><span class="comment">#&lt;generator object gen_ner.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002245435B970&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    gen_list()</span><br><span class="line">    gen_ner()</span><br></pre></td></tr></table></figure>
+
+<p>从上面的结果可以看到，generator是一个对象，如何打印出放在里面的元素呢，可以一个一个用next()打印，不过用next的话有一个缺点是，需要不断地调用next去计算g的下一个元素（next(g)），这种方法不能指定需要的那个元素，而且在没有更多元素的时候，会抛出StopIteration的错误。</p>
+<p>那么更便捷的方法是什么呢？用for循环打印：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_ner</span>():</span><br><span class="line">    g = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> g:</span><br><span class="line">        <span class="built_in">print</span>(n)</span><br><span class="line"></span><br><span class="line">      </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    gen_ner()</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-1-例子（斐波拉契数列）"><a href="#2-1-例子（斐波拉契数列）" class="headerlink" title="2.1 例子（斐波拉契数列）"></a>2.1 例子（斐波拉契数列）</h5><p>著名的斐波拉契数列（Fibonacci），除第一个和第二个数外，任意一个数都可由前两个数相加得到：</p>
+<p>1, 1, 2, 3, 5, 8, 13, 21, 34, …</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="built_in">print</span>(b)</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    fib(<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">执行结果是：</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br></pre></td></tr></table></figure>
+
+<p>其中：a, b &#x3D; b, a + b为赋值语句，相当于：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">t</span> = (b, a + b) <span class="comment"># t是一个tuple</span></span><br><span class="line"><span class="attr">a</span> = t[<span class="number">0</span>]</span><br><span class="line"><span class="attr">b</span> = t[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<p>但不必显式写出临时变量t就可以赋值，也就是说，<code>a, b = b, a + b</code>这句话的意思是：把a赋值给b，把b赋值给a+b。t只是作为一个中间变量出现，不用中间变量的时候可以直接赋值。</p>
+<p><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E7%94%9F%E6%88%90%E5%99%A81.png" alt="image-20220424192351161"></p>
+<h5 id="2-2-斐波拉契数列类似generator"><a href="#2-2-斐波拉契数列类似generator" class="headerlink" title="2.2  斐波拉契数列类似generator"></a>2.2  斐波拉契数列类似generator</h5><p>斐波拉契数列的推算规则，可以从第一个元素开始，推算出后续任意的元素，这种逻辑其实非常类似generator，也就是”2.1 例子（斐波拉契数列）“的函数和generator仅一步之遥。要把<code>fib</code>函数变成generator函数，只需要把<code>print(b)</code>改为<code>yield b</code>就可以了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params"><span class="built_in">max</span></span>):</span><br><span class="line">    n, a, b = <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="built_in">max</span>:</span><br><span class="line">        <span class="keyword">yield</span> b</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;done&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = fib(<span class="number">8</span>)		<span class="comment">#调用generator对象</span></span><br><span class="line">    <span class="built_in">print</span>(f)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">运行的结果是：</span><br><span class="line">&lt;generator object <span class="built_in">fib</span> <span class="built_in">at</span> <span class="number">0x000001EAE925B970</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-generator函数的执行顺序"><a href="#3-generator函数的执行顺序" class="headerlink" title="3. generator函数的执行顺序"></a>3. generator函数的执行顺序</h3><p>普通函数是顺序执行，遇到<code>return</code>语句或者最后一行函数语句就返回。</p>
+<p>generator的函数，在每次调用<code>next()</code>的时候执行，遇到<code>yield</code>语句返回，再次执行时从上次返回的<code>yield</code>语句处继续执行，例子如下：</p>
+<p>先定义一个generator函数，依次返回数字1,3,5:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span>(<span class="number">3</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span>(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>调用该generator函数时，首先要生成一个generator对象，然后用<code>next()</code>函数不断获得下一个返回值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>o = odd()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">step <span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(o)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">StopIteration</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>odd</code>不是普通函数，而是generator函数，在执行过程中，遇到<code>yield</code>就中断，下次又继续执行。执行3次<code>yield</code>后，已经没有<code>yield</code>可以执行了，所以，第4次调用<code>next(o)</code>就报错。</p>
+<p>我们在循环过程中不断调用<code>yield</code>，就会不断中断。当然要给循环设置一个条件来退出循环，不然就会产生一个无限数列出来。</p>
+<p>同样的，把函数改成generator函数后，我们基本上从来不会用<code>next()</code>来获取下一个返回值，而是直接使用<code>for</code>循环来迭代：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> odd():</span><br><span class="line">        <span class="built_in">print</span>(n)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">结果是：</span><br><span class="line">step <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">step <span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">step <span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>但是用<code>for</code>循环调用generator时，发现拿不到generator的<code>return</code>语句的返回值。如果想要拿到返回值，必须捕获<code>StopIteration</code>错误，返回值包含在<code>StopIteration</code>的<code>value</code>中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">odd</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 2&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;step 3&#x27;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    g = odd()</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            x = <span class="built_in">next</span>(g)</span><br><span class="line">            <span class="built_in">print</span>(x)</span><br><span class="line">        <span class="keyword">except</span> StopIteration <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Generator return value:&#x27;</span>, e.value)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
     <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2022/04/09/cpu%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1782,180 +2032,6 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/18/navicat%E5%AF%BC%E5%85%A5sql%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="post-title-link" itemprop="url">navicat导入sql文件失败解决办法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-06-18 09:09:25" itemprop="dateCreated datePublished" datetime="2020-06-18T09:09:25+08:00">2020-06-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-14 23:40:12" itemprop="dateModified" datetime="2022-04-14T23:40:12+08:00">2022-04-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>109</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>navicat导入.sql文件失败的话，先新建一个与所需要导入的数据库的字符集以及排列规则都相同的数据库，如下：<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql2.png"><br><br>直接在创建出来的数据库上右键“运行sql文件”，选择要导入的数据库，然后勾一三，点击“开始”，等待完成即可<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/mysql1.png"><br></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="caixuya">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="tia的学习笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/07/%E5%BF%83%E6%83%85%E8%AE%B0%E5%BD%95-%E4%BB%8A%E5%A4%A9%E6%80%BB%E7%AE%97%E6%8A%8A%E5%8D%9A%E5%AE%A2%E5%AE%8C%E5%96%84%E4%BA%86/" class="post-title-link" itemprop="url">心情记录:今天总算把博客完善了</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-06-07 00:29:54" itemprop="dateCreated datePublished" datetime="2020-06-07T00:29:54+08:00">2020-06-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-10 00:20:59" itemprop="dateModified" datetime="2022-04-10T00:20:59+08:00">2022-04-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/daily/" itemprop="url" rel="index"><span itemprop="name">daily</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>141</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>今天总算是把这个博客的功能完善了，之前以为弄评论区评论又要把域名备案，一系列东西过于繁杂，就想着有时间再弄，到今天，闲下来了，在网上找方案捣鼓了一下午，总算是好了，非常开心，高兴了一晚上<br><br>身边的人不明白我高兴的缘由，我也不知道跟谁分享，就把此刻高兴到跳脚的心情分享在这里吧，哈哈哈哈哈</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2026,13 +2102,13 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
@@ -2069,7 +2145,7 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
 <div class="copyright">
   
   &copy; 2020 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -2078,12 +2154,12 @@ c.聚合表达式可作为筛选条件。要求放在<code>group by</code>之后
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">61k</span>
+    <span title="Symbols count total">73k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">55 mins.</span>
+    <span title="Reading time total">1:06</span>
 </div>
 
         

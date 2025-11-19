@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="解决 Burp Suite 无法拦截 localhost 请求的问题问题描述在使用 Burp Suite 进行 DVWA 渗透测试时，遇到以下问题：  浏览器访问 http:&#x2F;&#x2F;localhost&#x2F;dvwa 时，Burp Suite 无法拦截请求 HTTP History 中看不到任何 localhost 的请求记录 Target → Site map 中可能显示 localhost，但没有具体路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决 Burp Suite 无法拦截 localhost 请求的问题">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="解决 Burp Suite 无法拦截 localhost 请求的问题问题描述在使用 Burp Suite 进行 DVWA 渗透测试时，遇到以下问题：  浏览器访问 http:&#x2F;&#x2F;localhost&#x2F;dvwa 时，Burp Suite 无法拦截请求 HTTP History 中看不到任何 localhost 的请求记录 Target → Site map 中可能显示 localhost，但没有具体路">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy1.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy2.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy3.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy4.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy5.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE.png">
+<meta property="og:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy_http_history.png">
+<meta property="article:published_time" content="2025-11-19T13:05:02.000Z">
+<meta property="article:modified_time" content="2025-11-19T13:05:25.751Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy1.png">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>解决 Burp Suite 无法拦截 localhost 请求的问题 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解决 Burp Suite 无法拦截 localhost 请求的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-19 21:05:02 / Modified: 21:05:25" itemprop="dateCreated datePublished" datetime="2025-11-19T21:05:02+08:00">2025-11-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>7 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="解决-Burp-Suite-无法拦截-localhost-请求的问题"><a href="#解决-Burp-Suite-无法拦截-localhost-请求的问题" class="headerlink" title="解决 Burp Suite 无法拦截 localhost 请求的问题"></a>解决 Burp Suite 无法拦截 localhost 请求的问题</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>在使用 Burp Suite 进行 DVWA 渗透测试时，遇到以下问题：</p>
+<ul>
+<li>浏览器访问 <code>http://localhost/dvwa</code> 时，Burp Suite 无法拦截请求</li>
+<li>HTTP History 中看不到任何 localhost 的请求记录</li>
+<li>Target → Site map 中可能显示 localhost，但没有具体路径</li>
+<li>访问其他外部网站（如 <code>http://example.com</code>）可以正常拦截</li>
+</ul>
+<h2 id="根本原因"><a href="#根本原因" class="headerlink" title="根本原因"></a>根本原因</h2><p><strong>Chrome&#x2F;Edge 等浏览器有内置的安全机制</strong>：即使配置了代理插件（如 SwitchyOmega），默认情况下也会<strong>自动绕过对 <code>localhost</code> 和 <code>127.0.0.1</code> 的代理</strong>。</p>
+<p>这是浏览器的默认行为，用于优化本地开发环境的性能，但会导致无法通过 Burp Suite 拦截本地请求。</p>
+<hr>
+<h2 id="完整解决方案"><a href="#完整解决方案" class="headerlink" title="完整解决方案"></a>完整解决方案</h2><p>需要<strong>同时应用以下三个方案</strong>才能彻底解决问题：</p>
+<h3 id="方案-A：修改-Chrome-启动参数（禁用-localhost-代理绕过）"><a href="#方案-A：修改-Chrome-启动参数（禁用-localhost-代理绕过）" class="headerlink" title="方案 A：修改 Chrome 启动参数（禁用 localhost 代理绕过）"></a>方案 A：修改 Chrome 启动参数（禁用 localhost 代理绕过）</h3><h3 id="方案-B：配置-Hosts-文件使用自定义域名"><a href="#方案-B：配置-Hosts-文件使用自定义域名" class="headerlink" title="方案 B：配置 Hosts 文件使用自定义域名"></a>方案 B：配置 Hosts 文件使用自定义域名</h3><h3 id="方案-C：正确配置-Burp-Suite-拦截规则"><a href="#方案-C：正确配置-Burp-Suite-拦截规则" class="headerlink" title="方案 C：正确配置 Burp Suite 拦截规则"></a>方案 C：正确配置 Burp Suite 拦截规则</h3><hr>
+<h2 id="方案-A：修改-Chrome-启动参数"><a href="#方案-A：修改-Chrome-启动参数" class="headerlink" title="方案 A：修改 Chrome 启动参数"></a>方案 A：修改 Chrome 启动参数</h2><h3 id="步骤-1：关闭所有-Chrome-进程"><a href="#步骤-1：关闭所有-Chrome-进程" class="headerlink" title="步骤 1：关闭所有 Chrome 进程"></a>步骤 1：关闭所有 Chrome 进程</h3><ol>
+<li>完全关闭 Chrome 浏览器（点击右上角的 X）</li>
+<li>打开任务管理器（<code>Ctrl + Shift + Esc</code>）</li>
+<li>查找所有 <code>chrome.exe</code> 进程</li>
+<li>右键点击每个进程，选择 <strong>“结束任务”</strong></li>
+<li>确保没有任何 Chrome 后台进程在运行</li>
+</ol>
+<h3 id="步骤-2：创建-Chrome-快捷方式"><a href="#步骤-2：创建-Chrome-快捷方式" class="headerlink" title="步骤 2：创建 Chrome 快捷方式"></a>步骤 2：创建 Chrome 快捷方式</h3><ol>
+<li><p>找到 Chrome 的安装位置，通常是：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="string">\Program</span> Files<span class="string">\Google\Chrome\Application\chrome.exe</span></span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="string">\Program</span> Files (x86)<span class="string">\Google\Chrome\Application\chrome.exe</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>右键点击 <code>chrome.exe</code>，选择 <strong>“创建快捷方式”</strong></p>
+</li>
+<li><p>将快捷方式移动到桌面或其他方便访问的位置</p>
+</li>
+</ol>
+<h3 id="步骤-3：修改快捷方式属性"><a href="#步骤-3：修改快捷方式属性" class="headerlink" title="步骤 3：修改快捷方式属性"></a>步骤 3：修改快捷方式属性</h3><ol>
+<li><p>右键点击刚创建的快捷方式</p>
+</li>
+<li><p>选择 <strong>“属性”</strong></p>
+</li>
+<li><p>在 <strong>“目标”</strong> 字段中，找到现有的路径，例如：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files\Google\Chrome\Application\chrome.exe&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在路径<strong>后面</strong>添加以下参数（注意有空格）：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">--proxy-bypass-list</span>=<span class="string">&quot;&lt;-loopback&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>完整的目标应该类似：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files\Google\Chrome\Application\chrome.exe&quot;</span> --proxy-bypass-list<span class="operator">=</span><span class="string">&quot;&lt;-loopback&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>点击 **”应用”**，然后点击 <strong>“确定”</strong></p>
+</li>
+</ol>
+<h3 id="步骤-4：通过新快捷方式启动-Chrome"><a href="#步骤-4：通过新快捷方式启动-Chrome" class="headerlink" title="步骤 4：通过新快捷方式启动 Chrome"></a>步骤 4：通过新快捷方式启动 Chrome</h3><ol>
+<li><strong>重要</strong>：不要通过任务栏或其他方式启动 Chrome</li>
+<li>只能通过刚才修改的快捷方式启动</li>
+<li>启动后，Chrome 将不再绕过 localhost 的代理</li>
+</ol>
+<h3 id="验证方法"><a href="#验证方法" class="headerlink" title="验证方法"></a>验证方法</h3><p>启动 Chrome 后，在地址栏输入：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome:<span class="regexp">//</span>version</span><br></pre></td></tr></table></figure>
+
+<p>在 <strong>“命令行”</strong> 部分，应该能看到 <code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code> 参数。</p>
+<hr>
+<h2 id="方案-B：配置-Hosts-文件使用自定义域名-1"><a href="#方案-B：配置-Hosts-文件使用自定义域名-1" class="headerlink" title="方案 B：配置 Hosts 文件使用自定义域名"></a>方案 B：配置 Hosts 文件使用自定义域名</h2><h3 id="为什么需要这个方案"><a href="#为什么需要这个方案" class="headerlink" title="为什么需要这个方案"></a>为什么需要这个方案</h3><p>即使禁用了浏览器的代理绕过，某些情况下 <code>localhost</code> 仍然可能有问题。使用自定义域名可以彻底避免这个问题。</p>
+<h3 id="步骤-1：编辑-Hosts-文件"><a href="#步骤-1：编辑-Hosts-文件" class="headerlink" title="步骤 1：编辑 Hosts 文件"></a>步骤 1：编辑 Hosts 文件</h3><ol>
+<li><p>以<strong>管理员身份</strong>打开记事本：</p>
+<ul>
+<li>点击开始菜单</li>
+<li>搜索 “记事本”</li>
+<li>右键点击 “记事本”</li>
+<li>选择 <strong>“以管理员身份运行”</strong></li>
+</ul>
+</li>
+<li><p>在记事本中，点击 <strong>“文件” → “打开”</strong></p>
+</li>
+<li><p>导航到以下路径：</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="name">C</span>:\Windows\System32\drivers\etc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在文件类型下拉菜单中，选择 <strong>“所有文件 (<em>.</em>)”</strong></p>
+</li>
+<li><p>找到并打开 <strong>hosts</strong> 文件（没有扩展名）</p>
+</li>
+</ol>
+<h3 id="步骤-2：添加自定义域名映射"><a href="#步骤-2：添加自定义域名映射" class="headerlink" title="步骤 2：添加自定义域名映射"></a>步骤 2：添加自定义域名映射</h3><p>在 hosts 文件的<strong>最后一行</strong>添加：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0.0.1</span>  dvwa.local</span><br></pre></td></tr></table></figure>
+
+<p>完整的 hosts 文件内容示例：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Copyright (c) 1993-2009 Microsoft Corp.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># This is a sample HOSTS file used by Microsoft TCP/IP for Windows.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># This file contains the mappings of IP addresses to host names. Each</span></span><br><span class="line"><span class="comment"># entry should be kept on an individual line. The IP address should</span></span><br><span class="line"><span class="comment"># be placed in the first column followed by the corresponding host name.</span></span><br><span class="line"><span class="comment"># The IP address and the host name should be separated by at least one</span></span><br><span class="line"><span class="comment"># space.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Additionally, comments (such as these) may be inserted on individual</span></span><br><span class="line"><span class="comment"># lines or following the machine name denoted by a &#x27;#&#x27; symbol.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># For example:</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#      102.54.94.97     rhino.acme.com          # source server</span></span><br><span class="line"><span class="comment">#       38.25.63.10     x.acme.com              # x client host</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># localhost name resolution is handled within DNS itself.</span></span><br><span class="line"><span class="comment">#	127.0.0.1       localhost</span></span><br><span class="line"><span class="comment">#	::1             localhost</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>  dvwa.local</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-3：保存文件"><a href="#步骤-3：保存文件" class="headerlink" title="步骤 3：保存文件"></a>步骤 3：保存文件</h3><ol>
+<li>点击 <strong>“文件” → “保存”</strong></li>
+<li>关闭记事本</li>
+</ol>
+<h3 id="步骤-4：刷新-DNS-缓存"><a href="#步骤-4：刷新-DNS-缓存" class="headerlink" title="步骤 4：刷新 DNS 缓存"></a>步骤 4：刷新 DNS 缓存</h3><p>打开命令提示符（<code>Win + R</code>，输入 <code>cmd</code>），执行：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ipconfig</span> /flushdns</span><br></pre></td></tr></table></figure>
+
+<p>你应该看到：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Windows<span class="built_in"> IP </span>配置</span><br><span class="line">已成功刷新<span class="built_in"> DNS </span>解析缓存。</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-5：验证配置"><a href="#步骤-5：验证配置" class="headerlink" title="步骤 5：验证配置"></a>步骤 5：验证配置</h3><p>在命令提示符中执行：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ping</span> dvwa.local</span><br></pre></td></tr></table></figure>
+
+<p>应该显示：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">正在<span class="built_in"> Ping </span>dvwa.local [127.0.0.1] 具有 32 字节的数据:</span><br><span class="line">来自 127.0.0.1 的回复: 字节=32 时间&lt;1ms <span class="attribute">TTL</span>=128</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-6：修改-DVWA-访问地址"><a href="#步骤-6：修改-DVWA-访问地址" class="headerlink" title="步骤 6：修改 DVWA 访问地址"></a>步骤 6：修改 DVWA 访问地址</h3><p>从现在开始，不要访问：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>localhost/dvwa</span><br></pre></td></tr></table></figure>
+
+<p>而是访问：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>dvwa.local/dvwa</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="方案-C：正确配置-Burp-Suite-拦截规则-1"><a href="#方案-C：正确配置-Burp-Suite-拦截规则-1" class="headerlink" title="方案 C：正确配置 Burp Suite 拦截规则"></a>方案 C：正确配置 Burp Suite 拦截规则</h2><h3 id="问题说明"><a href="#问题说明" class="headerlink" title="问题说明"></a>问题说明</h3><p>即使浏览器代理配置正确，如果 Burp Suite 的拦截规则配置不当，仍然无法拦截请求。</p>
+<h3 id="关键配置点"><a href="#关键配置点" class="headerlink" title="关键配置点"></a>关键配置点</h3><h4 id="❌-错误配置"><a href="#❌-错误配置" class="headerlink" title="❌ 错误配置"></a>❌ 错误配置</h4><p>如果勾选了 **”And URL is in target scope”**，Burp 只会拦截在 Target Scope 中的 URL。如果 <code>dvwa.local</code> 不在 Scope 中，请求将不会被拦截。</p>
+<h4 id="✅-正确配置"><a href="#✅-正确配置" class="headerlink" title="✅ 正确配置"></a>✅ 正确配置</h4><h3 id="步骤-1：进入-Proxy-Settings"><a href="#步骤-1：进入-Proxy-Settings" class="headerlink" title="步骤 1：进入 Proxy Settings"></a>步骤 1：进入 Proxy Settings</h3><ol>
+<li>在 Burp Suite 中，点击 <strong>Settings</strong>（或旧版本中的齿轮图标）</li>
+<li>在左侧导航中，选择 <strong>Tools → Proxy</strong></li>
+<li>找到 <strong>Request interception rules</strong> 部分</li>
+</ol>
+<h3 id="步骤-2：配置拦截规则"><a href="#步骤-2：配置拦截规则" class="headerlink" title="步骤 2：配置拦截规则"></a>步骤 2：配置拦截规则</h3><p><strong>必须勾选</strong>：</p>
+<ul>
+<li>✅ <strong>Intercept requests based on the following rules</strong><ul>
+<li>这个选项必须启用，否则拦截功能不工作</li>
+</ul>
+</li>
+</ul>
+<p><strong>必须取消勾选</strong>：</p>
+<ul>
+<li>❌ <strong>And URL is in target scope</strong><ul>
+<li>取消这个选项，允许拦截所有请求，不受 Scope 限制</li>
+</ul>
+</li>
+</ul>
+<p><strong>可选勾选</strong>（推荐保留）：</p>
+<ul>
+<li><p>✅ <strong>Or File extension Does not match</strong></p>
+<ul>
+<li>条件：<code>^gif$|^jpg$|^png$|^css$|^js$|^ico$...</code></li>
+<li>说明：不拦截图片、CSS、JS 等静态资源</li>
+</ul>
+</li>
+<li><p>✅ <strong>Or Request Contains parameters</strong></p>
+<ul>
+<li>说明：拦截包含参数的请求（如登录请求）</li>
+</ul>
+</li>
+<li><p>✅ <strong>Or HTTP method Does not match</strong></p>
+<ul>
+<li>条件：<code>get|post</code></li>
+<li>说明：只拦截 GET 和 POST 请求</li>
+</ul>
+</li>
+</ul>
+<h3 id="步骤-3：推荐的拦截规则配置"><a href="#步骤-3：推荐的拦截规则配置" class="headerlink" title="步骤 3：推荐的拦截规则配置"></a>步骤 3：推荐的拦截规则配置</h3><p>最终的拦截规则配置应该如下：</p>
+<table>
+<thead>
+<tr>
+<th>Enabled</th>
+<th>Operator</th>
+<th>Match type</th>
+<th>Relationship</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>✅</td>
+<td>Or</td>
+<td>File extension</td>
+<td>Does not match</td>
+<td>&#96;^gif$</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Or</td>
+<td>Request</td>
+<td>Contains parameters</td>
+<td>-</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Or</td>
+<td>HTTP method</td>
+<td>Does not match</td>
+<td>&#96;get</td>
+</tr>
+<tr>
+<td>❌</td>
+<td><del>And</del></td>
+<td><del>URL</del></td>
+<td><del>Is in target scope</del></td>
+<td><del>（取消勾选）</del></td>
+</tr>
+</tbody></table>
+<h3 id="步骤-4：配置-Response-Interception-Rules"><a href="#步骤-4：配置-Response-Interception-Rules" class="headerlink" title="步骤 4：配置 Response Interception Rules"></a>步骤 4：配置 Response Interception Rules</h3><p>在 <strong>Response interception rules</strong> 部分，类似配置：</p>
+<p><strong>必须勾选</strong>：</p>
+<ul>
+<li>✅ <strong>Intercept responses based on the following rules</strong></li>
+</ul>
+<p><strong>推荐配置</strong>：</p>
+<ul>
+<li>✅ <strong>Or Content type header Matches</strong> → <code>text</code></li>
+<li>✅ <strong>And Request Was intercepted</strong></li>
+<li>✅ <strong>And Status code Does not match</strong> → <code>^304$</code></li>
+<li>❌ <strong>And URL is in target scope</strong>（取消勾选）</li>
+</ul>
+<p><strong>配置完成后proxy配置是这样的:</strong><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy1.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy2.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy3.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy4.png"><br>—分割线—<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy5.png"></p>
+<h3 id="步骤-5：浏览器配置如下"><a href="#步骤-5：浏览器配置如下" class="headerlink" title="步骤 5：浏览器配置如下:"></a>步骤 5：浏览器配置如下:</h3><p>1.代理端口号需要和proxy配置中的Proxy listeners一致<br><br>2.不代理的地址列表不能有localost或者127.0.0.1<br><br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE.png"></p>
+<h3 id="步骤-6：Proxy标签HTTP-history的filter配置"><a href="#步骤-6：Proxy标签HTTP-history的filter配置" class="headerlink" title="步骤 6：Proxy标签HTTP history的filter配置:"></a>步骤 6：Proxy标签HTTP history的filter配置:</h3><p>1.需要勾选上HTML<br><img src="https://cxy-1300765640.cos.ap-nanjing.myqcloud.com/hexo_blog/proxy_http_history.png"></p>
+<h3 id="步骤-7：保存并测试"><a href="#步骤-7：保存并测试" class="headerlink" title="步骤 7：保存并测试"></a>步骤 7：保存并测试</h3><ol>
+<li>配置完成后，关闭 Settings 窗口</li>
+<li>确保 <strong>Proxy → Intercept</strong> 显示 <strong>“Intercept is on”</strong></li>
+<li>在浏览器中访问 <code>http://dvwa.local/dvwa</code></li>
+<li>应该能在 Burp Suite 中看到被拦截的请求</li>
+</ol>
+<hr>
+<h2 id="完整验证流程"><a href="#完整验证流程" class="headerlink" title="完整验证流程"></a>完整验证流程</h2><h3 id="第一步：验证基础配置"><a href="#第一步：验证基础配置" class="headerlink" title="第一步：验证基础配置"></a>第一步：验证基础配置</h3><ol>
+<li>✅ Burp Suite Proxy 监听在 <code>127.0.0.1:8082</code></li>
+<li>✅ SwitchyOmega 配置代理为 <code>localhost:8082</code></li>
+<li>✅ 浏览器当前使用 “burp suite” 情景模式</li>
+</ol>
+<h3 id="第二步：验证-Chrome-启动参数"><a href="#第二步：验证-Chrome-启动参数" class="headerlink" title="第二步：验证 Chrome 启动参数"></a>第二步：验证 Chrome 启动参数</h3><ol>
+<li>通过修改后的快捷方式启动 Chrome</li>
+<li>访问 <code>chrome://version</code></li>
+<li>确认命令行中包含 <code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code></li>
+</ol>
+<h3 id="第三步：验证-Hosts-配置"><a href="#第三步：验证-Hosts-配置" class="headerlink" title="第三步：验证 Hosts 配置"></a>第三步：验证 Hosts 配置</h3><ol>
+<li>在命令提示符中执行：<code>ping dvwa.local</code></li>
+<li>确认解析到 <code>127.0.0.1</code></li>
+</ol>
+<h3 id="第四步：验证-Burp-代理工作"><a href="#第四步：验证-Burp-代理工作" class="headerlink" title="第四步：验证 Burp 代理工作"></a>第四步：验证 Burp 代理工作</h3><ol>
+<li>在浏览器中访问 <code>http://burp</code></li>
+<li>应该看到 “Welcome to Burp Suite Professional” 页面</li>
+<li>如果能看到，说明代理正常工作</li>
+</ol>
+<h3 id="第五步：验证拦截功能"><a href="#第五步：验证拦截功能" class="headerlink" title="第五步：验证拦截功能"></a>第五步：验证拦截功能</h3><ol>
+<li>在 Burp Suite 中，确保 <strong>Intercept is on</strong></li>
+<li>在浏览器中访问 <code>http://dvwa.local/dvwa</code></li>
+<li>应该在 Burp Suite 的 Intercept 标签中看到请求被拦截</li>
+</ol>
+<h3 id="第六步：完整测试"><a href="#第六步：完整测试" class="headerlink" title="第六步：完整测试"></a>第六步：完整测试</h3><ol>
+<li>在 DVWA 登录页面输入用户名和密码</li>
+<li>点击 Login 按钮</li>
+<li>在 Burp Suite 中应该能看到：<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/dvwa/vulnerabilities/brute/?username=xxx&amp;password=xxx&amp;Login=Login</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>dvwa.local</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h2 id="故障排查"><a href="#故障排查" class="headerlink" title="故障排查"></a>故障排查</h2><h3 id="问题-1：Chrome-启动参数不生效"><a href="#问题-1：Chrome-启动参数不生效" class="headerlink" title="问题 1：Chrome 启动参数不生效"></a>问题 1：Chrome 启动参数不生效</h3><p><strong>症状</strong>：</p>
+<ul>
+<li>在 <code>chrome://version</code> 中看不到 <code>--proxy-bypass-list</code> 参数</li>
+</ul>
+<p><strong>原因</strong>：</p>
+<ul>
+<li>可能有其他 Chrome 进程在后台运行</li>
+<li>没有通过修改的快捷方式启动</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ol>
+<li>打开任务管理器，结束所有 <code>chrome.exe</code> 进程</li>
+<li>确保<strong>只通过修改的快捷方式</strong>启动 Chrome</li>
+<li>不要点击任务栏上的 Chrome 图标</li>
+</ol>
+<h3 id="问题-2：Hosts-文件修改不生效"><a href="#问题-2：Hosts-文件修改不生效" class="headerlink" title="问题 2：Hosts 文件修改不生效"></a>问题 2：Hosts 文件修改不生效</h3><p><strong>症状</strong>：</p>
+<ul>
+<li><code>ping dvwa.local</code> 无法解析或解析错误</li>
+</ul>
+<p><strong>原因</strong>：</p>
+<ul>
+<li>Hosts 文件格式错误（多余的空格、Tab 等）</li>
+<li>DNS 缓存未刷新</li>
+<li>没有管理员权限保存</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ol>
+<li><p>确保 hosts 文件格式正确：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0.0.1</span>  dvwa.local</span><br></pre></td></tr></table></figure>
+<p>（IP 和域名之间至少一个空格）</p>
+</li>
+<li><p>执行：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ipconfig</span> /flushdns</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以管理员身份重新编辑和保存 hosts 文件</p>
+</li>
+</ol>
+<h3 id="问题-3：Burp-仍然拦截不到请求"><a href="#问题-3：Burp-仍然拦截不到请求" class="headerlink" title="问题 3：Burp 仍然拦截不到请求"></a>问题 3：Burp 仍然拦截不到请求</h3><p><strong>症状</strong>：</p>
+<ul>
+<li>访问 <code>http://burp</code> 可以看到欢迎页面</li>
+<li>但访问 <code>http://dvwa.local/dvwa</code> 拦截不到</li>
+</ul>
+<p><strong>可能原因与解决方案</strong>：</p>
+<h4 id="原因-A：Intercept-规则配置错误"><a href="#原因-A：Intercept-规则配置错误" class="headerlink" title="原因 A：Intercept 规则配置错误"></a>原因 A：Intercept 规则配置错误</h4><p><strong>检查</strong>：</p>
+<ol>
+<li>进入 <strong>Settings → Tools → Proxy</strong></li>
+<li>找到 <strong>Request interception rules</strong></li>
+<li>确认 ✅ <strong>“Intercept requests based on the following rules”</strong> 已勾选</li>
+<li>确认 ❌ <strong>“And URL is in target scope”</strong> 未勾选</li>
+</ol>
+<h4 id="原因-B：浏览器缓存问题"><a href="#原因-B：浏览器缓存问题" class="headerlink" title="原因 B：浏览器缓存问题"></a>原因 B：浏览器缓存问题</h4><p><strong>解决</strong>：</p>
+<ol>
+<li>清除浏览器缓存（<code>Ctrl + Shift + Delete</code>）</li>
+<li>重启浏览器</li>
+<li>再次测试</li>
+</ol>
+<h4 id="原因-C：HTTPS-重定向"><a href="#原因-C：HTTPS-重定向" class="headerlink" title="原因 C：HTTPS 重定向"></a>原因 C：HTTPS 重定向</h4><p><strong>解决</strong>：</p>
+<ul>
+<li>确保访问的是 <code>http://dvwa.local</code>（HTTP，不是 HTTPS）</li>
+<li>如果自动跳转到 HTTPS，需要配置 Burp 的 HTTPS 拦截</li>
+</ul>
+<h3 id="问题-4：dvwa-local-无法访问"><a href="#问题-4：dvwa-local-无法访问" class="headerlink" title="问题 4：dvwa.local 无法访问"></a>问题 4：dvwa.local 无法访问</h3><p><strong>症状</strong>：</p>
+<ul>
+<li>浏览器显示 “无法访问此网站” 或 “ERR_CONNECTION_REFUSED”</li>
+</ul>
+<p><strong>原因</strong>：</p>
+<ul>
+<li>DVWA 服务器未启动</li>
+<li>Apache&#x2F;Nginx 没有配置虚拟主机</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<h4 id="方案-1：继续使用-127-0-0-1"><a href="#方案-1：继续使用-127-0-0-1" class="headerlink" title="方案 1：继续使用 127.0.0.1"></a>方案 1：继续使用 127.0.0.1</h4><p>如果你不想配置虚拟主机，可以直接访问：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>/dvwa</span><br></pre></td></tr></table></figure>
+
+<p>配合 Chrome 启动参数，<code>127.0.0.1</code> 也不会被绕过代理。</p>
+<h4 id="方案-2：配置-Apache-虚拟主机（可选）"><a href="#方案-2：配置-Apache-虚拟主机（可选）" class="headerlink" title="方案 2：配置 Apache 虚拟主机（可选）"></a>方案 2：配置 Apache 虚拟主机（可选）</h4><ol>
+<li><p>编辑 Apache 配置文件（如 <code>httpd.conf</code> 或 <code>httpd-vhosts.conf</code>）</p>
+</li>
+<li><p>添加虚拟主机配置：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;VirtualHost *<span class="number">:80</span>&gt;</span></span><br><span class="line">    <span class="attribute">ServerName</span> dvwa.local</span><br><span class="line">    <span class="attribute">DocumentRoot</span> <span class="string">&quot;C:/xampp/htdocs&quot;</span></span><br><span class="line">    <span class="section">&lt;Directory <span class="string">&quot;C:/xampp/htdocs&quot;</span>&gt;</span></span><br><span class="line">        <span class="attribute">Options</span> Indexes FollowSymLinks</span><br><span class="line">        <span class="attribute">AllowOverride</span> <span class="literal">All</span></span><br><span class="line">        <span class="attribute">Require</span> <span class="literal">all</span> granted</span><br><span class="line">    <span class="section">&lt;/Directory&gt;</span></span><br><span class="line"><span class="section">&lt;/VirtualHost&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启 Apache 服务</p>
+</li>
+</ol>
+<hr>
+<h2 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h2><h3 id="1-同时使用两个方案"><a href="#1-同时使用两个方案" class="headerlink" title="1. 同时使用两个方案"></a>1. 同时使用两个方案</h3><p><strong>推荐组合</strong>：</p>
+<ul>
+<li>✅ Chrome 启动参数（<code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code>）</li>
+<li>✅ Hosts 文件配置（<code>dvwa.local</code>）</li>
+<li>✅ Burp 拦截规则配置（取消勾选 Scope 限制）</li>
+</ul>
+<p>这样可以确保：</p>
+<ul>
+<li>Chrome 不会绕过本地代理</li>
+<li>使用自定义域名避免 localhost 特殊处理</li>
+<li>Burp 能拦截所有请求</li>
+</ul>
+<h3 id="2-创建专用的-Chrome-配置文件"><a href="#2-创建专用的-Chrome-配置文件" class="headerlink" title="2. 创建专用的 Chrome 配置文件"></a>2. 创建专用的 Chrome 配置文件</h3><p>为渗透测试创建单独的 Chrome 配置文件：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Program Files\Google\Chrome\Application\chrome.exe&quot; --user-data-<span class="built_in">dir</span>=&quot;C:\ChromePentest&quot; --proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这样可以避免影响日常使用的 Chrome 配置。</p>
+<h3 id="3-使用-Firefox-替代方案"><a href="#3-使用-Firefox-替代方案" class="headerlink" title="3. 使用 Firefox 替代方案"></a>3. 使用 Firefox 替代方案</h3><p>如果 Chrome 配置太麻烦，可以使用 Firefox：</p>
+<ul>
+<li>Firefox 对代理的支持更好</li>
+<li>不会自动绕过 localhost</li>
+<li>配置相对简单</li>
+</ul>
+<h3 id="4-固定-Burp-监听端口"><a href="#4-固定-Burp-监听端口" class="headerlink" title="4. 固定 Burp 监听端口"></a>4. 固定 Burp 监听端口</h3><p>统一使用固定端口（如 8082），避免频繁修改配置。</p>
+<hr>
+<h2 id="配置检查清单"><a href="#配置检查清单" class="headerlink" title="配置检查清单"></a>配置检查清单</h2><p>在开始渗透测试前，确保以下所有项都已正确配置：</p>
+<h3 id="Chrome-配置"><a href="#Chrome-配置" class="headerlink" title="Chrome 配置"></a>Chrome 配置</h3><ul>
+<li><input disabled="" type="checkbox"> 已创建带启动参数的快捷方式</li>
+<li><input disabled="" type="checkbox"> 快捷方式包含 <code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code></li>
+<li><input disabled="" type="checkbox"> 通过该快捷方式启动 Chrome</li>
+<li><input disabled="" type="checkbox"> 在 <code>chrome://version</code> 中确认参数生效</li>
+</ul>
+<h3 id="Hosts-配置"><a href="#Hosts-配置" class="headerlink" title="Hosts 配置"></a>Hosts 配置</h3><ul>
+<li><input disabled="" type="checkbox"> 以管理员身份编辑 hosts 文件</li>
+<li><input disabled="" type="checkbox"> 添加 <code>127.0.0.1  dvwa.local</code> 条目</li>
+<li><input disabled="" type="checkbox"> 保存文件</li>
+<li><input disabled="" type="checkbox"> 执行 <code>ipconfig /flushdns</code></li>
+<li><input disabled="" type="checkbox"> 用 <code>ping dvwa.local</code> 验证</li>
+</ul>
+<h3 id="Burp-Suite-配置"><a href="#Burp-Suite-配置" class="headerlink" title="Burp Suite 配置"></a>Burp Suite 配置</h3><ul>
+<li><input disabled="" type="checkbox"> Proxy Listener 运行在 127.0.0.1:8082</li>
+<li><input disabled="" type="checkbox"> ✅ “Intercept requests based on the following rules” 已勾选</li>
+<li><input disabled="" type="checkbox"> ❌ “And URL is in target scope” 未勾选</li>
+<li><input disabled="" type="checkbox"> Intercept is on（拦截已开启）</li>
+</ul>
+<h3 id="SwitchyOmega-配置"><a href="#SwitchyOmega-配置" class="headerlink" title="SwitchyOmega 配置"></a>SwitchyOmega 配置</h3><ul>
+<li><input disabled="" type="checkbox"> 代理服务器：localhost:8082</li>
+<li><input disabled="" type="checkbox"> 不代理列表只包含 <code>[::1]</code></li>
+<li><input disabled="" type="checkbox"> 当前情景模式：burp suite</li>
+</ul>
+<h3 id="验证测试"><a href="#验证测试" class="headerlink" title="验证测试"></a>验证测试</h3><ul>
+<li><input disabled="" type="checkbox"> 访问 <code>http://burp</code> 能看到欢迎页面</li>
+<li><input disabled="" type="checkbox"> 访问 <code>http://dvwa.local/dvwa</code> 能看到 DVWA</li>
+<li><input disabled="" type="checkbox"> 登录操作能被 Burp 拦截</li>
+<li><input disabled="" type="checkbox"> HTTP History 中能看到请求记录</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>解决 Burp Suite 无法拦截 localhost 请求的<strong>完整方案</strong>包括：</p>
+<ol>
+<li><p><strong>修改 Chrome 启动参数</strong></p>
+<ul>
+<li>添加 <code>--proxy-bypass-list=&quot;&lt;-loopback&gt;&quot;</code> 参数</li>
+<li>禁用浏览器对 localhost 的代理绕过</li>
+</ul>
+</li>
+<li><p><strong>配置 Hosts 文件</strong></p>
+<ul>
+<li>添加 <code>127.0.0.1  dvwa.local</code> 映射</li>
+<li>使用自定义域名访问 DVWA</li>
+</ul>
+</li>
+<li><p><strong>正确配置 Burp 拦截规则</strong></p>
+<ul>
+<li>勾选 “Intercept requests based on the following rules”</li>
+<li><strong>取消勾选</strong> “And URL is in target scope”</li>
+<li>可选勾选 “Or HTTP method Does not match”</li>
+</ul>
+</li>
+</ol>
+<p>这三个方案<strong>必须同时应用</strong>才能彻底解决问题。</p>
+<hr>
+<h2 id="附录：其他浏览器配置"><a href="#附录：其他浏览器配置" class="headerlink" title="附录：其他浏览器配置"></a>附录：其他浏览器配置</h2><h3 id="Microsoft-Edge"><a href="#Microsoft-Edge" class="headerlink" title="Microsoft Edge"></a>Microsoft Edge</h3><p>Edge 基于 Chromium，配置方法与 Chrome 相同：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe&quot;</span> --proxy-bypass-list<span class="operator">=</span><span class="string">&quot;&lt;-loopback&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Firefox"><a href="#Firefox" class="headerlink" title="Firefox"></a>Firefox</h3><p>Firefox 对代理支持较好，通常不需要特殊配置：</p>
+<ol>
+<li>打开 Firefox 设置</li>
+<li>搜索 “代理”</li>
+<li>选择 “手动代理配置”</li>
+<li>HTTP 代理：<code>127.0.0.1</code>，端口：<code>8082</code></li>
+<li>勾选 “也将此代理用于 HTTPS”</li>
+<li><strong>不要</strong>在 “不使用代理” 中添加 localhost</li>
+</ol>
+<hr>
+<p><strong>文档版本</strong>：1.0<br><strong>最后更新</strong>：2025-11-19<br><strong>适用环境</strong>：Windows 10&#x2F;11 + Chrome&#x2F;Edge + Burp Suite Professional&#x2F;Community</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/" title="解决 Burp Suite 无法拦截 localhost 请求的问题">http://caixuya.github.io/2025/11/19/解决Burp_Suite无法拦截localhost请求问题/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/06/12/%E6%90%AD%E5%BB%BAopenvpn/" rel="prev" title="搭建openvpn">
+      <i class="fa fa-chevron-left"></i> 搭建openvpn
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/19/DVWA_Brute_Force_%E6%94%BB%E5%87%BB%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4/" rel="next" title="DVWA Brute Force 攻击详细步骤指南">
+      DVWA Brute Force 攻击详细步骤指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-Burp-Suite-%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AA-localhost-%E8%AF%B7%E6%B1%82%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">解决 Burp Suite 无法拦截 localhost 请求的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%9C%AC%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.2.</span> <span class="nav-text">根本原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.3.</span> <span class="nav-text">完整解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-A%EF%BC%9A%E4%BF%AE%E6%94%B9-Chrome-%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%EF%BC%88%E7%A6%81%E7%94%A8-localhost-%E4%BB%A3%E7%90%86%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">方案 A：修改 Chrome 启动参数（禁用 localhost 代理绕过）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-B%EF%BC%9A%E9%85%8D%E7%BD%AE-Hosts-%E6%96%87%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D"><span class="nav-number">1.3.2.</span> <span class="nav-text">方案 B：配置 Hosts 文件使用自定义域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-C%EF%BC%9A%E6%AD%A3%E7%A1%AE%E9%85%8D%E7%BD%AE-Burp-Suite-%E6%8B%A6%E6%88%AA%E8%A7%84%E5%88%99"><span class="nav-number">1.3.3.</span> <span class="nav-text">方案 C：正确配置 Burp Suite 拦截规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-A%EF%BC%9A%E4%BF%AE%E6%94%B9-Chrome-%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">方案 A：修改 Chrome 启动参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%85%B3%E9%97%AD%E6%89%80%E6%9C%89-Chrome-%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.4.1.</span> <span class="nav-text">步骤 1：关闭所有 Chrome 进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%88%9B%E5%BB%BA-Chrome-%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">步骤 2：创建 Chrome 快捷方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E4%BF%AE%E6%94%B9%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F%E5%B1%9E%E6%80%A7"><span class="nav-number">1.4.3.</span> <span class="nav-text">步骤 3：修改快捷方式属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E9%80%9A%E8%BF%87%E6%96%B0%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8-Chrome"><span class="nav-number">1.4.4.</span> <span class="nav-text">步骤 4：通过新快捷方式启动 Chrome</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.5.</span> <span class="nav-text">验证方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-B%EF%BC%9A%E9%85%8D%E7%BD%AE-Hosts-%E6%96%87%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-1"><span class="nav-number">1.5.</span> <span class="nav-text">方案 B：配置 Hosts 文件使用自定义域名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BF%99%E4%B8%AA%E6%96%B9%E6%A1%88"><span class="nav-number">1.5.1.</span> <span class="nav-text">为什么需要这个方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E7%BC%96%E8%BE%91-Hosts-%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">步骤 1：编辑 Hosts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E6%98%A0%E5%B0%84"><span class="nav-number">1.5.3.</span> <span class="nav-text">步骤 2：添加自定义域名映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.4.</span> <span class="nav-text">步骤 3：保存文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E5%88%B7%E6%96%B0-DNS-%E7%BC%93%E5%AD%98"><span class="nav-number">1.5.5.</span> <span class="nav-text">步骤 4：刷新 DNS 缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E9%AA%8C%E8%AF%81%E9%85%8D%E7%BD%AE"><span class="nav-number">1.5.6.</span> <span class="nav-text">步骤 5：验证配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-6%EF%BC%9A%E4%BF%AE%E6%94%B9-DVWA-%E8%AE%BF%E9%97%AE%E5%9C%B0%E5%9D%80"><span class="nav-number">1.5.7.</span> <span class="nav-text">步骤 6：修改 DVWA 访问地址</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-C%EF%BC%9A%E6%AD%A3%E7%A1%AE%E9%85%8D%E7%BD%AE-Burp-Suite-%E6%8B%A6%E6%88%AA%E8%A7%84%E5%88%99-1"><span class="nav-number">1.6.</span> <span class="nav-text">方案 C：正确配置 Burp Suite 拦截规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%AF%B4%E6%98%8E"><span class="nav-number">1.6.1.</span> <span class="nav-text">问题说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE%E7%82%B9"><span class="nav-number">1.6.2.</span> <span class="nav-text">关键配置点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9D%8C-%E9%94%99%E8%AF%AF%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">❌ 错误配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9C%85-%E6%AD%A3%E7%A1%AE%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">✅ 正确配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E8%BF%9B%E5%85%A5-Proxy-Settings"><span class="nav-number">1.6.3.</span> <span class="nav-text">步骤 1：进入 Proxy Settings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E8%A7%84%E5%88%99"><span class="nav-number">1.6.4.</span> <span class="nav-text">步骤 2：配置拦截规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E6%8E%A8%E8%8D%90%E7%9A%84%E6%8B%A6%E6%88%AA%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.5.</span> <span class="nav-text">步骤 3：推荐的拦截规则配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E9%85%8D%E7%BD%AE-Response-Interception-Rules"><span class="nav-number">1.6.6.</span> <span class="nav-text">步骤 4：配置 Response Interception Rules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE%E5%A6%82%E4%B8%8B"><span class="nav-number">1.6.7.</span> <span class="nav-text">步骤 5：浏览器配置如下:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-6%EF%BC%9AProxy%E6%A0%87%E7%AD%BEHTTP-history%E7%9A%84filter%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.8.</span> <span class="nav-text">步骤 6：Proxy标签HTTP history的filter配置:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-7%EF%BC%9A%E4%BF%9D%E5%AD%98%E5%B9%B6%E6%B5%8B%E8%AF%95"><span class="nav-number">1.6.9.</span> <span class="nav-text">步骤 7：保存并测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E9%AA%8C%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="nav-number">1.7.</span> <span class="nav-text">完整验证流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">1.7.1.</span> <span class="nav-text">第一步：验证基础配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E9%AA%8C%E8%AF%81-Chrome-%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.7.2.</span> <span class="nav-text">第二步：验证 Chrome 启动参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E9%AA%8C%E8%AF%81-Hosts-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.7.3.</span> <span class="nav-text">第三步：验证 Hosts 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E9%AA%8C%E8%AF%81-Burp-%E4%BB%A3%E7%90%86%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.7.4.</span> <span class="nav-text">第四步：验证 Burp 代理工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E9%AA%8C%E8%AF%81%E6%8B%A6%E6%88%AA%E5%8A%9F%E8%83%BD"><span class="nav-number">1.7.5.</span> <span class="nav-text">第五步：验证拦截功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9A%E5%AE%8C%E6%95%B4%E6%B5%8B%E8%AF%95"><span class="nav-number">1.7.6.</span> <span class="nav-text">第六步：完整测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5"><span class="nav-number">1.8.</span> <span class="nav-text">故障排查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1%EF%BC%9AChrome-%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E4%B8%8D%E7%94%9F%E6%95%88"><span class="nav-number">1.8.1.</span> <span class="nav-text">问题 1：Chrome 启动参数不生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-2%EF%BC%9AHosts-%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9%E4%B8%8D%E7%94%9F%E6%95%88"><span class="nav-number">1.8.2.</span> <span class="nav-text">问题 2：Hosts 文件修改不生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-3%EF%BC%9ABurp-%E4%BB%8D%E7%84%B6%E6%8B%A6%E6%88%AA%E4%B8%8D%E5%88%B0%E8%AF%B7%E6%B1%82"><span class="nav-number">1.8.3.</span> <span class="nav-text">问题 3：Burp 仍然拦截不到请求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0-A%EF%BC%9AIntercept-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="nav-number">1.8.3.1.</span> <span class="nav-text">原因 A：Intercept 规则配置错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0-B%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98"><span class="nav-number">1.8.3.2.</span> <span class="nav-text">原因 B：浏览器缓存问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0-C%EF%BC%9AHTTPS-%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.8.3.3.</span> <span class="nav-text">原因 C：HTTPS 重定向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-4%EF%BC%9Advwa-local-%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE"><span class="nav-number">1.8.4.</span> <span class="nav-text">问题 4：dvwa.local 无法访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-1%EF%BC%9A%E7%BB%A7%E7%BB%AD%E4%BD%BF%E7%94%A8-127-0-0-1"><span class="nav-number">1.8.4.1.</span> <span class="nav-text">方案 1：继续使用 127.0.0.1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-2%EF%BC%9A%E9%85%8D%E7%BD%AE-Apache-%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">1.8.4.2.</span> <span class="nav-text">方案 2：配置 Apache 虚拟主机（可选）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.9.</span> <span class="nav-text">最佳实践建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%96%B9%E6%A1%88"><span class="nav-number">1.9.1.</span> <span class="nav-text">1. 同时使用两个方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA%E4%B8%93%E7%94%A8%E7%9A%84-Chrome-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.9.2.</span> <span class="nav-text">2. 创建专用的 Chrome 配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8-Firefox-%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="nav-number">1.9.3.</span> <span class="nav-text">3. 使用 Firefox 替代方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%9B%BA%E5%AE%9A-Burp-%E7%9B%91%E5%90%AC%E7%AB%AF%E5%8F%A3"><span class="nav-number">1.9.4.</span> <span class="nav-text">4. 固定 Burp 监听端口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="nav-number">1.10.</span> <span class="nav-text">配置检查清单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chrome-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.10.1.</span> <span class="nav-text">Chrome 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hosts-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.10.2.</span> <span class="nav-text">Hosts 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Burp-Suite-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.10.3.</span> <span class="nav-text">Burp Suite 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SwitchyOmega-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.10.4.</span> <span class="nav-text">SwitchyOmega 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%B5%8B%E8%AF%95"><span class="nav-number">1.10.5.</span> <span class="nav-text">验证测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.11.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E5%85%B6%E4%BB%96%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">1.12.</span> <span class="nav-text">附录：其他浏览器配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Microsoft-Edge"><span class="nav-number">1.12.1.</span> <span class="nav-text">Microsoft Edge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Firefox"><span class="nav-number">1.12.2.</span> <span class="nav-text">Firefox</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">73k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:06</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
