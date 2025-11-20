@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是密码学漏洞（Cryptography Vulnerabilities）？密码学漏洞是指在加密、哈希、签名等密码学操作中使用不安全的算法、错误的实现或不当的密钥管理，导致数据泄露或被篡改。 密码学的核心概念： 1. 对称加密（Symmetric Encryption）使用相同密钥">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - Cryptography (密码学) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是密码学漏洞（Cryptography Vulnerabilities）？密码学漏洞是指在加密、哈希、签名等密码学操作中使用不安全的算法、错误的实现或不当的密钥管理，导致数据泄露或被篡改。 密码学的核心概念： 1. 对称加密（Symmetric Encryption）使用相同密钥">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.093Z">
+<meta property="article:modified_time" content="2025-11-20T15:29:45.905Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - Cryptography (密码学) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - Cryptography (密码学) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:29:45" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>15 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是密码学漏洞（Cryptography-Vulnerabilities）？"><a href="#什么是密码学漏洞（Cryptography-Vulnerabilities）？" class="headerlink" title="什么是密码学漏洞（Cryptography Vulnerabilities）？"></a>什么是密码学漏洞（Cryptography Vulnerabilities）？</h3><p>密码学漏洞是指在加密、哈希、签名等密码学操作中使用不安全的算法、错误的实现或不当的密钥管理，导致数据泄露或被篡改。</p>
+<p><strong>密码学的核心概念：</strong></p>
+<h3 id="1-对称加密（Symmetric-Encryption）"><a href="#1-对称加密（Symmetric-Encryption）" class="headerlink" title="1. 对称加密（Symmetric Encryption）"></a>1. 对称加密（Symmetric Encryption）</h3><p>使用相同密钥进行加密和解密：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">明文 + 密钥 → 加密 → 密文</span><br><span class="line">密文 + 密钥 → 解密 → 明文</span><br><span class="line"></span><br><span class="line">算法：AES, <span class="keyword">DES</span>, 3DES, Blowfish</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-非对称加密（Asymmetric-Encryption）"><a href="#2-非对称加密（Asymmetric-Encryption）" class="headerlink" title="2. 非对称加密（Asymmetric Encryption）"></a>2. 非对称加密（Asymmetric Encryption）</h3><p>使用公钥加密，私钥解密：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">明文 + 公钥 → 加密 → 密文</span><br><span class="line">密文 + 私钥 → 解密 → 明文</span><br><span class="line"></span><br><span class="line">算法：RSA, <span class="built_in">ECC</span>, DSA</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-哈希函数（Hash-Functions）"><a href="#3-哈希函数（Hash-Functions）" class="headerlink" title="3. 哈希函数（Hash Functions）"></a>3. 哈希函数（Hash Functions）</h3><p>单向函数，生成固定长度的摘要：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">任意数据 → 哈希 → 固定长度摘要</span><br><span class="line"></span><br><span class="line">算法：<span class="keyword">SHA-256, </span><span class="keyword">SHA-3, </span><span class="keyword">bcrypt</span></span><br><span class="line"><span class="keyword"></span>不安全：MD5, <span class="keyword">SHA-1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-消息认证码（MAC）"><a href="#4-消息认证码（MAC）" class="headerlink" title="4. 消息认证码（MAC）"></a>4. 消息认证码（MAC）</h3><p>验证消息完整性和真实性：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">消息 + 密钥 → HMAC → 认证码</span><br><span class="line"></span><br><span class="line">算法：HMAC-SHA256</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见密码学漏洞：</strong></p>
+<table>
+<thead>
+<tr>
+<th>漏洞类型</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>弱算法</td>
+<td>使用已被攻破的算法</td>
+<td>MD5, DES, RC4</td>
+</tr>
+<tr>
+<td>短密钥</td>
+<td>密钥长度不足</td>
+<td>56位DES密钥</td>
+</tr>
+<tr>
+<td>硬编码密钥</td>
+<td>密钥写死在代码中</td>
+<td>key&#x3D;”12345678”</td>
+</tr>
+<tr>
+<td>ECB模式</td>
+<td>不安全的分组模式</td>
+<td>AES-ECB</td>
+</tr>
+<tr>
+<td>无IV</td>
+<td>不使用初始化向量</td>
+<td>重复的密文</td>
+</tr>
+<tr>
+<td>弱随机数</td>
+<td>可预测的随机数</td>
+<td>rand(), mt_rand()</td>
+</tr>
+<tr>
+<td>重放攻击</td>
+<td>缺少时间戳&#x2F;nonce</td>
+<td>重复使用token</td>
+</tr>
+</tbody></table>
+<p><strong>危害：</strong></p>
+<ul>
+<li>密码被破解</li>
+<li>数据被解密</li>
+<li>消息被篡改</li>
+<li>身份被伪造</li>
+<li>签名被伪造</li>
+</ul>
+<p><strong>DVWA场景：</strong><br>一个加密消息传输系统，使用不同强度的加密方法。</p>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用已被攻破的MD5算法，可以轻易破解。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Low难度：使用不安全的MD5哈希 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取用户密码</span></span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作：使用MD5哈希密码 ★★★</span></span><br><span class="line"><span class="comment">// md5() - MD5哈希函数（已被攻破，不安全！）</span></span><br><span class="line"><span class="comment">// 返回：32位十六进制字符串</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// 问题：</span></span><br><span class="line"><span class="comment">// 1. MD5已被攻破，存在碰撞攻击</span></span><br><span class="line"><span class="comment">// 2. MD5速度快，易于暴力破解</span></span><br><span class="line"><span class="comment">// 3. 没有使用盐（salt）</span></span><br><span class="line"><span class="comment">// 4. 彩虹表攻击可以快速破解</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// MD5的碰撞：</span></span><br><span class="line"><span class="comment">// 两个不同的输入可以产生相同的MD5哈希</span></span><br><span class="line"><span class="variable">$hashed</span> = <span class="title function_ invoke__">md5</span>(<span class="variable">$password</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 存储到数据库 ★★★</span></span><br><span class="line"><span class="comment">// 实际应用中会存储这个哈希</span></span><br><span class="line"><span class="comment">// 但攻击者获取数据库后可以轻易破解</span></span><br><span class="line"><span class="variable">$query</span> = <span class="string">&quot;INSERT INTO users (password) VALUES (&#x27;<span class="subst">$hashed</span>&#x27;)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Password hash (MD5): &quot;</span> . <span class="variable">$hashed</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 简单加密（XOR） ★★★</span></span><br><span class="line"><span class="comment">// 使用简单的XOR加密消息</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simple_encrypt</span>(<span class="params"><span class="variable">$message</span>, <span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// XOR加密：message XOR key</span></span><br><span class="line">    <span class="comment">// 特点：</span></span><br><span class="line">    <span class="comment">// 1. 加密和解密使用相同操作</span></span><br><span class="line">    <span class="comment">// 2. 非常不安全</span></span><br><span class="line">    <span class="comment">// 3. 密钥重用会暴露明文</span></span><br><span class="line">    <span class="variable">$result</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$keylen</span> = <span class="title function_ invoke__">strlen</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="title function_ invoke__">strlen</span>(<span class="variable">$message</span>); <span class="variable">$i</span>++) &#123;</span><br><span class="line">        <span class="comment">// ★★★ XOR操作 ★★★</span></span><br><span class="line">        <span class="comment">// ^ - XOR运算符</span></span><br><span class="line">        <span class="comment">// 每个字符与密钥字符进行XOR</span></span><br><span class="line">        <span class="variable">$result</span> .= <span class="title function_ invoke__">chr</span>(<span class="title function_ invoke__">ord</span>(<span class="variable">$message</span>[<span class="variable">$i</span>]) ^ <span class="title function_ invoke__">ord</span>(<span class="variable">$key</span>[<span class="variable">$i</span> % <span class="variable">$keylen</span>]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 硬编码密钥（极度危险！） ★★★</span></span><br><span class="line"><span class="comment">// 密钥直接写在代码中</span></span><br><span class="line"><span class="comment">// 任何人都可以看到源代码就知道密钥</span></span><br><span class="line"><span class="variable">$encryption_key</span> = <span class="string">&quot;secret&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;message&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$encrypted</span> = <span class="title function_ invoke__">simple_encrypt</span>(<span class="variable">$message</span>, <span class="variable">$encryption_key</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Encrypted message: &quot;</span> . <span class="variable">$encrypted</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 解密也很简单 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simple_decrypt</span>(<span class="params"><span class="variable">$encrypted</span>, <span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$decoded</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$encrypted</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">simple_encrypt</span>(<span class="variable">$decoded</span>, <span class="variable">$key</span>); <span class="comment">// XOR是对称的</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>MD5哈希示例：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输入：password123</span><br><span class="line">MD5：482c811da5d5b4bc6d497ffa98491e38</span><br><span class="line"></span><br><span class="line">输入：admin</span><br><span class="line">MD5：21232f297a57a5a743894a0e4a801fc3</span><br><span class="line"></span><br><span class="line">特点：</span><br><span class="line"><span class="bullet">1.</span> 固定长度32字符</span><br><span class="line"><span class="bullet">2.</span> 相同输入总是产生相同输出</span><br><span class="line"><span class="bullet">3.</span> 不可逆（单向函数）</span><br><span class="line"><span class="bullet">4.</span> 但可以通过彩虹表反查</span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><p><strong>MD5已被攻破</strong></p>
+<ul>
+<li>存在碰撞攻击</li>
+<li>2004年王小云教授已破解</li>
+<li>可以找到两个不同输入产生相同MD5</li>
+</ul>
+</li>
+<li><p><strong>无盐（Salt）</strong></p>
+<ul>
+<li>相同密码产生相同哈希</li>
+<li>容易被彩虹表攻击</li>
+</ul>
+</li>
+<li><p><strong>XOR加密不安全</strong></p>
+<ul>
+<li>密钥重用会暴露明文</li>
+<li>已知明文攻击</li>
+</ul>
+</li>
+<li><p><strong>硬编码密钥</strong></p>
+<ul>
+<li>密钥写在代码中</li>
+<li>任何人都可以看到</li>
+</ul>
+</li>
+</ol>
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：MD5暴力破解"><a href="#步骤1：MD5暴力破解" class="headerlink" title="步骤1：MD5暴力破解"></a>步骤1：MD5暴力破解</h4><p><strong>使用在线工具：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MD5哈希：<span class="number">5</span>f4dcc3b5aa765d61d8327deb882cf99</span><br><span class="line"></span><br><span class="line">在线MD5破解：</span><br><span class="line">- https:<span class="regexp">//</span>crackstation.net/</span><br><span class="line">- https:<span class="regexp">//m</span>d5decrypt.net/</span><br><span class="line">- https:<span class="regexp">//</span>www.md5online.org/</span><br><span class="line"></span><br><span class="line">结果：password</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用hashcat暴力破解：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 准备哈希文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;5f4dcc3b5aa765d61d8327deb882cf99&quot;</span> &gt; hashes.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用字典攻击</span></span><br><span class="line">hashcat -m 0 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 0: MD5模式</span></span><br><span class="line"><span class="comment"># -a 0: 字典攻击</span></span><br><span class="line"><span class="comment"># 结果：5f4dcc3b5aa765d61d8327deb882cf99:password</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 暴力破解（纯数字，长度1-8）</span></span><br><span class="line">hashcat -m 0 -a 3 hashes.txt ?d?d?d?d?d?d?d?d</span><br><span class="line"></span><br><span class="line"><span class="comment"># ?d: 数字字符集</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用John the Ripper：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 准备哈希文件（格式：username:hash）</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;admin:21232f297a57a57a743894a0e4a801fc3&quot;</span> &gt; hashes.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 破解</span></span><br><span class="line">john --format=raw-md5 hashes.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看结果</span></span><br><span class="line">john --show hashes.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：彩虹表攻击"><a href="#步骤2：彩虹表攻击" class="headerlink" title="步骤2：彩虹表攻击"></a>步骤2：彩虹表攻击</h4><p><strong>什么是彩虹表：</strong></p>
+<figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">预计算的哈希表：</span><br><span class="line">password → 5f4dcc3b5aa765d61d8327deb882cf99</span><br><span class="line">123456 → e10adc3949ba59abbe56e057f20f883e</span><br><span class="line">admin → 21232f297a57a5a743894a0e4a801fc3</span><br><span class="line"><span class="meta prompt_">...</span></span><br><span class="line"></span><br><span class="line">查找：</span><br><span class="line">获取哈希：5f4dcc3b5aa765d61d8327deb882cf99</span><br><span class="line">在表中查找 → 找到：password</span><br></pre></td></tr></table></figure>
+
+<p><strong>生成彩虹表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用rtgen生成彩虹表</span></span><br><span class="line">rtgen md5 loweralpha 1 8 0 1000 1000000 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用rcrack查找</span></span><br><span class="line">rcrack . -h 5f4dcc3b5aa765d61d8327deb882cf99</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：破解XOR加密"><a href="#步骤3：破解XOR加密" class="headerlink" title="步骤3：破解XOR加密"></a>步骤3：破解XOR加密</h4><p><strong>XOR加密原理：</strong></p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">明文：H e l l o</span><br><span class="line">ASCII：72<span class="number"> 101 </span>108<span class="number"> 108 </span>111</span><br><span class="line"></span><br><span class="line">密钥：k e y</span><br><span class="line">ASCII：107<span class="number"> 101 </span>121</span><br><span class="line"></span><br><span class="line">XOR：</span><br><span class="line">72 ^<span class="number"> 107 </span>=<span class="number"> 35 </span> (<span class="comment">#)</span></span><br><span class="line">101 ^<span class="number"> 101 </span>=<span class="number"> 0 </span> (NULL)</span><br><span class="line">108 ^<span class="number"> 121 </span>=<span class="number"> 21 </span>(控制字符)</span><br><span class="line">108 ^<span class="number"> 107 </span>=<span class="number"> 3 </span> (控制字符)</span><br><span class="line">111 ^<span class="number"> 101 </span>=<span class="number"> 10 </span>(换行)</span><br><span class="line"></span><br><span class="line">密文：Base64(这些字节)</span><br></pre></td></tr></table></figure>
+
+<p><strong>已知密钥破解：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">simple_decrypt</span>(<span class="params">encrypted, key</span>):</span><br><span class="line">    decoded = base64.b64decode(encrypted)</span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    keylen = <span class="built_in">len</span>(key)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, byte <span class="keyword">in</span> <span class="built_in">enumerate</span>(decoded):</span><br><span class="line">        result += <span class="built_in">chr</span>(byte ^ <span class="built_in">ord</span>(key[i % keylen]))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设我们知道密钥是&quot;secret&quot;</span></span><br><span class="line">encrypted = <span class="string">&quot;IwQBBQ0A&quot;</span>  <span class="comment"># Base64编码的密文</span></span><br><span class="line">key = <span class="string">&quot;secret&quot;</span></span><br><span class="line"></span><br><span class="line">plaintext = simple_decrypt(encrypted, key)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Decrypted: <span class="subst">&#123;plaintext&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>已知明文攻击（Known-Plaintext Attack）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果知道一段明文和对应的密文</span></span><br><span class="line"><span class="comment"># 可以恢复密钥</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">recover_key</span>(<span class="params">plaintext, ciphertext</span>):</span><br><span class="line">    key = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    decoded = base64.b64decode(ciphertext)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(plaintext)):</span><br><span class="line">        <span class="comment"># 明文 XOR 密文 = 密钥</span></span><br><span class="line">        key_byte = <span class="built_in">ord</span>(plaintext[i]) ^ decoded[i]</span><br><span class="line">        key += <span class="built_in">chr</span>(key_byte)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> key</span><br><span class="line"></span><br><span class="line">plaintext = <span class="string">&quot;Hello&quot;</span></span><br><span class="line">ciphertext = <span class="string">&quot;IwQBBQ0A&quot;</span>  <span class="comment"># 假设这是密文</span></span><br><span class="line"></span><br><span class="line">recovered_key = recover_key(plaintext, ciphertext)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Recovered key: <span class="subst">&#123;recovered_key&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：暴力破解短密钥"><a href="#步骤4：暴力破解短密钥" class="headerlink" title="步骤4：暴力破解短密钥"></a>步骤4：暴力破解短密钥</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">try_decrypt</span>(<span class="params">ciphertext, key</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        decoded = base64.b64decode(ciphertext)</span><br><span class="line">        result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> i, byte <span class="keyword">in</span> <span class="built_in">enumerate</span>(decoded):</span><br><span class="line">            result += <span class="built_in">chr</span>(byte ^ <span class="built_in">ord</span>(key[i % <span class="built_in">len</span>(key)]))</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">ciphertext = <span class="string">&quot;IwQBBQ0A&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设密钥是5个小写字母</span></span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> itertools.product(string.ascii_lowercase, repeat=<span class="number">5</span>):</span><br><span class="line">    key_str = <span class="string">&#x27;&#x27;</span>.join(key)</span><br><span class="line">    plaintext = try_decrypt(ciphertext, key_str)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> plaintext <span class="keyword">and</span> plaintext.isprintable():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Possible key: <span class="subst">&#123;key_str&#125;</span>, plaintext: <span class="subst">&#123;plaintext&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用SHA-1哈希和简单的AES加密，仍有弱点。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Medium难度：使用SHA-1哈希 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：使用SHA-1代替MD5 ★★★</span></span><br><span class="line"><span class="comment">// sha1() - SHA-1哈希函数</span></span><br><span class="line"><span class="comment">// 返回：40位十六进制字符串</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// 问题：</span></span><br><span class="line"><span class="comment">// 1. SHA-1也已被攻破（2017年Google展示碰撞）</span></span><br><span class="line"><span class="comment">// 2. 仍然没有使用盐</span></span><br><span class="line"><span class="comment">// 3. 速度仍然较快，易于暴力破解</span></span><br><span class="line"><span class="comment">// 4. 不适合密码哈希（应使用bcrypt/Argon2）</span></span><br><span class="line"><span class="variable">$hashed</span> = <span class="title function_ invoke__">sha1</span>(<span class="variable">$password</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Password hash (SHA-1): &quot;</span> . <span class="variable">$hashed</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 使用AES加密（但实现有问题） ★★★</span></span><br><span class="line"><span class="comment">// openssl_encrypt() - OpenSSL加密函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题1：硬编码密钥 ★★★</span></span><br><span class="line"><span class="variable">$encryption_key</span> = <span class="string">&quot;mysecretkey12345&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;message&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题2：使用ECB模式 ★★★</span></span><br><span class="line"><span class="comment">// AES-128-ECB - 电子密码本模式</span></span><br><span class="line"><span class="comment">// ECB模式的问题：</span></span><br><span class="line"><span class="comment">// 1. 相同的明文块产生相同的密文块</span></span><br><span class="line"><span class="comment">// 2. 不提供消息完整性保护</span></span><br><span class="line"><span class="comment">// 3. 容易受到块替换攻击</span></span><br><span class="line"><span class="comment">// 4. 不使用IV（初始化向量）</span></span><br><span class="line"><span class="variable">$method</span> = <span class="string">&#x27;AES-128-ECB&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题3：密钥长度处理不当 ★★★</span></span><br><span class="line"><span class="comment">// AES-128需要16字节密钥</span></span><br><span class="line"><span class="comment">// 如果密钥不够长，应该使用KDF派生</span></span><br><span class="line"><span class="comment">// 这里只是简单截断或填充</span></span><br><span class="line"><span class="variable">$key</span> = <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$encryption_key</span>, <span class="literal">true</span>), <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加密</span></span><br><span class="line"><span class="variable">$encrypted</span> = <span class="title function_ invoke__">openssl_encrypt</span>(</span><br><span class="line">    <span class="variable">$message</span>,</span><br><span class="line">    <span class="variable">$method</span>,</span><br><span class="line">    <span class="variable">$key</span>,</span><br><span class="line">    OPENSSL_RAW_DATA</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable">$encrypted_base64</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$encrypted</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Encrypted message (AES-ECB): &quot;</span> . <span class="variable">$encrypted_base64</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decrypt_message</span>(<span class="params"><span class="variable">$encrypted_base64</span>, <span class="variable">$encryption_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$method</span> = <span class="string">&#x27;AES-128-ECB&#x27;</span>;</span><br><span class="line">    <span class="variable">$key</span> = <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$encryption_key</span>, <span class="literal">true</span>), <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$encrypted</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$encrypted_base64</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$decrypted</span> = <span class="title function_ invoke__">openssl_decrypt</span>(</span><br><span class="line">        <span class="variable">$encrypted</span>,</span><br><span class="line">        <span class="variable">$method</span>,</span><br><span class="line">        <span class="variable">$key</span>,</span><br><span class="line">        OPENSSL_RAW_DATA</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$decrypted</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>SHA-1替代MD5</strong> - 更强的哈希算法</li>
+<li><strong>AES加密</strong> - 标准的对称加密算法</li>
+<li><strong>OpenSSL库</strong> - 使用专业的加密库</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><p><strong>SHA-1已被攻破</strong></p>
+<ul>
+<li>2017年Google发布SHA-1碰撞</li>
+<li>仍然可以暴力破解</li>
+</ul>
+</li>
+<li><p><strong>ECB模式不安全</strong></p>
+<ul>
+<li>相同明文产生相同密文</li>
+<li>容易识别模式</li>
+</ul>
+</li>
+<li><p><strong>硬编码密钥</strong></p>
+<ul>
+<li>密钥仍在代码中</li>
+</ul>
+</li>
+<li><p><strong>无盐和迭代</strong></p>
+<ul>
+<li>密码哈希应使用bcrypt</li>
+</ul>
+</li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：SHA-1暴力破解"><a href="#方法1：SHA-1暴力破解" class="headerlink" title="方法1：SHA-1暴力破解"></a>方法1：SHA-1暴力破解</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用hashcat破解SHA-1</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8&quot;</span> &gt; hashes.txt</span><br><span class="line">hashcat -m 100 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 100: SHA-1模式</span></span><br><span class="line"><span class="comment"># 结果：5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8:password</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：利用ECB模式漏洞"><a href="#方法2：利用ECB模式漏洞" class="headerlink" title="方法2：利用ECB模式漏洞"></a>方法2：利用ECB模式漏洞</h4><p><strong>ECB企鹅问题（ECB Penguin）：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原始图片 → 使用ECB加密 → 仍能看出轮廓</span><br><span class="line"></span><br><span class="line">原因：相同的像素块产生相同的密文块</span><br></pre></td></tr></table></figure>
+
+<p><strong>块替换攻击：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果知道某些块的明文和密文对应关系</span></span><br><span class="line"><span class="comment"># 可以替换块来修改消息</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 例如：</span></span><br><span class="line"><span class="comment"># 明文：Transfer $100 to Alice</span></span><br><span class="line"><span class="comment"># 密文：[Block1][Block2][Block3][Block4]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果知道&quot;$100&quot;的密文块</span></span><br><span class="line"><span class="comment"># 可以替换成&quot;$999&quot;的密文块</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这在ECB模式下是可行的</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>识别ECB模式：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">detect_ecb</span>(<span class="params">ciphertext</span>):</span><br><span class="line">    <span class="comment"># ECB模式下，相同的明文块产生相同的密文块</span></span><br><span class="line">    <span class="comment"># 检测重复的16字节块</span></span><br><span class="line"></span><br><span class="line">    decoded = base64.b64decode(ciphertext)</span><br><span class="line">    blocks = [decoded[i:i+<span class="number">16</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(decoded), <span class="number">16</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果有重复块，可能是ECB</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(blocks) != <span class="built_in">len</span>(<span class="built_in">set</span>(blocks)):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">ciphertext = <span class="string">&quot;your_base64_ciphertext&quot;</span></span><br><span class="line"><span class="keyword">if</span> detect_ecb(ciphertext):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Detected ECB mode!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：密钥恢复（如果可以）"><a href="#方法3：密钥恢复（如果可以）" class="headerlink" title="方法3：密钥恢复（如果可以）"></a>方法3：密钥恢复（如果可以）</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果密钥仍然硬编码在可访问的地方</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">encryption_key = <span class="string">&quot;mysecretkey12345&quot;</span>  <span class="comment"># 从源代码获取</span></span><br><span class="line">key = hashlib.sha256(encryption_key.encode()).digest()[:<span class="number">16</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;AES key (hex): <span class="subst">&#123;key.<span class="built_in">hex</span>()&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用SHA-256和AES-CBC，但仍有实现问题。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ High难度：使用SHA-256哈希 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：使用SHA-256 ★★★</span></span><br><span class="line"><span class="comment">// hash() - 通用哈希函数</span></span><br><span class="line"><span class="comment">// &#x27;sha256&#x27; - SHA-256算法</span></span><br><span class="line"><span class="comment">// 返回：64位十六进制字符串</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// 问题：</span></span><br><span class="line"><span class="comment">// 1. SHA-256虽然更强，但仍不适合密码哈希</span></span><br><span class="line"><span class="comment">// 2. 没有使用盐</span></span><br><span class="line"><span class="comment">// 3. 没有多次迭代（key stretching）</span></span><br><span class="line"><span class="comment">// 4. 应使用password_hash()和bcrypt/Argon2</span></span><br><span class="line"><span class="variable">$hashed</span> = <span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$password</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Password hash (SHA-256): &quot;</span> . <span class="variable">$hashed</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：使用AES-CBC模式 ★★★</span></span><br><span class="line"><span class="comment">// AES-CBC - 密码块链接模式</span></span><br><span class="line"><span class="comment">// 比ECB安全，因为：</span></span><br><span class="line"><span class="comment">// 1. 每个块的加密依赖于前一个块</span></span><br><span class="line"><span class="comment">// 2. 相同的明文块产生不同的密文块</span></span><br><span class="line"><span class="comment">// 3. 使用IV（初始化向量）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题1：仍然硬编码密钥 ★★★</span></span><br><span class="line"><span class="variable">$encryption_key</span> = <span class="string">&quot;mysecretkey12345&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进：生成随机IV ★★★</span></span><br><span class="line"><span class="comment">// openssl_random_pseudo_bytes() - 生成随机字节</span></span><br><span class="line"><span class="comment">// AES-128-CBC需要16字节IV</span></span><br><span class="line"><span class="variable">$iv</span> = <span class="title function_ invoke__">openssl_random_pseudo_bytes</span>(<span class="number">16</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;message&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$method</span> = <span class="string">&#x27;AES-128-CBC&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 密钥派生</span></span><br><span class="line"><span class="variable">$key</span> = <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$encryption_key</span>, <span class="literal">true</span>), <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 加密 ★★★</span></span><br><span class="line"><span class="variable">$encrypted</span> = <span class="title function_ invoke__">openssl_encrypt</span>(</span><br><span class="line">    <span class="variable">$message</span>,</span><br><span class="line">    <span class="variable">$method</span>,</span><br><span class="line">    <span class="variable">$key</span>,</span><br><span class="line">    OPENSSL_RAW_DATA,</span><br><span class="line">    <span class="variable">$iv</span>  // 使用IV</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题2：IV的传输 ★★★</span></span><br><span class="line"><span class="comment">// IV需要和密文一起传输</span></span><br><span class="line"><span class="comment">// IV不需要保密，但必须唯一</span></span><br><span class="line"><span class="comment">// 通常做法：IV + 密文</span></span><br><span class="line"><span class="variable">$encrypted_data</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$iv</span> . <span class="variable">$encrypted</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Encrypted message (AES-CBC): &quot;</span> . <span class="variable">$encrypted_data</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decrypt_message</span>(<span class="params"><span class="variable">$encrypted_data</span>, <span class="variable">$encryption_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$method</span> = <span class="string">&#x27;AES-128-CBC&#x27;</span>;</span><br><span class="line">    <span class="variable">$key</span> = <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$encryption_key</span>, <span class="literal">true</span>), <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$decoded</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$encrypted_data</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 提取IV和密文 ★★★</span></span><br><span class="line">    <span class="variable">$iv</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">0</span>, <span class="number">16</span>);  <span class="comment">// 前16字节是IV</span></span><br><span class="line">    <span class="variable">$ciphertext</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">16</span>);  <span class="comment">// 剩余是密文</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$decrypted</span> = <span class="title function_ invoke__">openssl_decrypt</span>(</span><br><span class="line">        <span class="variable">$ciphertext</span>,</span><br><span class="line">        <span class="variable">$method</span>,</span><br><span class="line">        <span class="variable">$key</span>,</span><br><span class="line">        OPENSSL_RAW_DATA,</span><br><span class="line">        <span class="variable">$iv</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$decrypted</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题3：缺少消息认证 ★★★</span></span><br><span class="line"><span class="comment">// 没有HMAC验证消息完整性</span></span><br><span class="line"><span class="comment">// 容易受到padding oracle攻击</span></span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>SHA-256</strong> - 更强的哈希算法</li>
+<li><strong>AES-CBC模式</strong> - 更安全的分组模式</li>
+<li><strong>随机IV</strong> - 每次加密使用不同IV</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><p><strong>密码哈希不当</strong></p>
+<ul>
+<li>SHA-256太快，易暴力破解</li>
+<li>应使用bcrypt&#x2F;Argon2</li>
+</ul>
+</li>
+<li><p><strong>硬编码密钥</strong></p>
+<ul>
+<li>密钥管理不当</li>
+</ul>
+</li>
+<li><p><strong>缺少消息认证</strong></p>
+<ul>
+<li>没有HMAC</li>
+<li>易受Padding Oracle攻击</li>
+</ul>
+</li>
+<li><p><strong>密钥派生简单</strong></p>
+<ul>
+<li>应使用PBKDF2&#x2F;HKDF</li>
+</ul>
+</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：SHA-256暴力破解"><a href="#方法1：SHA-256暴力破解" class="headerlink" title="方法1：SHA-256暴力破解"></a>方法1：SHA-256暴力破解</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 虽然SHA-256更强，但仍可以暴力破解弱密码</span></span><br><span class="line">hashcat -m 1400 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 1400: SHA-256模式</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：Padding-Oracle攻击"><a href="#方法2：Padding-Oracle攻击" class="headerlink" title="方法2：Padding Oracle攻击"></a>方法2：Padding Oracle攻击</h4><p><strong>什么是Padding Oracle：</strong></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">AES-CBC使用PKCS<span class="comment">#7填充：</span></span><br><span class="line">明文长度：<span class="number">13</span>字节</span><br><span class="line">块大小：<span class="number">16</span>字节</span><br><span class="line">填充：<span class="number">3</span>字节（<span class="number">0x03</span> <span class="number">0x03</span> <span class="number">0x03</span>）</span><br><span class="line"></span><br><span class="line">Padding <span class="keyword">Oracle：</span></span><br><span class="line"><span class="keyword"></span>服务器返回不同错误：</span><br><span class="line">- <span class="string">&quot;Invalid padding&quot;</span> → 填充错误</span><br><span class="line">- <span class="string">&quot;Invalid data&quot;</span> → 数据错误</span><br><span class="line"></span><br><span class="line">攻击者可以利用这个差异逐字节解密</span><br></pre></td></tr></table></figure>
+
+<p><strong>攻击脚本：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">padding_oracle_attack</span>(<span class="params">ciphertext_b64, url</span>):</span><br><span class="line">    <span class="comment"># 解码密文</span></span><br><span class="line">    decoded = base64.b64decode(ciphertext_b64)</span><br><span class="line">    iv = decoded[:<span class="number">16</span>]</span><br><span class="line">    ciphertext = decoded[<span class="number">16</span>:]</span><br><span class="line"></span><br><span class="line">    plaintext = <span class="string">b&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对每个块进行攻击</span></span><br><span class="line">    blocks = [ciphertext[i:i+<span class="number">16</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(ciphertext), <span class="number">16</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> block <span class="keyword">in</span> blocks:</span><br><span class="line">        decrypted_block = attack_block(block, iv, url)</span><br><span class="line">        plaintext += decrypted_block</span><br><span class="line">        iv = block  <span class="comment"># 下一轮使用当前块作为IV</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> plaintext</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">attack_block</span>(<span class="params">block, iv, url</span>):</span><br><span class="line">    decrypted = <span class="string">b&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 逐字节破解</span></span><br><span class="line">    <span class="keyword">for</span> byte_pos <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        <span class="keyword">for</span> guess <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">            <span class="comment"># 构造测试IV</span></span><br><span class="line">            test_iv = <span class="built_in">bytearray</span>(iv)</span><br><span class="line">            <span class="comment"># ... (复杂的padding oracle逻辑)</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 发送测试请求</span></span><br><span class="line">            response = requests.post(url, data=&#123;<span class="string">&#x27;ciphertext&#x27;</span>: base64.b64encode(test_iv + block)&#125;)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;Invalid padding&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> response.text:</span><br><span class="line">                <span class="comment"># 找到正确的字节</span></span><br><span class="line">                decrypted = <span class="built_in">bytes</span>([guess ^ (byte_pos + <span class="number">1</span>)]) + decrypted</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decrypted</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：时序攻击"><a href="#方法3：时序攻击" class="headerlink" title="方法3：时序攻击"></a>方法3：时序攻击</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> statistics</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timing_attack</span>(<span class="params">ciphertext, url</span>):</span><br><span class="line">    times = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        response = requests.post(url, data=&#123;<span class="string">&#x27;ciphertext&#x27;</span>: ciphertext&#125;)</span><br><span class="line">        elapsed = time.time() - start</span><br><span class="line">        times.append(elapsed)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果响应时间明显不同，可能泄露信息</span></span><br><span class="line">    avg_time = statistics.mean(times)</span><br><span class="line">    stddev = statistics.stdev(times)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Average time: <span class="subst">&#123;avg_time:<span class="number">.4</span>f&#125;</span>s, Std Dev: <span class="subst">&#123;stddev:<span class="number">.4</span>f&#125;</span>s&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用现代密码学最佳实践，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Impossible: 使用现代密码学最佳实践 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护1：使用password_hash() ★★★</span></span><br><span class="line"><span class="comment">// password_hash() - PHP内置的密码哈希函数</span></span><br><span class="line"><span class="comment">// PASSWORD_ARGON2ID - Argon2id算法（最新最安全）</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Argon2id的优点：</span></span><br><span class="line"><span class="comment">// 1. 抗GPU/ASIC攻击</span></span><br><span class="line"><span class="comment">// 2. 可配置的内存和时间成本</span></span><br><span class="line"><span class="comment">// 3. 自动生成随机盐</span></span><br><span class="line"><span class="comment">// 4. 内置版本管理</span></span><br><span class="line"><span class="comment">// 5. 2015年密码哈希竞赛冠军</span></span><br><span class="line"><span class="variable">$options</span> = [</span><br><span class="line">    <span class="string">&#x27;memory_cost&#x27;</span> =&gt; <span class="number">65536</span>,  <span class="comment">// 64MB内存</span></span><br><span class="line">    <span class="string">&#x27;time_cost&#x27;</span> =&gt; <span class="number">4</span>,         <span class="comment">// 4次迭代</span></span><br><span class="line">    <span class="string">&#x27;threads&#x27;</span> =&gt; <span class="number">2</span>            <span class="comment">// 2个线程</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="variable">$hashed</span> = <span class="title function_ invoke__">password_hash</span>(<span class="variable">$password</span>, PASSWORD_ARGON2ID, <span class="variable">$options</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Password hash (Argon2id): &quot;</span> . <span class="variable">$hashed</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 验证密码 ★★★</span></span><br><span class="line"><span class="comment">// password_verify() - 验证密码</span></span><br><span class="line"><span class="comment">// 自动处理盐和算法细节</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">verify_password</span>(<span class="params"><span class="variable">$password</span>, <span class="variable">$hash</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">password_verify</span>(<span class="variable">$password</span>, <span class="variable">$hash</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护2：使用环境变量存储密钥 ★★★</span></span><br><span class="line"><span class="comment">// 不再硬编码密钥</span></span><br><span class="line"><span class="variable">$encryption_key</span> = <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;ENCRYPTION_KEY&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$encryption_key</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Encryption key not configured&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护3：使用AEAD模式（AES-GCM） ★★★</span></span><br><span class="line"><span class="comment">// AES-GCM - Galois/Counter Mode</span></span><br><span class="line"><span class="comment">// 优点：</span></span><br><span class="line"><span class="comment">// 1. 提供加密和认证</span></span><br><span class="line"><span class="comment">// 2. 防止密文篡改</span></span><br><span class="line"><span class="comment">// 3. 高性能</span></span><br><span class="line"><span class="comment">// 4. 内置消息认证码（MAC）</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;message&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$method</span> = <span class="string">&#x27;aes-256-gcm&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护4：使用PBKDF2派生密钥 ★★★</span></span><br><span class="line"><span class="comment">// hash_pbkdf2() - 基于密码的密钥派生函数</span></span><br><span class="line"><span class="comment">// 参数：</span></span><br><span class="line"><span class="comment">// - 算法：sha256</span></span><br><span class="line"><span class="comment">// - 密码：原始密钥</span></span><br><span class="line"><span class="comment">// - 盐：随机盐</span></span><br><span class="line"><span class="comment">// - 迭代次数：100000次</span></span><br><span class="line"><span class="comment">// - 密钥长度：32字节（256位）</span></span><br><span class="line"><span class="variable">$salt</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">16</span>);</span><br><span class="line"><span class="variable">$key</span> = <span class="title function_ invoke__">hash_pbkdf2</span>(</span><br><span class="line">    <span class="string">&#x27;sha256&#x27;</span>,</span><br><span class="line">    <span class="variable">$encryption_key</span>,</span><br><span class="line">    <span class="variable">$salt</span>,</span><br><span class="line">    <span class="number">100000</span>,</span><br><span class="line">    <span class="number">32</span>,</span><br><span class="line">    <span class="literal">true</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 生成随机IV ★★★</span></span><br><span class="line"><span class="comment">// AES-256-GCM需要12字节IV（推荐）</span></span><br><span class="line"><span class="variable">$iv</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">12</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 认证附加数据（AAD） ★★★</span></span><br><span class="line"><span class="comment">// 可选的附加数据，会被认证但不加密</span></span><br><span class="line"><span class="variable">$aad</span> = <span class="string">&#x27;dvwa-message&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 加密 ★★★</span></span><br><span class="line"><span class="variable">$tag</span> = <span class="string">&#x27;&#x27;</span>;  <span class="comment">// 认证标签</span></span><br><span class="line"><span class="variable">$encrypted</span> = <span class="title function_ invoke__">openssl_encrypt</span>(</span><br><span class="line">    <span class="variable">$message</span>,</span><br><span class="line">    <span class="variable">$method</span>,</span><br><span class="line">    <span class="variable">$key</span>,</span><br><span class="line">    OPENSSL_RAW_DATA,</span><br><span class="line">    <span class="variable">$iv</span>,</span><br><span class="line">    <span class="variable">$tag</span>,  // 输出认证标签</span><br><span class="line">    <span class="variable">$aad</span>,  // 附加认证数据</span><br><span class="line">    <span class="number">16</span>     // 标签长度：<span class="number">16</span>字节</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 组合所有数据 ★★★</span></span><br><span class="line"><span class="comment">// 格式：salt + IV + tag + ciphertext</span></span><br><span class="line"><span class="variable">$encrypted_data</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$salt</span> . <span class="variable">$iv</span> . <span class="variable">$tag</span> . <span class="variable">$encrypted</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Encrypted message (AES-256-GCM): &quot;</span> . <span class="variable">$encrypted_data</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 解密函数 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decrypt_message</span>(<span class="params"><span class="variable">$encrypted_data</span>, <span class="variable">$encryption_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$method</span> = <span class="string">&#x27;aes-256-gcm&#x27;</span>;</span><br><span class="line">    <span class="variable">$decoded</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$encrypted_data</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 提取各个部分 ★★★</span></span><br><span class="line">    <span class="variable">$salt</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">0</span>, <span class="number">16</span>);    <span class="comment">// 盐：16字节</span></span><br><span class="line">    <span class="variable">$iv</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">16</span>, <span class="number">12</span>);     <span class="comment">// IV：12字节</span></span><br><span class="line">    <span class="variable">$tag</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">28</span>, <span class="number">16</span>);    <span class="comment">// 标签：16字节</span></span><br><span class="line">    <span class="variable">$ciphertext</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$decoded</span>, <span class="number">44</span>); <span class="comment">// 剩余：密文</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 重新派生密钥 ★★★</span></span><br><span class="line">    <span class="variable">$key</span> = <span class="title function_ invoke__">hash_pbkdf2</span>(</span><br><span class="line">        <span class="string">&#x27;sha256&#x27;</span>,</span><br><span class="line">        <span class="variable">$encryption_key</span>,</span><br><span class="line">        <span class="variable">$salt</span>,</span><br><span class="line">        <span class="number">100000</span>,</span><br><span class="line">        <span class="number">32</span>,</span><br><span class="line">        <span class="literal">true</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ AAD必须相同 ★★★</span></span><br><span class="line">    <span class="variable">$aad</span> = <span class="string">&#x27;dvwa-message&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 解密并验证 ★★★</span></span><br><span class="line">    <span class="variable">$decrypted</span> = <span class="title function_ invoke__">openssl_decrypt</span>(</span><br><span class="line">        <span class="variable">$ciphertext</span>,</span><br><span class="line">        <span class="variable">$method</span>,</span><br><span class="line">        <span class="variable">$key</span>,</span><br><span class="line">        OPENSSL_RAW_DATA,</span><br><span class="line">        <span class="variable">$iv</span>,</span><br><span class="line">        <span class="variable">$tag</span>,  // 验证认证标签</span><br><span class="line">        <span class="variable">$aad</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 如果认证失败，返回false ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$decrypted</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&#x27;Decryption failed: Message authentication failed&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$decrypted</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 额外安全措施 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 密钥轮换</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rotate_key_if_needed</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$key_age</span> = <span class="title function_ invoke__">time</span>() - <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;KEY_CREATED_TIME&#x27;</span>);</span><br><span class="line">    <span class="variable">$max_age</span> = <span class="number">30</span> * <span class="number">24</span> * <span class="number">3600</span>; <span class="comment">// 30天</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$key_age</span> &gt; <span class="variable">$max_age</span>) &#123;</span><br><span class="line">        <span class="comment">// 触发密钥轮换流程</span></span><br><span class="line">        <span class="title function_ invoke__">trigger_key_rotation</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 审计日志</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log_crypto_operation</span>(<span class="params"><span class="variable">$operation</span>, <span class="variable">$success</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$log</span> = [</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;operation&#x27;</span> =&gt; <span class="variable">$operation</span>,</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="variable">$success</span>,</span><br><span class="line">        <span class="string">&#x27;user&#x27;</span> =&gt; <span class="title function_ invoke__">dvwaCurrentUser</span>(),</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(</span><br><span class="line">        <span class="string">&#x27;/var/log/security/crypto.log&#x27;</span>,</span><br><span class="line">        <span class="title function_ invoke__">json_encode</span>(<span class="variable">$log</span>) . <span class="string">&quot;\n&quot;</span>,</span><br><span class="line">        FILE_APPEND</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>Argon2id密码哈希</strong> - 抗暴力破解</li>
+<li><strong>环境变量密钥</strong> - 不硬编码</li>
+<li><strong>AES-GCM AEAD</strong> - 加密+认证</li>
+<li><strong>PBKDF2密钥派生</strong> - 强密钥派生</li>
+<li><strong>随机盐和IV</strong> - 每次都不同</li>
+<li><strong>认证标签</strong> - 防止篡改</li>
+<li><strong>密钥轮换</strong> - 定期更换密钥</li>
+<li><strong>审计日志</strong> - 记录所有操作</li>
+</ol>
+<p><strong>安全流程：</strong></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">密码哈希：</span><br><span class="line">用户密码 → Argon2id(password, random_salt, options)</span><br><span class="line">→ 存储哈希</span><br><span class="line"></span><br><span class="line">验证：</span><br><span class="line">输入密码 → password_verify(input, stored_hash)</span><br><span class="line">→ <span class="literal">True</span>/<span class="literal">False</span></span><br><span class="line"></span><br><span class="line">加密：</span><br><span class="line">明文 + 密钥（环境变量）</span><br><span class="line">→ PBKDF2派生实际密钥</span><br><span class="line">→ AES-<span class="number">256</span>-GCM加密</span><br><span class="line">→ 生成认证标签</span><br><span class="line">→ 输出：salt + IV + <span class="keyword">tag</span> <span class="title">+ ciphertext</span></span><br><span class="line"></span><br><span class="line">解密：</span><br><span class="line">接收：salt + IV + <span class="keyword">tag</span> <span class="title">+ ciphertext</span></span><br><span class="line">→ PBKDF2派生密钥</span><br><span class="line">→ AES-<span class="number">256</span>-GCM解密</span><br><span class="line">→ 验证认证标签</span><br><span class="line">→ 成功：明文，失败：拒绝</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都失败：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">攻击<span class="number">1</span>：暴力破解密码</span><br><span class="line">Argon2id → 需要大量内存和时间</span><br><span class="line"><span class="number">64</span>MB内存 × <span class="number">4</span>次迭代 → 暴力破解不可行</span><br><span class="line"></span><br><span class="line">攻击<span class="number">2</span>：彩虹表</span><br><span class="line">随机盐 → 每个密码都有唯一哈希</span><br><span class="line">彩虹表无效</span><br><span class="line"></span><br><span class="line">攻击<span class="number">3</span>：篡改密文</span><br><span class="line">AES-GCM认证标签 → 任何修改都会导致验证失败</span><br><span class="line"></span><br><span class="line">攻击<span class="number">4</span>：<span class="attribute">Padding</span> Oracle</span><br><span class="line">AES-GCM不使用填充 → 不存在<span class="attribute">padding</span> oracle</span><br><span class="line"></span><br><span class="line">攻击<span class="number">5</span>：ECB模式攻击</span><br><span class="line">使用GCM模式 → ECB漏洞不存在</span><br><span class="line"></span><br><span class="line">攻击<span class="number">6</span>：获取密钥</span><br><span class="line">环境变量 → 不在代码中</span><br><span class="line">即使获取密文，没有密钥无法解密</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="密码哈希最佳实践"><a href="#密码哈希最佳实践" class="headerlink" title="密码哈希最佳实践"></a>密码哈希最佳实践</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确：使用password_hash()</span></span><br><span class="line"><span class="variable">$hash</span> = <span class="title function_ invoke__">password_hash</span>(<span class="variable">$password</span>, PASSWORD_ARGON2ID, [</span><br><span class="line">    <span class="string">&#x27;memory_cost&#x27;</span> =&gt; <span class="number">65536</span>,</span><br><span class="line">    <span class="string">&#x27;time_cost&#x27;</span> =&gt; <span class="number">4</span>,</span><br><span class="line">    <span class="string">&#x27;threads&#x27;</span> =&gt; <span class="number">2</span></span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">password_verify</span>(<span class="variable">$input_password</span>, <span class="variable">$hash</span>)) &#123;</span><br><span class="line">    <span class="comment">// 密码正确</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 错误</span></span><br><span class="line"><span class="variable">$hash</span> = <span class="title function_ invoke__">md5</span>(<span class="variable">$password</span>);</span><br><span class="line"><span class="variable">$hash</span> = <span class="title function_ invoke__">sha1</span>(<span class="variable">$password</span>);</span><br><span class="line"><span class="variable">$hash</span> = <span class="title function_ invoke__">hash</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$password</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="加密最佳实践"><a href="#加密最佳实践" class="headerlink" title="加密最佳实践"></a>加密最佳实践</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确：使用AEAD模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt_message</span>(<span class="params"><span class="variable">$plaintext</span>, <span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$method</span> = <span class="string">&#x27;aes-256-gcm&#x27;</span>;</span><br><span class="line">    <span class="variable">$iv</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">12</span>);</span><br><span class="line">    <span class="variable">$tag</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$ciphertext</span> = <span class="title function_ invoke__">openssl_encrypt</span>(</span><br><span class="line">        <span class="variable">$plaintext</span>,</span><br><span class="line">        <span class="variable">$method</span>,</span><br><span class="line">        <span class="variable">$key</span>,</span><br><span class="line">        OPENSSL_RAW_DATA,</span><br><span class="line">        <span class="variable">$iv</span>,</span><br><span class="line">        <span class="variable">$tag</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$iv</span> . <span class="variable">$tag</span> . <span class="variable">$ciphertext</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 错误</span></span><br><span class="line"><span class="comment">// - 使用ECB模式</span></span><br><span class="line"><span class="comment">// - 硬编码密钥</span></span><br><span class="line"><span class="comment">// - 不使用IV</span></span><br><span class="line"><span class="comment">// - 不验证消息完整性</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="密钥管理"><a href="#密钥管理" class="headerlink" title="密钥管理"></a>密钥管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用环境变量</span></span><br><span class="line"><span class="built_in">export</span> ENCRYPTION_KEY=$(openssl rand -hex 32)</span><br><span class="line"><span class="built_in">export</span> DATABASE_KEY=$(openssl rand -hex 32)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用密钥管理服务（KMS）</span></span><br><span class="line"><span class="comment"># - AWS KMS</span></span><br><span class="line"><span class="comment"># - Azure Key Vault</span></span><br><span class="line"><span class="comment"># - HashiCorp Vault</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="随机数生成"><a href="#随机数生成" class="headerlink" title="随机数生成"></a>随机数生成</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确：密码学安全的随机数</span></span><br><span class="line"><span class="variable">$random</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">32</span>);</span><br><span class="line"><span class="variable">$random</span> = <span class="title function_ invoke__">openssl_random_pseudo_bytes</span>(<span class="number">32</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 错误：不安全的随机数</span></span><br><span class="line"><span class="variable">$random</span> = <span class="title function_ invoke__">rand</span>();</span><br><span class="line"><span class="variable">$random</span> = <span class="title function_ invoke__">mt_rand</span>();</span><br><span class="line"><span class="variable">$random</span> = <span class="title function_ invoke__">uniqid</span>();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>密码哈希</td>
+<td>MD5</td>
+<td>SHA-1</td>
+<td>SHA-256</td>
+<td>Argon2id</td>
+</tr>
+<tr>
+<td>盐（Salt）</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ 自动</td>
+</tr>
+<tr>
+<td>加密算法</td>
+<td>XOR</td>
+<td>AES-ECB</td>
+<td>AES-CBC</td>
+<td>AES-GCM</td>
+</tr>
+<tr>
+<td>IV</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>消息认证</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ AEAD</td>
+</tr>
+<tr>
+<td>密钥管理</td>
+<td>硬编码</td>
+<td>硬编码</td>
+<td>硬编码</td>
+<td>环境变量</td>
+</tr>
+<tr>
+<td>密钥派生</td>
+<td>❌</td>
+<td>简单hash</td>
+<td>简单hash</td>
+<td>PBKDF2</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><h3 id="密码破解"><a href="#密码破解" class="headerlink" title="密码破解"></a>密码破解</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hashcat</span></span><br><span class="line">hashcat -m 0 hashes.txt wordlist.txt    <span class="comment"># MD5</span></span><br><span class="line">hashcat -m 100 hashes.txt wordlist.txt  <span class="comment"># SHA-1</span></span><br><span class="line">hashcat -m 1400 hashes.txt wordlist.txt <span class="comment"># SHA-256</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># John the Ripper</span></span><br><span class="line">john --format=raw-md5 hashes.txt</span><br><span class="line">john --format=raw-sha1 hashes.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="加密分析"><a href="#加密分析" class="headerlink" title="加密分析"></a>加密分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检测ECB模式</span></span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_ecb</span>(<span class="params">ciphertext</span>):</span><br><span class="line">    blocks = [ciphertext[i:i+<span class="number">16</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(ciphertext), <span class="number">16</span>)]</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(blocks) != <span class="built_in">len</span>(<span class="built_in">set</span>(blocks))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>渗透测试：</strong></p>
+<ol>
+<li>✅ 识别哈希算法（长度、格式）</li>
+<li>✅ 尝试彩虹表&#x2F;暴力破解</li>
+<li>✅ 检测加密模式（ECB&#x2F;CBC）</li>
+<li>✅ 查找硬编码密钥</li>
+<li>✅ 测试Padding Oracle</li>
+<li>✅ 分析随机数质量</li>
+</ol>
+<p><strong>防御清单：</strong></p>
+<ol>
+<li>✅ 使用Argon2id&#x2F;bcrypt哈希密码</li>
+<li>✅ 使用AES-GCM等AEAD模式</li>
+<li>✅ 密钥存储在环境变量&#x2F;KMS</li>
+<li>✅ 使用PBKDF2派生密钥</li>
+<li>✅ 使用random_bytes()生成随机数</li>
+<li>✅ 定期密钥轮换</li>
+<li>✅ 审计所有密码学操作</li>
+</ol>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不破解真实用户密码</li>
+<li>学习是为了构建安全系统</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - Cryptography (密码学) 攻防练习详解">http://caixuya.github.io/2025/11/20/Cryptography_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - Command Injection (命令注入) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - Command Injection (命令注入) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - JavaScript Attacks 攻防练习详解">
+      DVWA - JavaScript Attacks 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AF%86%E7%A0%81%E5%AD%A6%E6%BC%8F%E6%B4%9E%EF%BC%88Cryptography-Vulnerabilities%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是密码学漏洞（Cryptography Vulnerabilities）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Symmetric-Encryption%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">1. 对称加密（Symmetric Encryption）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Encryption%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2. 非对称加密（Asymmetric Encryption）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0%EF%BC%88Hash-Functions%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">3. 哈希函数（Hash Functions）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B6%88%E6%81%AF%E8%AE%A4%E8%AF%81%E7%A0%81%EF%BC%88MAC%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">4. 消息认证码（MAC）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9AMD5%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：MD5暴力破解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%BD%A9%E8%99%B9%E8%A1%A8%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：彩虹表攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E7%A0%B4%E8%A7%A3XOR%E5%8A%A0%E5%AF%86"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：破解XOR加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%E7%9F%AD%E5%AF%86%E9%92%A5"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：暴力破解短密钥</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9ASHA-1%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：SHA-1暴力破解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%88%A9%E7%94%A8ECB%E6%A8%A1%E5%BC%8F%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：利用ECB模式漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E5%AF%86%E9%92%A5%E6%81%A2%E5%A4%8D%EF%BC%88%E5%A6%82%E6%9E%9C%E5%8F%AF%E4%BB%A5%EF%BC%89"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：密钥恢复（如果可以）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9ASHA-256%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：SHA-256暴力破解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9APadding-Oracle%E6%94%BB%E5%87%BB"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：Padding Oracle攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E6%97%B6%E5%BA%8F%E6%94%BB%E5%87%BB"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：时序攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%93%88%E5%B8%8C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">7.1.</span> <span class="nav-text">密码哈希最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">7.2.</span> <span class="nav-text">加密最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E7%AE%A1%E7%90%86"><span class="nav-number">7.3.</span> <span class="nav-text">密钥管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90"><span class="nav-number">7.4.</span> <span class="nav-text">随机数生成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">常用工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3"><span class="nav-number">9.1.</span> <span class="nav-text">密码破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E5%88%86%E6%9E%90"><span class="nav-number">9.2.</span> <span class="nav-text">加密分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">10.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -2,16 +2,169 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/</loc>
+    <loc>http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
     
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://caixuya.github.io/2025/11/19/DVWA_Brute_Force_%E6%94%BB%E5%87%BB%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4/</loc>
+    <loc>http://caixuya.github.io/2025/11/20/CSP_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/File_Inclusion_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/File_Upload_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Insecure_CAPTCHA_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/SQL_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/XSS_DOM_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/XSS_Stored_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Weak_Session_IDs_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Command_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Authorisation_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/API_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/20/Brute_Force_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/</loc>
+    
+    <lastmod>2025-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://caixuya.github.io/2025/11/19/%E8%A7%A3%E5%86%B3Burp_Suite%E6%97%A0%E6%B3%95%E6%8B%A6%E6%88%AAlocalhost%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2025-11-19</lastmod>
     
@@ -310,7 +463,7 @@
 
   <url>
     <loc>http://caixuya.github.io/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -320,105 +473,105 @@
   
   <url>
     <loc>http://caixuya.github.io/categories/Oracle/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/python/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/github/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/hexo/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/markdown/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/mysql/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/SSH-struts2/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/nginx/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/daily/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/bat/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/AI/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/linux/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://caixuya.github.io/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2025-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

