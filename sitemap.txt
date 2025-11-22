@@ -1,3 +1,4 @@
+http://caixuya.github.io/2025/11/20/SQL_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/Cryptography_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/CSP_Bypass_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/CSRF_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
@@ -7,7 +8,6 @@ http://caixuya.github.io/2025/11/20/Insecure_CAPTCHA_%E6%94%BB%E9%98%B2%E7%BB%83
 http://caixuya.github.io/2025/11/20/JavaScript_Attacks_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/Open_HTTP_Redirect_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/SQL_Injection_Blind_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
-http://caixuya.github.io/2025/11/20/SQL_Injection_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/XSS_DOM_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/XSS_Stored_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/
 http://caixuya.github.io/2025/11/20/XSS_Reflected_%E6%94%BB%E9%98%B2%E7%BB%83%E4%B9%A0/

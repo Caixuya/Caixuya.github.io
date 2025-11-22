@@ -2535,10 +2535,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2025-11-20 23:31:37 / Modified: 23:26:39" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
+              <time title="Created: 2025-11-20 23:31:37" itemprop="dateCreated datePublished" datetime="2025-11-20T23:31:37+08:00">2025-11-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-11-22 16:23:38" itemprop="dateModified" datetime="2025-11-22T16:23:38+08:00">2025-11-22</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -2612,7 +2618,7 @@
 <figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="number">1</span><span class="comment">&#x27;</span></span><br><span class="line">完整SQL：<span class="keyword">SELECT</span> ... <span class="keyword">WHERE</span> user_id = <span class="comment">&#x27;1&#x27;&#x27;;</span></span><br><span class="line">结果：SQL语法错误</span><br><span class="line">错误信息：You have an <span class="keyword">error</span> <span class="keyword">in</span> your SQL syntax...</span><br></pre></td></tr></table></figure>
 
 <p><strong>测试2：注释符测试</strong></p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="number">1</span>&#x27; <span class="comment">--</span></span><br><span class="line">完整SQL：<span class="keyword">SELECT</span> ... WHERE user_id = <span class="string">&#x27;1&#x27;</span> <span class="comment">-- &#x27;;</span></span><br><span class="line">结果：正常显示ID=<span class="number">1</span>的用户</span><br><span class="line">说明：<span class="comment">-- 注释掉了后面的单引号</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="number">1</span><span class="string">&#x27; -- </span></span><br><span class="line"><span class="string">（注意1&#x27;</span><span class="comment">--后面需要有一个空格）</span></span><br><span class="line">完整<span class="keyword">SQL</span>：<span class="keyword">SELECT</span> ... <span class="keyword">WHERE</span> user_id <span class="operator">=</span> <span class="string">&#x27;1&#x27;</span> <span class="comment">-- &#x27;;</span></span><br><span class="line">结果：正常显示ID<span class="operator">=</span><span class="number">1</span>的用户</span><br><span class="line">说明：<span class="comment">-- 注释掉了后面的单引号</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>测试3：逻辑测试</strong></p>
 <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="number">1</span><span class="string">&#x27; OR &#x27;</span><span class="number">1</span><span class="string">&#x27;=&#x27;</span><span class="number">1</span></span><br><span class="line">完整SQL：<span class="keyword">SELECT</span> <span class="params">...</span> <span class="keyword">WHERE</span> user_id = <span class="string">&#x27;1&#x27;</span> <span class="literal">OR</span> <span class="string">&#x27;1&#x27;</span>=<span class="string">&#x27;1&#x27;</span>;</span><br><span class="line">结果：显示所有用户</span><br></pre></td></tr></table></figure>
